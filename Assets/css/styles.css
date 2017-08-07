@@ -1,0 +1,305 @@
+/*Default styling*/
+
+td.Sat, td.Sun{
+    font-weight: bold;
+    color: red;
+}
+
+table.dptAdmin td{
+    text-align: left;
+    padding-right: 20px;
+    padding-left: 10px;
+    width: auto;
+}
+table.dptAdmin td input.other{
+    text-align: center;
+    width: 110px;
+}
+table.dptAdmin th{
+    text-align: center;
+    background-color: #ccddee;
+}
+
+table.quickUpdate th{
+    text-align: center;
+    width: 80px;
+    background-color: #514444;
+    color: #fff;
+}
+table.quickUpdate td {
+    text-align: center;
+    border-bottom: 1px solid grey;
+}
+table.quickUpdate td input[type="time"]{
+    color: grey;
+    font-weight: 500;
+    width: 100px;
+    text-align: center;
+}
+table.quickUfpdate td input:focus{
+    color: #000;
+}
+
+table.dptTimetable {
+    margin-top: 5px;
+    width: 100%;
+    border: 1px solid;
+    border-collapse: collapse;
+}
+table.dptTimetable tr, table.dptTimetable td, table.dptTimetable th {
+    border: 1px solid black;
+}
+table.dptTimetable tr td{
+    text-align: center;
+    padding: 5px;
+    width: 100px;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+table.dptTimetable tr, table.dptTimetable th{
+     text-align: center;
+     padding: 5px;
+     vertical-align: middle;
+     width: 100px;
+     white-space: nowrap;
+}
+table.dptTimetable tr td.jamah{
+    font-weight: bold;
+}
+table.dptTimetable th.tableHeading{
+    background-color: #D2A9AC
+}
+table.dptTimetable th.fasting, td.fasting{
+    background: rgba(0, 128, 0, 0.34);
+    width: 100px;
+    font-weight: bold;
+}
+table.dptTimetable th.azanOnly {
+    width: 140px;
+}
+table.dptTimetable tr:hover {
+    background: #eee;
+}
+table.dptTimetable tr.highlight{
+    background-color: #F5FF92 !important;
+    font-weight: bold;
+}
+table.dptTimetable th.highlight,
+table.dptTimetable td.highlight{
+    background-color: #F5FF92;
+    font-weight: bold;
+}
+table.dptTimetable tr:nth-child(even) {
+    background: rgba(232, 251, 232, 0.34);
+}
+
+/*No Border styling*/
+table.dptNoBorder {
+    border: 0;
+    background: inherit;
+}
+table.dptNoBorder tr, table.dptNoBorder td, table.dptNoBorder th{
+    border: 0;
+    background: inherit;
+}
+/* End of No Border styling*/
+
+table.customStyles {}  /* intentionally blank  */
+
+.dptCenter {
+    margin: auto;
+    width: 50%;
+    border:3px solid #8AC007;
+    padding-left: 10px;
+    padding-top: 10px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.orange {
+    color: orange;
+}
+
+.red {
+    color: red;
+}
+
+.blue {
+    color: blue;
+}
+
+.green {
+    color: green;
+}
+
+.smallFont {
+    font-style: italic;
+    font-size: smaller;
+}
+
+div.donation {
+    width: auto;
+    color: #000000;
+    background-color: #f1f1f1;
+    padding: 15px;
+    line-height: 1.15em;
+    word-wrap: break-word;
+    margin-bottom: 12px;
+    margin-top: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+div.donation-text {
+    margin-top: 20px;
+    width: auto;
+    background-color: #ffffff;
+    padding: 1.1%;
+    border-left: 4px solid #8AC007;
+    word-wrap: break-word;
+}
+div.donation-link {
+    margin-top: 20px;
+    width: 25%;
+    background-color: #0088cc;
+    color: white;
+    padding: 1.1%;
+    border-left: 4px solid #8AC007;
+    word-wrap: break-word;
+    font-size: medium;
+    text-align: center;
+}
+div.donation-link a{
+    color: white;
+}
+div.donation-link a:hover{
+    color: black;
+}
+table.dptTimetable th.jummah, table.dptTimetable th.notificationBackground  {
+    background-color: maroon;
+    font-weight: bold;
+    color: #FFF;
+    text-align: center;
+}
+
+#langSettings{
+    cursor: pointer;
+}
+
+p.monthHeading{
+    float:left;
+    margin-right: 20px;
+    margin-top: 5px;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+span.printIcon {
+    float: right;
+    cursor: pointer;
+}
+
+select.otherMonth  {
+    border: 0 !important;  /*Removes border*/
+    -webkit-appearance: none;  /*Removes default chrome and safari style*/
+    -moz-appearance: none; /* Removes Default Firefox style*/
+    appearance:none;
+    background: rgba(138, 116, 0, 0.32) no-repeat 90% center;
+    width: 100px; /*Width of select dropdown to give space for arrow image*/
+    text-indent: 0.01px; /* Removes default arrow from firefox*/
+    text-overflow: "";  /*Removes default arrow from firefox*/ /*My custom style for fonts*/
+    color: #000;
+    font-weight: bold;
+    border-radius: 10px 0;
+    padding: 5px;
+    box-shadow: inset 0 0 5px rgba(000,000,000, 0.5);
+    float: left;
+}
+
+span.dpt-donation {
+    float: right;
+    width: auto;
+    color: #000000;
+    background-color: maroon;
+    padding: 10px;
+    line-height: 1.15em;
+    word-wrap: break-word;
+    margin-bottom: 12px;
+    margin-top: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    font-size: 15px;
+}
+
+span.dpt-donation a{
+    color: #abc;
+    font-weight: bold;
+}
+
+span.dpt-donation a:hover{
+    color: #fff;
+    font-weight: bold;
+}
+
+span.timeLeft {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.button {
+    font-weight: bold;
+}
+
+.saveButton {
+    float: left;
+    margin-right: 5px;
+}
+
+h3.printSiteName {
+    display: none;
+    visibility: hidden;
+}
+
+.hijriDate {
+    font-weight: initial;
+    font-style: italic;
+    display: block;
+}
+
+span.dptScNextPrayer {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+h2.dptScTime {
+    margin: 0px;
+}
+
+@media print {
+    * {
+        background: initial!important;
+      -webkit-print-color-adjust: exact;
+   }
+    body {
+        -webkit-print-color-adjust: exact;
+        background-color: #c30;
+    }
+    #monthlyTimetable, #monthlyTimetable * {
+        visibility: visible;
+        font-size: 10px;
+    }
+    .monthHeading, .printIcon{
+        visibility: hidden;
+    }
+    select.otherMonth {
+        width: 100%;
+        font-size: 20px;
+        color: blue;
+    }
+    table.timetable td {
+        -webkit-print-color-adjust: exact;
+    }
+    h3.printSiteName {
+        display: block;
+        visibility: visible;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%, -30%);
+    }
+}
