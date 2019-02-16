@@ -1,8 +1,10 @@
 <?php
 require_once('db.php');
 require_once(__DIR__.'/../Views/DailyTimetablePrinter.php');
+require_once(__DIR__.'/../Views/TimetablePrinter.php' );
 
-class DailyTimeTable
+
+class DailyTimeTable extends TimetablePrinter
 {
     /** @var boolean */
     private $isJamahOnly = false;
@@ -31,10 +33,13 @@ class DailyTimeTable
     /** @var bool  */
     private $displayHijriDate = false;
 
+    /** $var db */
+    private $db;
 
     public function __construct()
     {
-        $this->row = $this->getCalendarToday();
+        $this->db = new DatabaseConnection();
+        $this->row = $this->db->getPrayerTimeForToday();
         $this->timetablePrinter = new DailyTimetablePrinter();
     }
 
@@ -80,6 +85,8 @@ class DailyTimeTable
      */
     public function verticalTime($attr=array())
     {
+        $this->timetablePrinter->setVertical(true);
+
         $row = $this->getRow($attr);
 
         if ($this->isJamahOnly) {
@@ -90,7 +97,7 @@ class DailyTimeTable
             return $this->timetablePrinter->verticalTimeAzanOnly($row);
         }
 
-        return $this->timetablePrinter->verticalTime($row);
+        return $this->timetablePrinter->printVerticalTime($row);
     }
 
     /**
@@ -99,6 +106,8 @@ class DailyTimeTable
      */
     public function horizontalTime($attr=array())
     {
+        $this->timetablePrinter->setHorizontal(true);
+
         $row = $this->getRow($attr);
 
         if ($this->isJamahOnly) {
@@ -113,25 +122,25 @@ class DailyTimeTable
             return $this->timetablePrinter->horizontalTimeDiv($row);
         }
 
-        return $this->timetablePrinter->horizontalTime($row);
+        return $this->timetablePrinter->printHorizontalTime($row);
     }
 
         /**
-     * @param  string $jummah
+     * @param  string $widgetNotice
      * @return string
      */
-    public function getAnnouncement($jummah="", $day)
+    public function getAnnouncement($widgetNotice="", $day)
     {
-        $jummah = trim( $jummah );
+        $widgetNotice = trim( $widgetNotice );
         $day = trim($day);
 
-        if (empty($jummah)) {
+        if (empty($widgetNotice)) {
             return "";
         }
 
         $today = date('l');
         $announcement = "";
-        $exploded = explode('.', $jummah);
+        $exploded = explode(PHP_EOL, $widgetNotice);
         foreach($exploded as $line) {
             $announcement .= $line . "</br>";
         }
@@ -155,6 +164,7 @@ class DailyTimeTable
         return $this->timetablePrinter->displayNextPrayer($row);
     }
 
+
     public function scRamadanTime($attr)
     {
         $row = $this->getRow($attr);
@@ -162,18 +172,59 @@ class DailyTimeTable
         return $this->timetablePrinter->displayRamadanTime($row);
     }
 
-    /**
-     * return todays prayer time based on day and month
-     * @return array
-     */
-    private function getCalendarToday()
+    public function scFajr($attr)
     {
-        $db = new DatabaseConnection();
-        return $db->getPrayerTimeForToday();
+        $result = "<span class='dpt_jamah'>" . $this->formatDateForPrayer($this->row['fajr_jamah']) . "</span>";
+        if ( isset($attr['start_time']) ) {
+            $result = "<span class='dpt_start'>" . $this->formatDateForPrayer($this->row['fajr_begins']) . "</span>" . $result;
+        }
+        return $result;
+    }
+
+    public function scSunrise($attr)
+    {
+        return "<span class='dpt_sunrise'>" . $this->formatDateForPrayer($this->row['sunrise']) . "</span>";
+    }
+
+    public function scZuhr($attr)
+    {
+        $result = "<span class='dpt_jamah'>" . $this->formatDateForPrayer($this->row['zuhr_jamah']) . "</span>";
+        if ( isset($attr['start_time']) ) {
+            $result = "<span class='dpt_start'>" . $this->formatDateForPrayer($this->row['zuhr_begins']) . "</span>" . $result;
+        }
+        return $result;
+    }
+
+    public function scAsr($attr)
+    {
+        $result = "<span class='dpt_jamah'>" . $this->formatDateForPrayer($this->row['asr_jamah']) . "</span>";
+        if ( isset($attr['start_time']) ) {
+            $result = "<span class='dpt_start'>" . $this->formatDateForPrayer($this->row['asr_mithl_1']) . "</span>" . $result;
+        }
+        return $result;
+    }
+
+    public function scMaghrib($attr)
+    {
+        $result = "<span class='dpt_jamah'>" . $this->formatDateForPrayer($this->row['maghrib_jamah']) . "</span>";
+        if ( isset($attr['start_time']) ) {
+            $result = "<span class='dpt_start'>" . $this->formatDateForPrayer($this->row['maghrib_begins']) . "</span>" . $result;
+        }
+        return $result;
+    }
+
+    public function scIsha($attr)
+    {
+        $result = "<span class='dpt_jamah'>" . $this->formatDateForPrayer($this->row['isha_jamah']) . "</span>";
+        if ( isset($attr['start_time']) ) {
+            $result = "<span class='dpt_start'>" . $this->formatDateForPrayer($this->row['isha_begins']) . "</span>" . $result;
+        }
+        return $result;
     }
 
     private function getRow($attr)
     {
+
         $this->setDisplayForShortCode($attr);
 
         if (isset($attr['asr'])) {
@@ -189,6 +240,10 @@ class DailyTimeTable
         if (isset($attr['announcement'])) {
             $day = isset($attr['day']) ? $attr['day'] : 'everyday';
             $row['announcement'] = $this->getAnnouncement($attr['announcement'], $day);
+        }
+
+        if ( $row['jamah_changes']) {
+            $row['announcement'] .= $this->timetablePrinter->getJamahChange($this->row);
         }
 
         $row['widgetTitle'] = $this->title;

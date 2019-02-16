@@ -1,8 +1,23 @@
 <?php
-
 require_once(__DIR__ .'/../../Models/db.php');
 
+$quickMonth = $_POST["quickMonth"];
+$quickMonth = $quickMonth ?: date('m');
 $monthName = date('F');
+$futureMonths = [];
+for($i=date('m'); $i<=12; $i++) {
+    $dateObj   = DateTime::createFromFormat('!m', $i);
+    $futureMonths[$i] = $dateObj->format('F');
+}
+
+$options = "";
+foreach($futureMonths as $key=>$month_name){
+    $selected = "";
+    if($key == $quickMonth){
+        $selected = " selected='selected'";
+    }
+    $options .= "<option value='{$key}' {$selected}>{$month_name}</option>";
+}
 
 $db = new DatabaseConnection();
 $ramadan = get_option('ramadan-chbox');
@@ -10,9 +25,8 @@ if (! empty($ramadan)) {
     $data = $db->getPrayerTimeForRamadan();
     $monthName = 'Ramadan';
 } else {
-    $data = $db->getPrayerTimeForMonth(date('m'));
+    $data = $db->getPrayerTimeForMonth( $quickMonth );
 }
-echo "<h3>Update Iqamah time for ". $monthName .", ". date('Y')  ."</h3>";
 
 $prayerNames = $timetable->getLocalPrayerNames();
 
@@ -21,26 +35,52 @@ if ( empty($data)) {
 } else {
 
     echo "
-        <div>
+<div class='container-fluid'>
+    <div class='row monthSelector'>
+    <h4>
+        <form name='quickUpdateMonth' method='post'>
+            <div class='col-sm-2'>Update Iqamah time for: </div>
+            <div class='col-sm-2'>
+                <select name='quickMonth' class='form-control'>
+                     ". $options ." 
+                </select>               
+            </div> 
+            <div class='col-sm-2'>
+                <input type='submit' value='Load month' class='button'>
+            </div>
+        </form>
+    </h4>
+    </div>
+    <div class='row'>
         <form name='quickUpdate' method='post'>
-        <table class='quickUpdate'>
-            <tr>
-                <th>DATE</th>
-                <th>DAY</th>
-                <th>". $prayerNames['fajr'] ."</th>
-                <th>". $prayerNames['zuhr'] ."</th>
-                <th>". $prayerNames['asr'] ."</th>
-                <th>". $prayerNames['maghrib'] ."</th>
-                <th>". $prayerNames['isha'] ."</th>
-            </tr>
+        <table class='table table-condensed'>
+            <thead class='bg-primary'>
+                <tr>
+                    <th>DATE</th>
+                    <th>DAY</th>
+                    <th>". $prayerNames['fajr'] ."</th>
+                    <th>". $prayerNames['zuhr'] ."</th>
+                    <th>". $prayerNames['asr'] ."</th>
+                    <th>". $prayerNames['maghrib'] ."</th>
+                    <th>". $prayerNames['isha'] ."</th>
+                </tr>
+            </thead>
     ";
 
     foreach ($data as $key => $value) {
         $date = $value['d_date'];
+        $displayDate = date("M d", strtotime($date));
+        $todayDate = date("M d", strtotime(date('Y-m-d')));
+        $today = '';
+        if ($displayDate == $todayDate) {
+            $today = 'highlight';
+        } else {
+            $today = '';
+        }
         $weekday = date("D", strtotime($date));
         echo "
-            <tr>
-                <td><b>". date("M d", strtotime($date)) ."</b></td>
+            <tr class=" . $today . ">
+                <td><b>". $displayDate ."</b></td>
                 <td class=" . $weekday . "><b>". $weekday ."</b></td>
 
                 <input type='hidden' name='thisMonth[".$key."][d_date]' value=". $date ." >
@@ -60,6 +100,7 @@ if ( empty($data)) {
             </tr>
         </table>
         </form>
+        </div>
         </div>
     ";
 }

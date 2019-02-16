@@ -12,37 +12,36 @@ class LanguageProcessor
      */
     public function __construct(array $data) {
         $this->data = $data;
-        error_log(print_r($this->data, 1));
     }
 
-    public function proocess()
+    public function process()
     {
-        if (! empty($_POST['prayersLocal'])) {
-            $prayersLocal = $_POST['prayersLocal'];
+        if (! empty($this->data['prayersLocal'])) {
+            $prayersLocal = $this->data['prayersLocal'];
             delete_option('prayersLocal');
             add_option('prayersLocal', $prayersLocal);
         }
 
-        if (! empty($_POST['headersLocal'])) {
-            $headersLocal = $_POST['headersLocal'];
+        if (! empty($this->data['headersLocal'])) {
+            $headersLocal = $this->data['headersLocal'];
             delete_option('headersLocal');
             add_option('headersLocal', $headersLocal);
         }
 
-        if (! empty($_POST['monthsLocal'])) {
-            $monthsLocal = $_POST['monthsLocal'];
+        if (! empty($this->data['monthsLocal'])) {
+            $monthsLocal = $this->data['monthsLocal'];
             delete_option('monthsLocal');
             add_option('monthsLocal', $monthsLocal);
         }
 
-        if ( ! empty($_POST['numbersLocal'])) {
-            $numbersLocal = $_POST['numbersLocal'];
+        if ( ! empty($this->data['numbersLocal'])) {
+            $numbersLocal = $this->data['numbersLocal'];
             delete_option('numbersLocal');
             add_option('numbersLocal', $numbersLocal);
         }
 
-        if ( ! empty($_POST['timesLocal'])) {
-            $timesLocal = $_POST['timesLocal'];
+        if ( ! empty($this->data['timesLocal'])) {
+            $timesLocal = $this->data['timesLocal'];
             delete_option('timesLocal');
             add_option('timesLocal', $timesLocal);
         }

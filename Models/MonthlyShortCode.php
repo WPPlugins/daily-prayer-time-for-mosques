@@ -9,7 +9,6 @@ class MonthlyShortCode
 
     public function __construct()
     {
-        $this->setScript();
         $this->printer = new MonthlyTimetablePrinter();
     }
 
@@ -19,31 +18,6 @@ class MonthlyShortCode
         ob_start();
         return $data;
         return ob_get_clean();
-    }
-
-    private function setScript()
-    {
-        // Get the Path to this plugin's folder
-        $path = plugin_dir_url( __FILE__ ); // I am in Models
-        $path .= '../';
-
-        // Enqueue our script
-        wp_enqueue_script( 'load-monthly-table',
-            $path. 'Assets/js/load-monthly-table.js',
-            array( 'jquery' ),
-            '1.0.0', true );
-
-        // Get the protocol of the current page
-        $protocol = isset( $_SERVER['HTTPS'] ) ? 'https://' : 'http://';
-
-        // Set the ajaxurl Parameter which will be output right before
-        // our ajax-delete-posts.js file so we can use ajaxurl
-        $params = array(
-            // Get the url to the admin-ajax.php file using admin_url()
-            'ajaxurl' => admin_url( 'admin-ajax.php', $protocol ),
-        );
-        // Print the script to our page
-        wp_localize_script( 'load-monthly-table', 'timetable_params', $params );
     }
 
     /**
@@ -64,10 +38,11 @@ class MonthlyShortCode
         $path = plugin_dir_url( __FILE__ ); // I am in Models
         $path .= '../';
 
-        $siteName = $_SERVER['SERVER_NAME'];
+        $siteName = get_bloginfo( 'name' );
 
-        return $introText = "<meta name='viewport' content='width=1100' />
-
+        return $introText = "
+        <div class='container-fluid'>
+            <div class='row'>
             <div id='printAndMonth'>
                 <div id='monthContainer'>
                 <h3 class='printSiteName'>".$siteName."</h3>
@@ -78,7 +53,7 @@ class MonthlyShortCode
                         </form>
                     </span>
                     <span class='printIcon'>
-                        <a title='click to print' onclick='printDiv(\"printAndMonth\")'>
+                        <a title='click to print' onclick='DPT.printDiv(\"printAndMonth\")'>
                             <img src=".$path. 'Assets/images/print_icon.png'." alt='click to print'>
                         </a>
                     </span>
@@ -86,12 +61,14 @@ class MonthlyShortCode
                 <div class='clear'></div>
                 <div class='monthlyTimetable' id='monthlyTimetable'></div>
             </div>
+            </div>
+        </div>
         ";
     }
 
     /**
      * @param $month
-     * @return string
+     * @return string#
      */
     private function getMonths($month){
         $months = $this->printer->getLocalMonths();

@@ -1,8 +1,17 @@
 /*Default styling*/
+body {
+    font-family: 'Ubuntu', sans-serif !important;
+}
 
 td.Sat, td.Sun{
     font-weight: bold;
     color: red;
+}
+
+tr.today {
+    font-size: large;
+    font-weight: bold;
+    color: blue;
 }
 
 table.dptAdmin td{
@@ -46,6 +55,10 @@ table.dptTimetable {
     border: 1px solid;
     border-collapse: collapse;
 }
+table.dptTimetable thead.prayerName {
+    font-weight: bold;
+    background: #eee;
+}
 table.dptTimetable tr, table.dptTimetable td, table.dptTimetable th {
     border: 1px solid black;
 }
@@ -67,7 +80,8 @@ table.dptTimetable tr td.jamah{
     font-weight: bold;
 }
 table.dptTimetable th.tableHeading{
-    background-color: #D2A9AC
+    background-color: #D2A9AC;
+    font-weight: bold;
 }
 table.dptTimetable th.fasting, td.fasting{
     background: rgba(0, 128, 0, 0.34);
@@ -187,9 +201,7 @@ table.dptTimetable th.jummah, table.dptTimetable th.notificationBackground  {
 p.monthHeading{
     float:left;
     margin-right: 20px;
-    margin-top: 5px;
-    font-weight: bold;
-    font-size: 2em;
+    font-size: 20px;
 }
 
 span.printIcon {
@@ -199,19 +211,14 @@ span.printIcon {
 
 select.otherMonth  {
     border: 0 !important;  /*Removes border*/
-    -webkit-appearance: none;  /*Removes default chrome and safari style*/
     -moz-appearance: none; /* Removes Default Firefox style*/
-    appearance:none;
-    background: rgba(138, 116, 0, 0.32) no-repeat 90% center;
     width: 100px; /*Width of select dropdown to give space for arrow image*/
     text-indent: 0.01px; /* Removes default arrow from firefox*/
     text-overflow: "";  /*Removes default arrow from firefox*/ /*My custom style for fonts*/
     color: #000;
-    font-weight: bold;
-    border-radius: 10px 0;
     padding: 5px;
-    box-shadow: inset 0 0 5px rgba(000,000,000, 0.5);
     float: left;
+    border-radius: 5px 5px 5px 5px;
 }
 
 span.dpt-donation {
@@ -271,10 +278,223 @@ h2.dptScTime {
     margin: 0px;
 }
 
+.jamahChanges span{
+    margin-left: 20px;
+    margin-right: 20px;
+    word-spacing: 10px;
+}
+
+p.nextIqamah {
+    margin: 0px;
+}
+
+div.digital-screen div.left-screen {
+    float: left;
+}
+
+.monthlyTimetable{
+	width: 100%;
+	overflow-x:auto;
+}
+
+.active-slider{
+    width: 200px;
+}
+
+.fa-check {
+    display: block !important;
+}
+.fa-check:after {
+    padding-right: 5px;
+}
+div.monthSelector {
+    margin-bottom: 10px;
+}
+a.url {
+    text-decoration: underline;
+}
+/* X BOARD */
+.x-board {
+    color: #ffffff;
+    height: 100vh;
+}
+
+.x-board .height-100 {
+    height: 100%;
+}
+
+.x-board .top-row {
+    height: 15%;
+}
+
+.x-board .middle-row {
+height: 70%;
+}
+
+.x-board .bottom-row {
+    height: 15%;
+}
+
+.x-board .table-borderless td,
+.x-board .table-borderless th,
+.x-board .table-borderless tr{
+    border: 0 !important;
+}
+
+.x-board .align-middle {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.x-board .green {
+    color: lightgreen;
+}
+.x-board .bg-dark {
+    background-color: #000;
+}
+
+.x-board .time{
+    background-color: #000;
+    color: #fff;
+    font-size: 8vh;
+    font-weight:bold;
+}
+.x-board .date-eng{
+    font-weight: bold;
+    color: maroon;
+    padding-left: 5px;
+    font-size: 6vh;
+}
+.x-board h6.hijriDate{
+    display: inline;
+    color: blue;
+    font-size: 4vh;
+}
+
+.x-board h3 {
+    font-weight: bold;
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+.x-board .bg-red {
+    background-color: #641E16;
+}
+.x-board .bg-green {
+    background-color: #003300;
+}
+.x-board .bg-green h2{}
+.x-board span.timeLeft{
+}
+.x-board table {
+    margin: 0;
+    border: none;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.x-board .l-red {
+    background-color: #7d3732;
+}
+
+.x-board table th, .x-board table td {
+    padding: 20px;
+    font-size: 5vh;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.x-board table td.prayerName {
+    background: #423f3f;
+}
+
+.x-board table thead tr th, 
+.x-board table tbody tr td {
+    border-bottom: 1px solid rgba(155,96,91,1);
+    vertical-align: middle;
+    border-collapse: collapse;
+}
+.x-board table > thead > tr > td {
+    border-bottom: 1px solid #000;
+}
+.x-board table > tbody > tr:last-child > td {
+    border: none;
+}
+
+.x-board table td span {
+    font-weight: bold;
+}
+
+.x-board .nextPrayer h2 {
+    font-size: 11vh;
+}
+.x-board .nextPrayer h3 {
+    font-size: 9vh;
+    color: #fff;
+    opacity: .8
+}
+
+.x-board .dptScTime{
+    color: inherit;
+}
+.x-board .timeLeft {
+    font-size: 5vh;
+}
+.x-board .blink{
+    animation: blink 1s infinite;
+    color: red;
+    font-weight: bold;
+    font-size: 5vh;
+}
+
+.x-board span.tomorrow {
+    margin-left: 10px;
+}
+.x-time-change{
+    background: #565656;
+    color: #ffffff;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.x-board .padding-null {
+    padding: 0;
+}
+
+.x-board .carousel,.item,.active {
+   height:100%;
+ }
+.x-board .carousel-inner {
+    height:100%;
+}
+
+.x-board img.logo{
+    max-width: 70%;
+    max-height: 100%;
+}
+
+.x-board .carousel-inner .item img.carousel-slide{
+    height: 100%;
+    width: 100%;
+}
+
+.x-board .scrolling{
+    font-size: 5vh;
+}
+
+@keyframes blink{
+    0%{opacity: 1;}
+    75%{opacity: 1;}
+    76%{ opacity: 0;}
+    100%{opacity: 0;}
+}
+
+
 @media print {
     * {
         background: initial!important;
-      -webkit-print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
    }
     body {
         -webkit-print-color-adjust: exact;
@@ -301,5 +521,11 @@ h2.dptScTime {
         position: fixed;
         left: 50%;
         transform: translate(-50%, -30%);
+    }
+    table.customStyles tr.highlight, th.highlight, td.highlight {
+        background: transparent !important;
+    }
+    h6.hijriDate{
+        display: none;
     }
 }

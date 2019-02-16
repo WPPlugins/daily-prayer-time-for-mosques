@@ -6,7 +6,23 @@ class Validator
     private $validData = array();
 
     /** @var array  */
-    private $headers = array();
+    private $headers = array (
+            0 => 'd_date',
+            1 => 'fajr_begins',
+            2 => 'fajr_jamah',
+            3 => 'sunrise',
+            4 => 'zuhr_begins',
+            5 => 'zuhr_jamah',
+            6 => 'asr_mithl_1',
+            7 => 'asr_mithl_2',
+            8 => 'asr_jamah',
+            9 => 'maghrib_begins',
+            10 => 'maghrib_jamah',
+            11 => 'isha_begins',
+            12 => 'isha_jamah',
+            13 => 'is_ramadan',
+            14 => 'hijri_date',
+        );
 
     /**
      * @param $file
@@ -41,7 +57,7 @@ class Validator
 
         $num = count($data);
 
-        for ($c=0; $c < $num - 1; $c++) {
+        for ($c=0; $c < $num - 2; $c++) { // exclude the last two columns
             if ($c == 0) {
                 $date = $this->getDateAfterValidation($data[$c]);
                 if(! $date) {
@@ -69,6 +85,7 @@ class Validator
                 }
             }
         }
+
         $this->setValidData($data);
 
         return true;
@@ -86,10 +103,15 @@ class Validator
 
     /**
      * @param array $header
+     * @return bool
      */
-    public function setHeaders(array $header)
+    public function checkHeader(array $header)
     {
-        $this->headers = $header;
+        if ( count($header) != count($this->headers)) {
+            echo "<h3 class='dptCenter ui-state-error'>Do not remove any column header";
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -135,13 +157,14 @@ class Validator
     private function isValidateTimeFormat($time)
     {
         $time = trim($time);
-        $pattern = "/^([0-9]|[01][0-9]|2[0-3]):[0-5][0-9]$/"; // HH:MM or H:MM
+        $pattern1 = "/^([0-9]|[01][0-9]|2[0-3]):[0-5][0-9]$/"; // HH:MM or H:MM
+        $pattern2 = "/^([0-9]|[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/"; // HH:MM or H:MM
 
-        if (! preg_match($pattern, $time, $matches)) {
-            return false;
+        if ( preg_match($pattern1, $time, $matches) || preg_match($pattern2, $time, $matches) ) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**

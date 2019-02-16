@@ -16,14 +16,18 @@ class OtherProcessor
 
     public function process()
     {
-        $ramadan = ($_POST['ramadan-chbox']);
+        $ramadan = ($this->data['ramadan-chbox']);
         delete_option('ramadan-chbox');
         add_option('ramadan-chbox', $ramadan);
 
-        if (! empty($_POST['asrSelect'])) {
-            $asrSelect = ($_POST['asrSelect']);
+        if (! empty($this->data['asrSelect'])) {
+            $asrSelect = ($this->data['asrSelect']);
             delete_option('asrSelect');
             add_option('asrSelect', $asrSelect);
         }
+
+        $jamahChanges = ($this->data['jamah_changes']);
+        delete_option('jamah_changes');
+        add_option('jamah_changes', $jamahChanges);
     }
 }

@@ -9,12 +9,21 @@ class HijriDate
      * @param $month
      * @param $year
      * @param bool $stringDate
+     * @param bool $sunset
      *
      * @return array|string
-     *
      */
-    public function getDate($day, $month, $year, $stringDate=false)
+    public function getDate($day, $month, $year, $stringDate=false, $sunset=false)
     {
+        if ($sunset == true) {
+            $dt = new DateTime('tomorrow');
+            $tomorrow = $dt->format('d/m/Y');
+            $parts = explode('/', $tomorrow);
+            $day = $parts[0];
+            $month = $parts[1];
+            $year = $parts[2];
+        }
+
         $date = $this->greg2Hijri($day, $month, $year);
 
         $day = $date['day'];

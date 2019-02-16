@@ -48,4 +48,31 @@ function printDiv(divName) {
     document.body.innerHTML = originalContents;
 }
 
+function startTimer() {
+    var presentTime = '';
+    if (document.getElementsByClassName('timeLeftCountDown')[0]) {
+        presentTime = document.getElementsByClassName('timeLeftCountDown')[0].innerHTML.trim();
+        presentTime = presentTime.split(' ')[0];
+        var timeArray = presentTime.split(/[:]+/);
+        if (timeArray && timeArray.length === 2) {
+            var m = timeArray[0];
+            var s = checkSecond((timeArray[1] - 1));
+            if(s==59){m=m-1}
+            document.getElementsByClassName('timeLeftCountDown')[0].innerHTML =
+                m + ":" + s;
+            setTimeout(startTimer, 1000);
+            if(m == 0 && s == 0) {
+                document.getElementsByClassName('timeLeftCountDown')[0].innerHTML = "";
+                location.reload();
+            }
+        }
+    }
+  }
+  
+  function checkSecond(sec) {
+    if (sec < 10 && sec >= 0) {sec = "0" + sec}; // add zero in front of numbers < 10
+    if (sec < 0) {sec = "59"};
+    return sec;
+  }
 
+startTimer();

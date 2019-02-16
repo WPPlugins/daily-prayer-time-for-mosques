@@ -1,6 +1,6 @@
 <?php
 
-$timeTable = new DailyTimeTable();
+$timeTable = new DailyShortCode();
 
 if (! empty($instance['announcement']) && ! empty($instance['announcementDay']) ) {
     $timeTable->setAnnouncement($instance['announcement'], $instance['announcementDay'] );

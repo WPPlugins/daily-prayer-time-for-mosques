@@ -7,11 +7,16 @@ $timetable = new TimetablePrinter();
 <form name="languageSettings" method="post">
     <table border="1" class="dptAdmin">
         <tr><th colspan="6">Display prayer name in your language</th></tr>
-        <tr><th>Fajr</th><th>Sunrise</th><th>Zuhr</th><th>Asr</th><th>Magrib</th><th>Isha</th></tr>
         <tr>
-            <?php $prayers = $timetable->getLocalPrayerNames();
+            <?php $names = $timetable->getLocalPrayerNames();
+            foreach($names as $key => $val) { ?>
+                <th><?php echo ucfirst($key) ?></th>
+            <?php } ?>
+        </tr>
+        <tr>
+            <?php $prayers = $timetable->getLocalPrayerNames(true);
             foreach($prayers as $key => $val) { ?>
-                <td><input type="text" name="prayersLocal[<?php echo $key;?>]" value="<?php echo $val;?>"/></td>
+                <td><input type="text" name="prayersLocal[<?php echo $key;?>]" value="<?php echo stripslashes($val);?>"/></td>
             <?php } ?>
         </tr>
     </table>
@@ -29,7 +34,7 @@ $timetable = new TimetablePrinter();
     </table>
     </br>
     <table border="1" class="dptAdmin">
-        <tr><th colspan="7">Other table headings in your language</th></tr>
+        <tr><th colspan="9">Other table headings in your language</th></tr>
         <tr>
             <?php $headers = $timetable->getLocalHeaders();
             foreach($headers as $key => $val) { ?>
@@ -38,7 +43,7 @@ $timetable = new TimetablePrinter();
         </tr>
         <tr>
             <?php foreach($headers as $key => $val) { ?>
-                <td><input class='other' type="text" name="headersLocal[<?php echo $key;?>]" value="<?php echo $val;?>"/></td>
+                <td><input class='other' type="text" name="headersLocal[<?php echo $key;?>]" value="<?php echo stripslashes($val);?>"/></td>
             <?php } ?>
         </tr>
     </table>
@@ -61,13 +66,13 @@ $timetable = new TimetablePrinter();
     <table border="1" class="dptAdmin">
         <tr><th colspan="10">Time related values</th></tr>
         <tr>
-            <?php $numbers = $timetable->getLocalTimes();
-            foreach($numbers as $key => $val) { ?>
+            <?php $names = $timetable->getLocalTimes();
+            foreach($names as $key => $val) { ?>
                 <th><?php echo ucfirst($key) ?></th>
             <?php } ?>
         </tr>
         <tr>
-            <?php foreach($numbers as $key => $val) { ?>
+            <?php foreach($names as $key => $val) { ?>
                 <td><input type="text" name="timesLocal[<?php echo $key;?>]" value="<?php echo $val;?>"/></td>
             <?php } ?>
         </tr>

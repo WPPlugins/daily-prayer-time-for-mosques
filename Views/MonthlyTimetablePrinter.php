@@ -37,8 +37,8 @@ class MonthlyTimetablePrinter extends TimetablePrinter
 
 
         $table = "
-        <table class='dptTimetable customStyles'>
-         <tr>
+        <table class='dptTimetable customStyles dptUserStyles'>
+         <thead class='prayerName'>
              <th></th>
              <th></th>
 
@@ -48,8 +48,8 @@ class MonthlyTimetablePrinter extends TimetablePrinter
         $table .= "
              <th colspan='2'>" .$this->localPrayerNames['maghrib']. "</th>
              <th colspan='2'>" .$this->localPrayerNames['isha']. "</th>
-         </tr>
-         <tr>
+         </thead>
+         <thead>
             <th class='tableHeading'>".$this->localTimes['date']."</th>
             <th class='tableHeading'>".$this->localTimes['day']."</th>
 
@@ -69,7 +69,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
 
             <th class='tableHeading'>" .$this->localHeaders['begins']. "</th>
             <th class='tableHeading'>" .$this->localHeaders['iqamah']. "</th>
-        </tr>";
+        </thead>";
 
         return $table;
     }
@@ -96,7 +96,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
 
             $table .= "
              <tr " . $this->getClass($today[1], $today[2]) . ">
-                <td>" . date("M d", strtotime($day['d_date'])). ' '. $this->getHijriDate($today[2], $today[1], $today[0]) ."</td>
+                <td>" . date_i18n(get_option( 'date_format' ), strtotime($day['d_date'])). ' '. $this->getHijriDate($today[2], $today[1], $today[0], $day, true) ."</td>
                 <td class=" . $weekday . ">" . $weekday . "</td>
 
                 <td ". $classFasting .">" . $this->formatDateForPrayer($day['fajr_begins']). "</td>
@@ -160,7 +160,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
 
             $table .= "
              <tr " . $this->getClass($today[1], $today[2]) . ">
-                <td>" . date("M d", strtotime($day['d_date'])). ' '. $this->getHijriDate($today[2], $today[1], $today[0]) ."</td>
+                <td>" . date_i18n(get_option( 'date_format' ), strtotime($day['d_date'])). ' '. $this->getHijriDate($today[2], $today[1], $today[0], $day, true) ."</td>
 
                 <td class=" . $weekday . ">" . $weekday . "</td>"
                       . $this->getFastingTdWithData($options['isRamadan'], $day['fajr_begins'], true )."
@@ -248,7 +248,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
 
             $table .= "
              <tr " . $this->getClass($today[1], $today[2]) . ">
-                <td>" . date("M d", strtotime($day['d_date'])). ' '. $this->getHijriDate($today[2], $today[1], $today[0]) ."</td>
+                <td>" . date_i18n(get_option( 'date_format' ), strtotime($day['d_date'])). ' '. $this->getHijriDate($today[2], $today[1], $today[0], $day, true) ."</td>
 
                 <td class=" . $weekday . ">" . $weekday . "</td>"
                       . $this->getFastingTdWithData($options['isRamadan'], $day['fajr_begins'] ) . "
@@ -314,25 +314,4 @@ class MonthlyTimetablePrinter extends TimetablePrinter
         }
         return "<th class='tableHeading'>" .$this->localHeaders['standard']. "</th><th class='tableHeading'>" .$this->localHeaders['hanafi']. "</th>";
     }
-
-    /**
-     * @param $day
-     * @param $month
-     * @param $year
-     *
-     * @return string
-     */
-    private function getHijriDate($day, $month, $year)
-    {
-        $hijridateArray = $this->hijriDate->getDate($day, $month, $year);
-
-        $hijriCheckbox = get_option('hijri-chbox');
-
-        $hijriDate = ! empty($hijriCheckbox)
-            ? '<span class="hijriDate">('. $hijridateArray['month']. ' '. $hijridateArray['day'] .')</span>'
-            : '';
-
-        return $hijriDate;
-    }
-
 }

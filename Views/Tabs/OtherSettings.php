@@ -15,6 +15,13 @@
                 </select>
             </td>
         </tr>
+        <tr>
+            <td>Iqamah time change threshold:</td>
+            <td>
+                <input type="number" name="jamah_changes" min="0" max="59" placeholder="0" value="<?=get_option('jamah_changes')?>">
+                <i>'0' to deactivate</i>
+            </td>
+        </tr>
     </table>
     <?php submit_button('Save changes', 'primary', 'otherSettings'); ?>
 </form>

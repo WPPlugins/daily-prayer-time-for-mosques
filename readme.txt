@@ -1,20 +1,33 @@
 === Daily Prayer Time ===
-Contributors: mmrs151
+Contributors: mmrs151, Hjeewa, kams01
 Donate link: http://www.uwt.org/
 Tags: prayer time, ramadan time, salah time, mosque timetable, islam, muslim, salat, namaz, fasting
-Requires at least: 3.5
-Tested up to: 4.7
-Stable tag: 4.2.6
+Requires at least: 4.5
+Requires PHP: 5.6
+Tested up to: 5.0.3
+Stable tag: 2019.2.16
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Display Yearly, Monthly and Daily prayer time vertically or horizontally, in any language.
 
 == Description ==
+For video tutorial please follow these links
+How to use the plugin [youtube https://www.youtube.com/watch?v=SaE-2VS5Ru0]
+How to setup digital screen in mosque with this plugin [youtube https://www.youtube.com/watch?v=WzXc7nY4974]
+
 Alhamdulillah that you can Display Yearly and Monthly prayer time with ajax month selector using shortcode [timetable]
 Daily prayer time can be displayed vertically or horizontally in your preferable widget area. Designed for any Mosque or Islamic institutes.
 
 **You need to upload your masjid's timetable from plugin admin section.**
+
+= PULL REQUEST =
+https://bitbucket.org/mmrs151/daily-prayer-time-for-mosques
+Add you commit and make pull request. Please describe your feature, I will add it to the core.
+Also, feel free to release my code with a new name in the plugin directory
+My sole intention is to support the ummah.
+So I have absolutely no complain as long as you have the same intention.
+Mustafiz.
 
 = Features =
 Once the installation above is done, this will allow you
@@ -43,16 +56,25 @@ Once the installation above is done, this will allow you
 
 - Support all language that are readable on the web
 
+- Use custom css using the class dptUserStyles to decorate your element table elements.
+
+- Use span class dpt_jamah and dpt_start along with [next_xxxx_prayer] and design your view however you want.
+
+- Display Iqamah update for next day
+
+- Display prayer time on big monitors in the masjid
+
 = shortcodes =
 1. **[monthlytable]** - Display Yearly and Monthly prayer time with ajax month selector
-2. **[monthlytable_daily]** - Display daily timetable horizontally
-3. **[monthlytable_daily asr=hanafi]** - Display daily timetable horizontally with Hanafi Asr start method
-4. **[monthlytable_daily_vertical]** - Display daily timetable vertically
-5. **[monthlytable_daily_vertical asr=hanafi]** - Display daily timetable vertically with Hanafi Asr start method
-6. **[monthlytable_daily asr=hanafi friday_alert="First Khutbah: 1:15. Second Khutbah: 1:45"]** - Display Friday announcement
+2. **[dailytable_horizontal]** - Display daily timetable horizontally
+3. **[dailytable_horizontal asr=hanafi]** - Display daily timetable horizontally with Hanafi Asr start method
+4. **[dailytable_vertical]** - Display daily timetable vertically
+5. **[dailytable_vertical asr=hanafi]** - Display daily timetable vertically with Hanafi Asr start method
+6. **[dailytable_horizontal asr=hanafi friday_alert="First Khutbah: 1:15. Second Khutbah: 1:45"]** - Display Friday announcement
 7. **[monthlytable display=iqamah_only]** - Display Iqamah only for Yearly and Monthly prayer time with ajax month selector
 8. **[monthlytable display=azan_only]** - Display Azan only for Yearly and Monthly prayer time with ajax month selector
 9. **[monthlytable heading="Månedlige Tidsplan"]** - Display monthly time table heading in any language, default is 'Monthly Time Table for'
+10. **[digital_screen]** - Display prayer time on big monitors in the masjid
 ... and more. Check the 'helps-and-tips' page in plugin settings once you install it.
 
 == Installation ==
@@ -88,9 +110,9 @@ Please look at https://trello.com/b/6Re5Dga7/salah-time-wordpress-plugin
 3. Hijri date settings
 4. Change timetable look and feel
 5. Update monthly prayer time from admin section
-6. Ramadan and Asr salah settings
+6. Ramadan, Asr and Iqamah notification settings
 7. Widget settings
-8. Dark and no border theme
+8. Dark and no border styling
 9. Support for any language
 10. Custom title in widget
 11. Change monthly time table heading and month name
@@ -98,44 +120,37 @@ Please look at https://trello.com/b/6Re5Dga7/salah-time-wordpress-plugin
 13. Ramadan calendar for current year
 14. Shortcode for displaying next prayer
 15. Shortcode for displaying daily ramadan times
+16. Iqamah change notification for tomorrow
+17. Display prayer time on big monitors in the masjid
 
 == Changelog ==
 
-= 4.2.6 =
-* Fix for iqamah time or azan time only
+= 2019.2.16 =
+* Display prayer time on big monitors in the masjid
+* Allow future months in quick update
+* Add prayer name column and heading in theme settings
+* Sample will export current timing
+* Change hijri date after maghrib
 
-= 4.2.5 =
-* Horizontal timetable with div layout, easy for devs to update
-* Iftar/sehri start/end using shortcode
-* fix sunrise for next prayer shortcode
+= 4.4.5 =
+* Add year in auto calculated hijri date
+* Break long announcement into new lines
 
-= 4.2.4 =
-* Fix shared hosting data import
-* Fix for number of rows affected
-* Fix sample.csv url
+= 4.4.4 =
+* Custom hijri date
+* Table header and notification font colour
 
-= 4.2.3 =
-* fix debug
-* fix time remaining in shortcode
-* New shortcode for showing single next prayer time
-* Customisable notification background colour
+= 4.4.3 =
+* Added khutbah for zuhr on Friday prayer notification
 
-= 4.1.1 =
-* Display hijri date on a new line
-
-= 4.1.0 =
-* Allowing multiple date format
-
-= 4.0.0 =
-* Upgraded Admin pages
-* User can select theme
-* Quick time table update
-* Hijri date
-
-= 3.1.0 =
-* Fix more translation bugs
+= 4.4 =
+* Iqamah change notification for tomorrow
 
 == Upgrade Notice ==
 
-= 4.2.5 =
-This version allows you to display ramadan times using a shortcode. Also there is a div layout for horizontal timetable, which make developer easy to change if needed.
+= 2019.2.16 =
+* Display prayer time on big monitors in the masjid
+* Allow future months in quick update
+* Add prayer name column and heading in theme settings
+* Sample will export current timing
+* Change hijri date after maghrib

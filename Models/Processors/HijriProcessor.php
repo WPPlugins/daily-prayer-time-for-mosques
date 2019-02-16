@@ -17,11 +17,11 @@ class HijriProcessor
 
     public function process()
     {
-        $hijri = $_POST['hijri-chbox'];
+        $hijri = $this->data['hijri-chbox'];
         delete_option('hijri-chbox');
         add_option('hijri-chbox', $hijri);
 
-        $hijriAdjust = $_POST['hijri-adjust'];
+        $hijriAdjust = $this->data['hijri-adjust'];
         delete_option('hijri-adjust');
         add_option('hijri-adjust', $hijriAdjust);
     }

@@ -47,7 +47,8 @@ class UpdateStyles
         if (! empty($tableHeading)) {
             $css .= "
                 table.customStyles th.tableHeading{
-                    background:" . get_option('tableHeading')
+                    background:" . get_option('tableHeading') . ";" .
+                    "color:" . get_option( 'tableHeadingFont' )
                 ."}";
         }
 
@@ -55,7 +56,8 @@ class UpdateStyles
         if (! empty($notificationBackground)) {
             $css .= "
                 table.customStyles th.notificationBackground{
-                    background:" . get_option('notificationBackground')
+                    background:" . get_option('notificationBackground') . ";" .
+                    "color: " . get_option( 'notificationFont' )
                 ."}";
         }
 
@@ -75,6 +77,16 @@ class UpdateStyles
                 ."}";
         }
 
+        $prayerName = get_option('prayerName');
+        if (! empty($prayerName)) {
+            $css .= "
+                table.customStyles th.prayerName{
+                    background:" . get_option('prayerName')  . ";" .
+                    "color: " . get_option( 'prayerNameFont' )
+
+                ."}";
+        }
+
         $highlight = get_option('highlight');
         if (! empty($highlight)) {
             $css .= "
@@ -84,6 +96,37 @@ class UpdateStyles
                 ."}";
         }
 
+        $digitalScreenRed = get_option('digitalScreenRed');
+        if (! empty($digitalScreenRed)) {
+            $css .= "
+            .x-board .bg-red {
+                    background:" . get_option('digitalScreenRed') ."!important"
+                ."}";
+        }
+
+        $digitalScreenLightRed = get_option('digitalScreenLightRed');
+        if (! empty($digitalScreenLightRed)) {
+            $css .= "
+            .x-board .l-red {
+                    background:" . get_option('digitalScreenLightRed') ."!important"
+                ."}";
+        }
+
+        $digitalScreenGreen = get_option('digitalScreenGreen');
+        if (! empty($digitalScreenGreen)) {
+            $css .= "
+            .x-board .bg-green {
+                    background:" . get_option('digitalScreenGreen') ."!important"
+                ."}";
+        }
+
+        $digitalScreenPrayerName = get_option('digitalScreenPrayerName');
+        if (! empty($digitalScreenPrayerName)) {
+            $css .= "
+            .x-board td.prayerName {
+                    background:" . get_option('digitalScreenPrayerName') ."!important"
+                ."}";
+        }
         wp_add_inline_style( $this->handle, $css );
     }
 }

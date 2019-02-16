@@ -20,21 +20,21 @@
             name="<?php echo $this->get_field_name( 'hanafiAsr' ); ?>"
             value="hanafiAsr"
             <?php if($instance["hanafiAsr"] === 'hanafiAsr'){ echo 'checked="checked"'; } ?>
-        />Display Asr start time according to Hanafi school</br></br>
+        /> Display Asr start time according to Hanafi school</br></br>
 
         <input
             type="checkbox"
             name="<?php echo $this->get_field_name( 'choice' ); ?>"
             value="horizontal"
             <?php if($instance["choice"] === 'horizontal'){ echo 'checked="checked"'; } ?>
-        />Display prayer time horizontally</br></br>
+        /> Display prayer time horizontally</br></br>
 
         <input
             type="checkbox"
             name="<?php echo $this->get_field_name( 'hideTimeRemaining' ); ?>"
             value="hideTimeRemaining"
             <?php if($instance["hideTimeRemaining"] === 'hideTimeRemaining'){ echo 'checked="checked"'; } ?>
-        />Hide time remaining for next IQAMAH</br></br>
+        /> Hide time remaining for next IQAMAH</br></br>
 
         <?php if (get_option('ramadan-chbox')) { ?>
         <input
@@ -42,7 +42,7 @@
             name="<?php echo $this->get_field_name( 'hideRamadan' ); ?>"
             value="hideRamadan"
             <?php if($instance["hideRamadan"] === 'hideRamadan'){ echo 'checked="checked"'; } ?>
-        />Hide Ramadan time</br></br>
+        /> Hide Ramadan time</br></br>
         <?php } ?>
 
         Announcement

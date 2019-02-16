@@ -50,9 +50,11 @@ class CsvProcessor
                 exit;
             }
 
-            /** skip column headings */
             $header = fgetcsv($handle);
-            $validator->setHeaders($header);
+            if (! $validator->checkHeader($header) ) {
+                $this->goBack();
+                exit;
+            }
 
             $total = 0;
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
