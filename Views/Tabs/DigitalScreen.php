@@ -57,7 +57,7 @@
             </form>
         </div>
         <div class="col-sm-6 col-xs-12 highlight">
-            <h3><pre><strong>INSTRUCTIONS</strong></pre></h3>
+            <h3 class="pt-2"><code>INSTRUCTIONS</code></h3>
             <li>Get a small computer, possibly a raspberry Pi</li>
             <li>Install wordpress locally - to avoid your site being hacked and redirected(x)</li>
             <li>Use <a class="url" href="https://en-gb.wordpress.org/themes/blankslate/" target="_blank">Blank Slate theme <i class="fa fa-external-link" aria-hidden="true"></i></a></li>

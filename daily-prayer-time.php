@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Daily Prayer Time
-Version: 2019.2.16
+Version: 2019.3.1
 Plugin URI: https://wordpress.org/plugins/daily-prayer-time-for-mosques/
 Description: Display yearly, monthly and daily prayer time, ramadan time vertically or horizontally, in any language
 Author: <a href="http://mmrs151.wordpress.com">mmrs151</a>
@@ -134,9 +134,7 @@ $monthlyShortCode = new MonthlyShortCode();
 add_shortcode( 'monthlytable', array($monthlyShortCode, 'printMonthlyTimeTable') );
 
 $dailyShortCode = new DailyShortCode();
-add_shortcode( 'monthlytable_daily', array($dailyShortCode, 'verticalTime') );
 add_shortcode( 'dailytable_vertical', array($dailyShortCode, 'verticalTime') );
-add_shortcode( 'monthlytable_daily_horizontal', array($dailyShortCode, 'horizontalTime') );
 add_shortcode( 'dailytable_horizontal', array($dailyShortCode, 'horizontalTime') );
 add_shortcode( 'display_ramadan_time', array($dailyShortCode, 'scRamadanTime') );
 add_shortcode( 'daily_next_prayer', array($dailyShortCode, 'scNextPrayer') );

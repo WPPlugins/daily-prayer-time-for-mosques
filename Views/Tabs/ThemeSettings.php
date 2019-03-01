@@ -2,7 +2,7 @@
 <form name="themeSettings" method="post">
     <table class='dptAdmin'>
         <tr>
-            <td>Use borderless widget</td>
+            <td>Borderless daily prayer time</td>
             <td><input type="checkbox"
                         name="hideTableBorder"
                         value="dptNoBorder" <?php if(get_option("hideTableBorder") === 'dptNoBorder'){ echo 'checked'; } ?>>

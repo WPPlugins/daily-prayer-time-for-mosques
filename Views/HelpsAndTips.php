@@ -4,52 +4,31 @@
     the plugin if your data is not imported
 </p>
 
-<?php
-echo '<div class="wrap"><div id="icon-tools" class="icon32"></div>';
-echo '<h1>Helps and Tips</h1>';
-?>
-<li><a target="_blank" href="http://praytimes.org/code/v2/js/examples/yearly.htm"> Click here</a> for auto-generated prayer start time for your location</li>
-<li><a target="_blank" href="http://localhost/wp/wp-content/plugins/daily-prayer-time-for-mosques/Assets/sample.csv"> Click here</a> for CSV sample and update your Iqamah time</li>
-
+<h2>Helps and Tips</h2>
 <p>
-    <h2><u>Features</u></h2>
-    <ol>
-        <li>Use single prayer shortcode to design your site with your own html/css</li>
-        <li>Display prayer start and jamah time</li>
-        <li>Display prayer time either vertical or horizontal widget.</li>
-        <li>Display 'Jamah time' only if you chose.</li>
-        <li>Chose from three different themes</li>
-        <li>Chose Asr salah start method</li>
-        <li>Display monthly and yearly timetable using shortcode [timetable] from any page or post</li>
-        <li>Display Khutbah time announcement on Friday</li>
-        <li>Display Iqamah time only for monthly timetable using shortcode</li>
-        <li>Upload any number of days, weeks, months or a full year.</li>
-        <li>Change monthly timetable heading, month name in your local language.</li>
-        <li>Ramadan calendar for daily and monthly display(use '1' for is_ramadan in csv)</li>
-        <li>Highlight coming prayer</li>
-        <li>Display time left for next iqamah for 60 mins</li>
-        <li>Notifications on daily widgets</li>
-        <li>Count down timer for next prayer within one hour</li>
-        <li>Auto calculate or custom hijri date(provide hijri_date in csv)</li>
-    </ol>
-</p>
-<p>
-    <h2><u><a name="shortcodes"></a>Shortcodes:</u></h2>
+    <h3><u>Shortcodes:</u></h3>
     <ol>
         <li>[monthlytable]</li>
         <li>[dailytable_vertical]</li>
         <li>[dailytable_horizontal]</li>
-        <li>[daily_next_prayer] <i>(no shortcode options)</i></li>
         <li>[display_ramadan_time] <i>(no shortcode options)</i></li>
+        <li>[daily_next_prayer] <i>(no shortcode options)</i></li>
         <li>[fajr_prayer]</li>
         <li>[sunrise]</li>
         <li>[zuhr_prayer]</li>
         <li>[asr_prayer]</li>
         <li>[maghrib_prayer]</li>
         <li>[isha_prayer]</li>
+        <li>[fajr_start]</li>
+        <li>[zuhr_start]</li>
+        <li>[asr_start]</li>
+        <li>[maghrib_start]</li>
+        <li>[isha_start]</li>
+        <li>[digital_screen] <i>(no shortcode options)</i></li>
+        <li>[display_iqamah_update]</li>
     </ol>
 
-    <h2>Shortcode Options:</h2>
+    <h3>Shortcode Options:</h3>
     <ol>
         <li>asr=hanafi</li>
         <li>display=iqamah_only/azan_only</li>
@@ -63,7 +42,7 @@ echo '<h1>Helps and Tips</h1>';
     </ol>
 </p>
 <p>
-    <h2>shortcodes examples</h2>
+    <h3>shortcodes examples</h3>
     <ol>
 
         <li><b>[sunrise]</b> - Display sunrise for the day, use span class dpt_sunrise to decorate your view</li>
@@ -82,17 +61,17 @@ echo '<h1>Helps and Tips</h1>';
         <li><b>[dailytable_horizontal asr=hanafi]</b> - Display daily timetable horizontally with Hanafi Asr start method</li>
         <li><b>[dailytable_horizontal asr=hanafi display=azan_only]</b> - Display daily iqamah only timetable horizontally with Hanafi Asr start method</li>
         <li><b>[dailytable_vertical asr=hanafi announcement="First Khutbah: 1:15. Second Khutbah: 1:45" day=friday]</b> - Display announcement on your given day or everyday</li>
+        <li><b>[digital_screen]</b> - Display prayer time on big monitors in the masjid</li>
 
     </ol>
-        <a href="https://wordpress.org/plugins/daily-prayer-time-for-mosques/screenshots/" target="_new">Please check the screen shots</a>
+        <a href="https://wordpress.org/plugins/daily-prayer-time-for-mosques/screenshots/" target="_new">Please check the screen shots <i class="fa fa-external-link" aria-hidden="true"></i></a>
 </p>
 <p>
-    <h2><u>How to update ramadan timetable</u></h2>
+    <h3><u>How to update ramadan timetable</u></h3>
     Simply put '1' for the column(is_ramadan) in the sample csv for the days belongs to ramadan before upload
 </p>
 <p>
-    <h2><u>How to use custom hijri date</u></h2>
+    <h3><u>How to use custom hijri date</u></h3>
     Insert your own calculated Hijri date in the csv column(hijri_date) and allow visibility from settings
 </p>
-<?php
-echo '</div>';
+

@@ -56,8 +56,9 @@ class DatabaseConnection
     {
         $xmin = get_option( 'jamah_changes' );
         $xmin = empty($min) ? $xmin : $min;
+
         if ( $xmin < 1) {
-            $xmin = 1;
+            return;
         }
 
         global $wpdb;
@@ -70,7 +71,7 @@ class DatabaseConnection
                     abs(TIME_TO_SEC(TIMEDIFF(today.isha_jamah, tomorrow.isha_jamah)) /60) as isha_jamah
                 FROM $this->dbTable  today
                 INNER JOIN $this->dbTable tomorrow
-                ON today.d_date = tomorrow.d_date + 1
+                ON today.d_date = tomorrow.d_date + INTERVAL 1 DAY
                 WHERE today.d_date = CURDATE() + INTERVAL 1 DAY;";
 
         $result = $wpdb->get_row($sql, ARRAY_A);

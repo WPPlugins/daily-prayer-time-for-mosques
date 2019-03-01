@@ -31,14 +31,13 @@ if (! empty($ramadan)) {
 $prayerNames = $timetable->getLocalPrayerNames();
 
 if ( empty($data)) {
-    echo '<h4 class="green">Please Upload Timetable to use this page</h4>';
+    echo 'Please Upload Timetable to use this page';
 } else {
 
     echo "
 <div class='container-fluid'>
-    <div class='row monthSelector'>
-    <h4>
-        <form name='quickUpdateMonth' method='post'>
+    <form name='quickUpdateMonth' method='post'>
+        <div class='row mb-2 font-weight-bold'>
             <div class='col-sm-2'>Update Iqamah time for: </div>
             <div class='col-sm-2'>
                 <select name='quickMonth' class='form-control'>
@@ -48,13 +47,12 @@ if ( empty($data)) {
             <div class='col-sm-2'>
                 <input type='submit' value='Load month' class='button'>
             </div>
-        </form>
-    </h4>
-    </div>
+        </div>
+    </form>
     <div class='row'>
         <form name='quickUpdate' method='post'>
         <table class='table table-condensed'>
-            <thead class='bg-primary'>
+            <thead class='bg-primary text-white'>
                 <tr>
                     <th>DATE</th>
                     <th>DAY</th>

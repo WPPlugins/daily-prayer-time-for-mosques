@@ -5,7 +5,7 @@ Tags: prayer time, ramadan time, salah time, mosque timetable, islam, muslim, sa
 Requires at least: 4.5
 Requires PHP: 5.6
 Tested up to: 5.0.3
-Stable tag: 2019.2.16
+Stable tag: 2019.3.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,11 +22,12 @@ Daily prayer time can be displayed vertically or horizontally in your preferable
 **You need to upload your masjid's timetable from plugin admin section.**
 
 = PULL REQUEST =
-https://bitbucket.org/mmrs151/daily-prayer-time-for-mosques
-Add you commit and make pull request. Please describe your feature, I will add it to the core.
-Also, feel free to release my code with a new name in the plugin directory
+[GIT Repository] https://bitbucket.org/mmrs151/daily-prayer-time-for-mosques
+Add your commit and make a pull request. Please describe your feature, I will add it to the core.
+Also, feel free to release my code with a new plugin name with your exiting new ideas added to it.
 My sole intention is to support the ummah.
 So I have absolutely no complain as long as you have the same intention.
+
 Mustafiz.
 
 = Features =
@@ -125,32 +126,16 @@ Please look at https://trello.com/b/6Re5Dga7/salah-time-wordpress-plugin
 
 == Changelog ==
 
-= 2019.2.16 =
-* Display prayer time on big monitors in the masjid
-* Allow future months in quick update
-* Add prayer name column and heading in theme settings
-* Sample will export current timing
-* Change hijri date after maghrib
-
-= 4.4.5 =
-* Add year in auto calculated hijri date
-* Break long announcement into new lines
-
-= 4.4.4 =
-* Custom hijri date
-* Table header and notification font colour
-
-= 4.4.3 =
-* Added khutbah for zuhr on Friday prayer notification
-
-= 4.4 =
-* Iqamah change notification for tomorrow
+= 2019.3.1 =
+* [bugfix] hijri date in monthly calendar
+* [bugfix] hide display iqamah update
+* Screen options made available
+* Update other months iqamah time
 
 == Upgrade Notice ==
 
-= 2019.2.16 =
-* Display prayer time on big monitors in the masjid
-* Allow future months in quick update
-* Add prayer name column and heading in theme settings
-* Sample will export current timing
-* Change hijri date after maghrib
+= 2019.3.1 =
+* [bugfix] hijri date in monthly calendar
+* [bugfix] hide display iqamah update
+* Screen options made available
+* Update other months iqamah time

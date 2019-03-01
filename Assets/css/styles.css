@@ -68,6 +68,7 @@ table.dptTimetable tr td{
     width: 100px;
     white-space: nowrap;
     vertical-align: middle;
+    border: none;
 }
 table.dptTimetable tr, table.dptTimetable th{
      text-align: center;
@@ -333,6 +334,7 @@ height: 70%;
 
 .x-board .bottom-row {
     height: 15%;
+    flex-wrap: nowrap;
 }
 
 .x-board .table-borderless td,
@@ -353,7 +355,8 @@ height: 70%;
     color: lightgreen;
 }
 .x-board .bg-dark {
-    background-color: #000;
+    background-color: #000 !important;
+    color: #eee;
 }
 
 .x-board .time{
@@ -400,7 +403,7 @@ height: 70%;
 }
 
 .x-board table th, .x-board table td {
-    padding: 20px;
+    padding: 15px;
     font-size: 5vh;
     text-transform: none;
     letter-spacing: normal;
@@ -408,13 +411,18 @@ height: 70%;
 
 .x-board table td.prayerName {
     background: #423f3f;
+    color: #eee;
 }
 
-.x-board table thead tr th, 
+.x-board table thead tr th,
 .x-board table tbody tr td {
     border-bottom: 1px solid rgba(155,96,91,1);
     vertical-align: middle;
     border-collapse: collapse;
+    color: #eee;
+}
+.x-board table > thead > tr > td {
+    border-top: 1px solid #000;
 }
 .x-board table > thead > tr > td {
     border-bottom: 1px solid #000;
@@ -428,7 +436,8 @@ height: 70%;
 }
 
 .x-board .nextPrayer h2 {
-    font-size: 11vh;
+    font-size: 10vh;
+    margin: 50px;
 }
 .x-board .nextPrayer h3 {
     font-size: 9vh;
@@ -470,7 +479,7 @@ height: 70%;
 }
 
 .x-board img.logo{
-    max-width: 70%;
+    max-width: 69%;
     max-height: 100%;
 }
 
@@ -511,16 +520,20 @@ height: 70%;
         width: 100%;
         font-size: 20px;
         color: blue;
+        -webkit-appearance: none;
+        -moz-appearance: none;
     }
     table.timetable td {
         -webkit-print-color-adjust: exact;
     }
     h3.printSiteName {
+        font-size: 30px;
         display: block;
         visibility: visible;
         position: fixed;
         left: 50%;
         transform: translate(-50%, -30%);
+        padding-top: 15px;
     }
     table.customStyles tr.highlight, th.highlight, td.highlight {
         background: transparent !important;

@@ -291,14 +291,14 @@ class DailyShortCode extends TimetablePrinter
 
         $isVertical = get_option('vertical-chbox');
         if ($isVertical) {
-            $leftClass = "col-md-6 col-md-offset-3 bg-red height-100 padding-null text-center";
-            $rightClass = "col-xs-12 padding-null text-center bg-green height-100";
+            $leftClass = "col-sm-12 bg-red height-100 padding-null text-center";
+            $rightClass = "col-sm-12 padding-null text-center bg-green height-100";
         }
 
         $html =  '
             <div class="row middle-row bg-red">
                 <div class="'. $leftClass .'">
-                    <table class="height-100 table table-responsive">
+                    <table class="table height-100">
                         <thead class="bg-dark">
                             <tr>
                                 <td>
@@ -378,7 +378,7 @@ class DailyShortCode extends TimetablePrinter
                                 <span class="blink">' . get_option('blink-text', 'SILENT YOUR MOBILE') . '</span>
                         </div>
                     </div>                
-                    <div class="col-xs-9 height-100">
+                    <div class="col-sm-9 col-xs-12 height-100">
                         <div class="align-middle">
                             <h3 class="text-primary scrolling">
                                 <marquee scrollamount="11">'

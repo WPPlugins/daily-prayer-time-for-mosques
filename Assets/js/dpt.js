@@ -5,6 +5,7 @@ DPT = {
         this.changeInputBackground();
         this.printDiv();
         this.startTimer();
+        this.bs3screenOptions();
     },
 
     monthlyCalendarChange: function () {
@@ -92,6 +93,15 @@ DPT = {
         if (sec < 10 && sec >= 0) {sec = "0" + sec}; // add zero in front of numbers < 10
         if (sec < 0) {sec = "59"};
         return sec;
+    },
+
+    bs3screenOptions: function( ) {
+            jQuery("#contextual-help-link").click(function () {
+                jQuery("#contextual-help-wrap").css("cssText", "display: block !important;");
+            });
+            jQuery("#show-settings-link").click(function () {
+                jQuery("#screen-options-wrap").css("cssText", "display: block !important;");
+            });
     }
 };
 jQuery(document).ready(function() { DPT.init(); });
