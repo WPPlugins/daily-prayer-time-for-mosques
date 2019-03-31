@@ -372,7 +372,7 @@ class DailyTimetablePrinter extends TimetablePrinter
             time() > strtotime($dbRow['sunrise']) &&
             time() < strtotime($dbRow['zuhr_jamah'])
         ) {
-            return $this->localPrayerNames['zuhr'] = $this->getLocalHeaders()['khutbah'];
+            return $this->localPrayerNames['zuhr'] = $this->getLocalHeaders()['jumuah'];
         }
 
         return $this->localPrayerNames[$nextPrayer] .' '. $iqamah;

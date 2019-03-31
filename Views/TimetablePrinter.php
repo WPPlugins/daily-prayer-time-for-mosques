@@ -21,7 +21,6 @@ class TimetablePrinter
         "hanafi" => "Hanafi",
         "fast_begins" => "Fast Begins",
         "fast_ends" => "Fast Ends",
-        "khutbah" => "Khutbah",
         "jumuah" => "Jumuah"
     );
 
@@ -122,9 +121,9 @@ class TimetablePrinter
             $localPrayerName = $this->prayerLocal;
         }
 
-        if (! $forAdmin ){
-            if ( date('D') == 'Fri' ) {
-                $localPrayerName['zuhr'] = $this->getLocalHeaders()['khutbah'];
+        if (! $forAdmin){
+            if ($this->todayIsFriday()) {
+                $localPrayerName['zuhr'] = $this->getLocalHeaders()['jumuah'];
             }
         }
 
@@ -386,7 +385,7 @@ class TimetablePrinter
             if (! empty($key) ){
                 $prayer = explode('_', $key);
                 if ( $this->tomorrowIsFriday() ) {
-                    $prayerNames['zuhr'] = $this->getLocalHeaders()['khutbah'];
+                    $prayerNames['zuhr'] = $this->getLocalHeaders()['jumuah'];
                 } else {
                     $prayerNames['zuhr'] = $this->prayerLocal['zuhr'];
                 }

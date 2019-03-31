@@ -1,5 +1,10 @@
-<h3>Theme settings</h3>
+<h2>Theme settings</h2>
 <form name="themeSettings" method="post">
+    <div style="width: 100%; height: 20px; border-bottom: 1px solid black; text-align: center; margin-bottom: 10px;">
+          <span style="font-size: 30px; background-color: #F3F5F6; padding: 0 10px;">
+            Prayer time table
+          </span>
+    </div>
     <table class='dptAdmin'>
         <tr>
             <td>Borderless daily prayer time</td>
@@ -48,21 +53,28 @@
             <td>Notification Font</td>
             <td><input type="text" name="notificationFont" value="<?php echo get_option('notificationFont') ?>" class="color-field"></td>
         </tr>
+    </table>
+    <div style="width: 100%; height: 20px; border-bottom: 1px solid black; text-align: center; margin-bottom: 10px;">
+          <span style="font-size: 30px; background-color: #F3F5F6; padding: 0 10px;">
+            Digital Screen backgrounds
+          </span>
+    </div>
+    <table class="dptAdmin">
         <tr>
-            <td>Digital Screen red</td>
-            <td><input type="text" name="digitalScreenRed" value="<?php echo get_option('digitalScreenRed') ?>" class="color-field"></td>
+            <td>Prayer name</td>
+            <td><input type="text" name="digitalScreenPrayerName" value="<?php echo get_option('digitalScreenPrayerName') ?>" class="color-field"></td>
         </tr>
         <tr>
-            <td>Digital Screen light red</td>
+            <td>Prayer begins</td>
             <td><input type="text" name="digitalScreenLightRed" value="<?php echo get_option('digitalScreenLightRed') ?>" class="color-field"></td>
         </tr>
         <tr>
-            <td>Digital Screen green</td>
+            <td>Iqamah</td>
             <td><input type="text" name="digitalScreenGreen" value="<?php echo get_option('digitalScreenGreen') ?>" class="color-field"></td>
         </tr>
         <tr>
-            <td>Digital Screen Prayer name</td>
-            <td><input type="text" name="digitalScreenPrayerName" value="<?php echo get_option('digitalScreenPrayerName') ?>" class="color-field"></td>
+            <td>Next prayer section</td>
+            <td><input type="text" name="digitalScreenRed" value="<?php echo get_option('digitalScreenRed') ?>" class="color-field"></td>
         </tr>
         <tr>
             <td colspan="2">

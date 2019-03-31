@@ -352,8 +352,10 @@ height: 70%;
 }
 
 .x-board .green {
-    color: lightgreen;
+    color: #fff;
+    opacity: .8;
 }
+
 .x-board .bg-dark {
     background-color: #000 !important;
     color: #eee;
@@ -389,8 +391,7 @@ height: 70%;
     background-color: #003300;
 }
 .x-board .bg-green h2{}
-.x-board span.timeLeft{
-}
+
 .x-board table {
     margin: 0;
     border: none;
@@ -451,6 +452,7 @@ height: 70%;
 .x-board .timeLeft {
     font-size: 5vh;
 }
+
 .x-board .blink{
     animation: blink 1s infinite;
     color: red;

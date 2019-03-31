@@ -322,27 +322,37 @@ class DailyShortCode extends TimetablePrinter
                         <tr>
                             <td class="prayerName"><span>' . $this->getLocalPrayerNames()['sunrise'] . '</span></td>
                             <td class="l-red" colspan="2">' . do_shortcode("[sunrise]") . '</td>
-                        </tr>
-                        <tr>
-                            <td class="prayerName"><span>' . $this->getLocalPrayerNames()['zuhr'] . '</span></td>
-                            <td class="l-red">' . do_shortcode("[zuhr_start]") . '</td>
-                            <td>' . do_shortcode("[zuhr_prayer]") . '</td>
-                        </tr>
-                        <tr>
-                            <td class="prayerName"><span>' . $this->getLocalPrayerNames()['asr'] . '</span></td>
-                            <td class="l-red">' . do_shortcode("[asr_start]") . '</td>
-                            <td>' . do_shortcode("[asr_prayer]") . '</td>
-                        </tr>
-                        <tr>
-                            <td class="prayerName"><span>' . $this->getLocalPrayerNames()['maghrib'] . '</span></td>
-                            <td class="l-red">' . do_shortcode("[maghrib_start]") . '</td>
-                            <td>' . do_shortcode("[maghrib_prayer]") . '</td>
-                        </tr>
-                        <tr>
-                            <td class="prayerName"><span>' . $this->getLocalPrayerNames()['isha'] . '</span></td>
-                            <td class="l-red">' . do_shortcode("[isha_start]") . '</td>
-                            <td>' . do_shortcode("[isha_prayer]") . '</td>
                         </tr>';
+        if ( get_option('jumuah') && $this->todayIsFriday()) {
+            $html .= '<tr>
+                            <td class="prayerName"><span>' . stripslashes($this->getLocalHeaders()['jumuah']) . '</span></td>
+                            <td colspan="2" class="l-red">' . get_option('jumuah') . '</td>
+                        </tr>';
+        } else {
+            $html .= '
+            <tr>
+                <td class="prayerName"><span>' . $this->getLocalPrayerNames()['zuhr'] . '</span></td>
+                <td class="l-red">' . do_shortcode("[zuhr_start]") . '</td>
+                <td>' . do_shortcode("[zuhr_prayer]") . '</td>
+            </tr>
+            ';
+        }
+
+        $html .= '<tr>
+            <td class="prayerName"><span>' . $this->getLocalPrayerNames()['asr'] . '</span></td>
+            <td class="l-red">' . do_shortcode("[asr_start]") . '</td>
+            <td>' . do_shortcode("[asr_prayer]") . '</td>
+        </tr>
+        <tr>
+            <td class="prayerName"><span>' . $this->getLocalPrayerNames()['maghrib'] . '</span></td>
+            <td class="l-red">' . do_shortcode("[maghrib_start]") . '</td>
+            <td>' . do_shortcode("[maghrib_prayer]") . '</td>
+        </tr>
+        <tr>
+            <td class="prayerName"><span>' . $this->getLocalPrayerNames()['isha'] . '</span></td>
+            <td class="l-red">' . do_shortcode("[isha_start]") . '</td>
+            <td>' . do_shortcode("[isha_prayer]") . '</td>
+        </tr>';
         if ( get_option('jumuah') && ! $this->todayIsFriday()) {
             $html .= '<tr>
                             <td class="prayerName"><span>' . stripslashes($this->getLocalHeaders()['jumuah']) . '</span></td>
@@ -447,7 +457,7 @@ class DailyShortCode extends TimetablePrinter
             if (! empty($key) ){
                 $prayer = explode('_', $key);
                 if ( $this->tomorrowIsFriday() ) {
-                    $prayerNames['zuhr'] = $this->getLocalHeaders()['khutbah'];
+                    $prayerNames['zuhr'] = $this->getLocalHeaders()['jumuah'];
                 } else {
                     $prayerNames['zuhr'] = $this->prayerLocal['zuhr'];
                 }

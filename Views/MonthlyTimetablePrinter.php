@@ -34,7 +34,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
         }
 
         $fastingClass = $this->getFastingClass( $options );
-
+        $prayers = $this->getLocalPrayerNames(true);
 
         $table = "
         <table class='dptTimetable customStyles dptUserStyles'>
@@ -42,12 +42,12 @@ class MonthlyTimetablePrinter extends TimetablePrinter
              <th></th>
              <th></th>
 
-             <th colspan='3'>" .$this->localPrayerNames['fajr']. "</th>
-             <th colspan='2'>" .$this->localPrayerNames['zuhr']. "</th>";
-        $table .= "<th colspan=".$this->getAsrMethodColspan().">" .$this->localPrayerNames['asr']. "</th>";
+             <th colspan='3'>" .$prayers['fajr']. "</th>
+             <th colspan='2'>" .$prayers['zuhr']. "</th>";
+        $table .= "<th colspan=".$this->getAsrMethodColspan().">" .$prayers['asr']. "</th>";
         $table .= "
-             <th colspan='2'>" .$this->localPrayerNames['maghrib']. "</th>
-             <th colspan='2'>" .$this->localPrayerNames['isha']. "</th>
+             <th colspan='2'>" .$prayers['maghrib']. "</th>
+             <th colspan='2'>" .$prayers['isha']. "</th>
          </thead>
          <thead>
             <th class='tableHeading'>".$this->localTimes['date']."</th>
@@ -55,7 +55,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
 
             <th class='tableHeading ". $fastingClass ."'>" . $fajrBegins . "</th>
             <th class='tableHeading'>" .$this->localHeaders['iqamah']. "</th>
-            <th class='tableHeading'>" .$this->localPrayerNames['sunrise']. "</th>
+            <th class='tableHeading'>" .$prayers['sunrise']. "</th>
 
             <th class='tableHeading'>" .$this->localHeaders['begins']. "</th>
             <th class='tableHeading'>" .$this->localHeaders['iqamah']. "</th>";
@@ -190,14 +190,15 @@ class MonthlyTimetablePrinter extends TimetablePrinter
         $maghribJamah = '';
         $azanOnlyClass = '';
 
+        $prayers = $this->getLocalPrayerNames(true);
         if ($isAzanOnly) {
-            $fajr = $this->localPrayerNames['fajr'];
-            $maghrib = $this->localPrayerNames['maghrib'];
-            $sunrise =  "<th class='tableHeading'>" .$this->localPrayerNames['sunrise']. "</th>";
+            $fajr = $prayers['fajr'];
+            $maghrib = $prayers['maghrib'];
+            $sunrise =  "<th class='tableHeading'>" .$prayers['sunrise']. "</th>";
             $azanOnlyClass = 'azanOnly';
         } else {
-            $fajrJamah = "<th class='tableHeading'>" .$this->localPrayerNames['fajr']. "</th>";
-            $maghribJamah = "<th class='tableHeading'>" .$this->localPrayerNames['maghrib']. "</th>";
+            $fajrJamah = "<th class='tableHeading'>" .$prayers['fajr']. "</th>";
+            $maghribJamah = "<th class='tableHeading'>" .$prayers['maghrib']. "</th>";
         }
 
         if ($options['isRamadan'] && !$isAzanOnly) {
@@ -221,11 +222,11 @@ class MonthlyTimetablePrinter extends TimetablePrinter
                  . $fajrHeading .""
                  .$fajrJamah.""
                  .$sunrise.
-             "<th class='tableHeading'>" .$this->localPrayerNames['zuhr']. "</th>
-             <th class='tableHeading'>" .$this->localPrayerNames['asr']. "</th>"
+             "<th class='tableHeading'>" .$prayers['zuhr']. "</th>
+             <th class='tableHeading'>" .$prayers['asr']. "</th>"
                  . $maghribHeading . ""
                  .$maghribJamah ."".
-             "<th class='tableHeading'>" .$this->localPrayerNames['isha']. "</th>
+             "<th class='tableHeading'>" .$prayers['isha']. "</th>
          </tr>";
 
         return $table;
