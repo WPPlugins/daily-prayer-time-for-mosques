@@ -417,6 +417,7 @@ height: 70%;
 
 .x-board table thead tr th,
 .x-board table tbody tr td {
+    padding: 0px !important;
     border-bottom: 1px solid rgba(155,96,91,1);
     vertical-align: middle;
     border-collapse: collapse;

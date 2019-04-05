@@ -369,8 +369,8 @@ class DailyTimetablePrinter extends TimetablePrinter
             return $this->localPrayerNames['fajr'].' '. $iqamah;
         }
         if ( date('D') == 'Fri' &&
-            time() > strtotime($dbRow['sunrise']) &&
-            time() < strtotime($dbRow['zuhr_jamah'])
+            current_time('timestamp') > strtotime($dbRow['sunrise']) &&
+            current_time('timestamp') < strtotime($dbRow['zuhr_jamah'])
         ) {
             return $this->localPrayerNames['zuhr'] = $this->getLocalHeaders()['jumuah'];
         }

@@ -127,7 +127,7 @@ class TimetablePrinter
             }
         }
 
-        return $localPrayerName;
+        return array_map('stripslashes', $localPrayerName);
     }
 
     public function getLocalHeaders()
@@ -141,7 +141,7 @@ class TimetablePrinter
             return $this->headersLocal;
         }
 
-        return $headers_local;
+        return array_map('stripslashes', $headers_local);
     }
 
     public function getLocalMonths()
@@ -158,7 +158,7 @@ class TimetablePrinter
             unset( $monthsLocal['ramadan'] );
         }
 
-        return $monthsLocal;
+        return array_map('stripslashes', $monthsLocal);
     }
 
     public function getLocalNumbers()
