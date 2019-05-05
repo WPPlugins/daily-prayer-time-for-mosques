@@ -201,6 +201,7 @@ class TimetablePrinter
     public function formatDate($mysqlDate, $format=null)
     {
         $phpDate = strtotime($mysqlDate);
+
         $date =  date( get_option('date_format'), $phpDate );
         if ($format) {
             $date = date($format, $phpDate);
@@ -213,9 +214,14 @@ class TimetablePrinter
      * @param  string $mysqlDate
      * @return string
      */
-    public function formatDateForPrayer($mysqlDate)
+    public function formatDateForPrayer($mysqlDate, $imsak=false)
     {
-        $wpDate = $this->formatDate($mysqlDate, get_option('time_format'));
+        $phpDate = strtotime($mysqlDate);
+        if ($imsak) {
+            $phpDate = $phpDate - (get_option('imsaq') * 60);
+        }
+        $wpDate = date(get_option('time_format'), $phpDate);
+
         $result = str_split($wpDate);
         $intlDate = '';
         $this->localNumbers = $this->getLocalNumbers();

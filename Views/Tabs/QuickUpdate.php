@@ -20,32 +20,26 @@ foreach($futureMonths as $key=>$month_name){
 }
 
 $db = new DatabaseConnection();
-$ramadan = get_option('ramadan-chbox');
-if (! empty($ramadan)) {
-    $data = $db->getPrayerTimeForRamadan();
-    $monthName = 'Ramadan';
-} else {
-    $data = $db->getPrayerTimeForMonth( $quickMonth );
-}
+$data = $db->getPrayerTimeForMonth( $quickMonth );
 
 $prayerNames = $timetable->getLocalPrayerNames();
 
 if ( empty($data)) {
-    echo 'Please Upload Timetable to use this page';
+    $msg = '<h3>Please upload prayer time to use this page ';
+    echo $msg . '</h3>';
 } else {
-
     echo "
 <div class='container-fluid'>
     <form name='quickUpdateMonth' method='post'>
-        <div class='row mb-2 font-weight-bold'>
-            <div class='col-sm-2'>Update Iqamah time for: </div>
-            <div class='col-sm-2'>
+        <div class='row font-weight-bold' style='padding-bottom: 10px;'>
+            <div class='col-sm-2' style='padding-left:0px;'>Update Iqamah time for: </div>
+            <div class='col-sm-1'>
                 <select name='quickMonth' class='form-control'>
                      ". $options ." 
                 </select>               
             </div> 
             <div class='col-sm-2'>
-                <input type='submit' value='Load month' class='button'>
+                <input type='submit' value='Load month' class='button-primary'>
             </div>
         </div>
     </form>

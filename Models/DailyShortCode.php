@@ -260,6 +260,11 @@ class DailyShortCode extends TimetablePrinter
 
     private function getTopRow($attr)
     {
+        if ( get_option('hijri-chbox')) {
+            $date = date_i18n( 'D jS  M' );
+        } else {
+            $date = date_i18n( 'l ' . get_option( 'date_format' ) );
+        }
         $html = '
         <div class="container-fluid x-board">
             <div class="row top-row">
@@ -270,7 +275,7 @@ class DailyShortCode extends TimetablePrinter
                 </div>
                 <div class="col-sm-7 col-xs-12 text-center height-100">
                     <div class="align-middle">
-                        <span class="date-eng h6">' .  date_i18n( 'D jS  M' ) . '</span>
+                        <span class="date-eng h6">' .  $date . '</span>
                         <span>' . $this->getHijriDate(date("d"), date("m"), date("Y"), $this->getRow($attr)) . '</span>
                     </div>
                 </div>

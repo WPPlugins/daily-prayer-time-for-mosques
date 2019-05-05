@@ -23,14 +23,14 @@ class DailyTimetablePrinter extends TimetablePrinter
             <tr>
                 <th class="tableHeading">' .$this->localHeaders['prayer']. '</th>'
                   . $this->printTableHeading($row) .
-                  '</tr>
+            '</tr>
             <tr>
                 <th class="tableHeading">' .$this->localHeaders['begins']. '</th>'
                   .$this->printAzanTime($row).
-                  '</tr>
+            '</tr>
             <tr><th class="tableHeading">' .$this->localHeaders['iqamah']. '</th>'
                   .$this->printJamahTime($row, false).
-                  '</tr>
+            '</tr>
         </table>';
 
         return $table;
@@ -43,11 +43,11 @@ class DailyTimetablePrinter extends TimetablePrinter
         $table .= '
             <tr><th>' .$this->localHeaders['prayer']. '</th>'
                   . $this->printTableHeading($row) .
-                  '</tr>
+            '</tr>
             <tr>
                 <th>'.$this->localHeaders['iqamah'].'</th>'
                   .$this->printJamahTime($row).
-                  '</tr>
+            '</tr>
         </table>';
 
         return $table;
@@ -65,11 +65,11 @@ class DailyTimetablePrinter extends TimetablePrinter
         $table .=   '
             <tr><th>' .$this->localHeaders['prayer']. '</th>'
                     . $this->printTableHeading($row) .
-                    '</tr>
+            '</tr>
             <tr>
                 <th>'.$this->localHeaders['begins'].'</th>'
                     .$this->printAzanTime($row).
-                    '</tr>
+            '</tr>
         </table>';
 
         return $table;
@@ -149,7 +149,7 @@ class DailyTimetablePrinter extends TimetablePrinter
         if (get_option('ramadan-chbox') && ! $row['hideRamadan']) {
             $ramadan = '
                 <tr class="">
-                    <td colspan="3" class="highlight">'. $this->localHeaders['fast_begins'].': '.$this->formatDateForPrayer($row['fajr_begins']).'</td>
+                    <td colspan="3" class="highlight">'. $this->localHeaders['fast_begins'].': '.$this->formatDateForPrayer($row['fajr_begins'], true).'</td>
                     <td></td>
                     <td colspan="3" class="highlight">'. $this->localHeaders['fast_ends'].': '.$this->formatDateForPrayer($row['maghrib_begins']).'</td>
                 </tr>';
@@ -258,7 +258,7 @@ class DailyTimetablePrinter extends TimetablePrinter
             $ramadan = '
             <tr>
              <th class="highlight">' .$this->localHeaders['fast_begins']. '</th>
-             <th '.$colspanRamadan.' class="highlight">' .$this->formatDateForPrayer($row['fajr_begins']). '</th>
+             <th '.$colspanRamadan.' class="highlight">' .$this->formatDateForPrayer($row['fajr_begins'], true). '</th>
             </tr>
             <tr>
              <th class="highlight">'.$this->localHeaders['fast_ends'].'</th>
@@ -351,14 +351,17 @@ class DailyTimetablePrinter extends TimetablePrinter
             <span class="dptScNextPrayer">
                 '. $this->getHeading($row, $nextPrayer, $iqamah) .'
                 <h2 class="dptScTime">
-                '. $this->formatDateForPrayer($nextPrayerName)
+                '. $this->getNextPrayerTime($nextPrayerName, $row)
                 .'</h2>
             </span>
-            <span class="green">
+            ';
+        if (! $this->isJumahDisplay($row)) {
+            $nextPrayerString .= '<span class="green">
                 <span class="timeLeftCountDown timeLeft '.$this->getIqamahClass( $nextIqamah ).'">'.  $timeLeftText .' </span>
                 ' . $minLeftText . '
             </span>
         </div>';
+        }
 
         return $nextPrayerString;
     }
@@ -368,13 +371,31 @@ class DailyTimetablePrinter extends TimetablePrinter
         if ( is_null($nextPrayer)) {
             return $this->localPrayerNames['fajr'].' '. $iqamah;
         }
-        if ( date('D') == 'Fri' &&
-            current_time('timestamp') > strtotime($dbRow['sunrise']) &&
-            current_time('timestamp') < strtotime($dbRow['zuhr_jamah'])
-        ) {
+        if ( $this->isJumahDisplay($dbRow) ) {
             return $this->localPrayerNames['zuhr'] = $this->getLocalHeaders()['jumuah'];
         }
 
         return $this->localPrayerNames[$nextPrayer] .' '. $iqamah;
     }
+
+    private function getNextPrayerTime($nextPrayerName, $dbRow)
+    {
+        if ( $this->isJumahDisplay($dbRow) ) {
+            return get_option('jumuah');
+        }
+        return $this->formatDateForPrayer($nextPrayerName);
+    }
+
+    public function isJumahDisplay($dbRow)
+    {
+        if ( date('D') == 'Fri' &&
+            current_time('timestamp') > strtotime($dbRow['sunrise']) &&
+            current_time('timestamp') <= strtotime($dbRow['zuhr_jamah']) + 60
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
 }

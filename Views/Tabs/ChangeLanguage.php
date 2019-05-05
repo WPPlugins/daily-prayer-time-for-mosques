@@ -1,85 +1,106 @@
 <?php
-require_once(__DIR__.'/../TimetablePrinter.php' );
+require_once(__DIR__ . '/../TimetablePrinter.php');
 $timetable = new TimetablePrinter();
 
 ?>
 <h3>Change Language</h3>
-<form name="languageSettings" method="post">
-    <table border="1" class="dptAdmin">
-        <tr><th colspan="6">Display prayer name in your language</th></tr>
-        <tr>
-            <?php $names = $timetable->getLocalPrayerNames();
-            foreach($names as $key => $val) { ?>
-                <th><?php echo ucfirst($key) ?></th>
-            <?php } ?>
-        </tr>
-        <tr>
-            <?php $prayers = $timetable->getLocalPrayerNames(true);
-            foreach($prayers as $key => $val) { ?>
-                <td><input type="text" name="prayersLocal[<?php echo $key;?>]" value="<?php echo stripslashes($val);?>"/></td>
-            <?php } ?>
-        </tr>
-    </table>
-    </br>
-    <table border="1" class="dptAdmin">
-        <tr><th colspan="3">Translate month name in your own language</th></tr>
-        <tr>
-            <?php $months = $timetable->getLocalMonths();
-            foreach($months as $key => $val) { ?>
-        <tr><td class="months"><?php echo ucfirst($key);?></td>
-            <td class="months"><input type="text" name="monthsLocal[<?php echo $key;?>]" value="<?php echo $val;?>"/></td>
-        </tr>
-        <?php } ?>
-        </tr>
-    </table>
-    </br>
-    <table border="1" class="dptAdmin">
-        <tr><th colspan="9">Other table headings in your language</th></tr>
-        <tr>
-            <?php $headers = $timetable->getLocalHeaders();
-            foreach($headers as $key => $val) { ?>
-                <th><?php echo ucfirst($key) ?></th>
-            <?php } ?>
-        </tr>
-        <tr>
-            <?php foreach($headers as $key => $val) { ?>
-                <td><input class='other' type="text" name="headersLocal[<?php echo $key;?>]" value="<?php echo stripslashes($val);?>"/></td>
-            <?php } ?>
-        </tr>
-    </table>
-    </br>
-    <table border="1" class="dptAdmin">
-        <tr><th colspan="10">Numbers in your language</th></tr>
-        <tr>
-            <?php $numbers = $timetable->getLocalNumbers();
-            foreach($numbers as $key => $val) { ?>
-                <th><?php echo $key ?></th>
-            <?php } ?>
-        </tr>
-        <tr>
-            <?php foreach($numbers as $key => $val) { ?>
-                <td><input type="text" maxlength="1" size="1" name="numbersLocal[<?php echo $key;?>]" value="<?php echo $val;?>"/></td>
-            <?php } ?>
-        </tr>
-    </table>
-    </br>
-    <table border="1" class="dptAdmin">
-        <tr><th colspan="10">Time related values</th></tr>
-        <tr>
-            <?php $names = $timetable->getLocalTimes();
-            foreach($names as $key => $val) { ?>
-                <th><?php echo ucfirst($key) ?></th>
-            <?php } ?>
-        </tr>
-        <tr>
-            <?php foreach($names as $key => $val) { ?>
-                <td><input type="text" name="timesLocal[<?php echo $key;?>]" value="<?php echo $val;?>"/></td>
-            <?php } ?>
-        </tr>
-    </table>
-    <div class="saveButton">
-        <?php
-        submit_button('Save changes', 'primary', 'languageSettings');
-        ?>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6 col-xs-12">
+            <form name="languageSettings" method="post">
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th colspan="6" class="text-center bg-primary">Display prayer name in your language</th>
+                    </tr>
+                    <tr>
+                        <?php $names = $timetable->getLocalPrayerNames();
+                        foreach ($names as $key => $val) { ?>
+                            <th class="text-center bg-info"><?php echo ucfirst($key) ?></th>
+                        <?php } ?>
+                    </tr>
+                    <tr>
+                        <?php $prayers = $timetable->getLocalPrayerNames(true);
+                        foreach ($prayers as $key => $val) { ?>
+                            <td><input style="width:215px;" type="text" name="prayersLocal[<?php echo $key; ?>]" value="<?php echo stripslashes($val); ?>" /></td>
+                        <?php } ?>
+                    </tr>
+                </table>
+                <p>&nbsp;</p>
+                <table class="table table-striped table-bordered">
+                    <?php $months = $timetable->getLocalMonths(); ?>
+                    <tr>
+                        <th colspan=<?= count($months); ?> class="text-center bg-primary">Translate month name in your own language</th>
+                    </tr>
+                    <tr>
+                        <?php
+                        foreach ($months as $key => $val) { ?>
+                            <th class="text-center bg-info"><?php echo ucfirst($key); ?></th>
+                        <?php } ?>
+                    </tr>
+                    <tr>
+                        <?php $months = $timetable->getLocalMonths();
+                        foreach ($months as $key => $val) { ?>
+                            <td class="months"><input style="width:100px;" type="text" name="monthsLocal[<?php echo $key; ?>]" value="<?php echo $val; ?>" /></td>
+                        <?php } ?>
+                    </tr>
+                </table>
+                <p>&nbsp;</p>
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th colspan="9" class="text-center bg-primary">Other table headings in your language</th>
+                    </tr>
+                    <tr>
+                        <?php $headers = $timetable->getLocalHeaders();
+                        foreach ($headers as $key => $val) { ?>
+                            <th class="text-center bg-info"><?php echo ucfirst($key) ?></th>
+                        <?php } ?>
+                    </tr>
+                    <tr>
+                        <?php foreach ($headers as $key => $val) { ?>
+                            <td><input style="width:155px;" class='other' type="text" name="headersLocal[<?php echo $key; ?>]" value="<?php echo stripslashes($val); ?>" /></td>
+                        <?php } ?>
+                    </tr>
+                </table>
+                <p>&nbsp;</p>
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th colspan="10" class="text-center bg-primary">Numbers in your language</th>
+                    </tr>
+                    <tr>
+                        <?php $numbers = $timetable->getLocalNumbers();
+                        foreach ($numbers as $key => $val) { ?>
+                            <th class="text-center bg-info"><?php echo $key ?></th>
+                        <?php } ?>
+                    </tr>
+                    <tr>
+                        <?php foreach ($numbers as $key => $val) { ?>
+                            <td><input style="width:120px;" type="text" maxlength="1" size="1" name="numbersLocal[<?php echo $key; ?>]" value="<?php echo $val; ?>" /></td>
+                        <?php } ?>
+                    </tr>
+                </table>
+                <p>&nbsp;</p>
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th colspan="10" class="text-center bg-primary">Time related values</th>
+                    </tr>
+                    <tr>
+                        <?php $names = $timetable->getLocalTimes();
+                        foreach ($names as $key => $val) { ?>
+                            <th class="text-center bg-info"><?php echo ucfirst($key) ?></th>
+                        <?php } ?>
+                    </tr>
+                    <tr>
+                        <?php foreach ($names as $key => $val) { ?>
+                            <td><input style="width:210px;" type="text" name="timesLocal[<?php echo $key; ?>]" value="<?php echo $val; ?>" /></td>
+                        <?php } ?>
+                    </tr>
+                </table>
+                <div class="saveButton">
+                    <?php
+                    submit_button('Save changes', 'primary', 'languageSettings');
+                    ?>
+                </div>
+            </form>
+        </div>
     </div>
-</form>
+</div>

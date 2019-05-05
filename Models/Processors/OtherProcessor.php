@@ -29,5 +29,9 @@ class OtherProcessor
         $jamahChanges = ($this->data['jamah_changes']);
         delete_option('jamah_changes');
         add_option('jamah_changes', $jamahChanges);
+
+        $imsaq = ($this->data['imsaq']);
+        delete_option('imsaq');
+        add_option('imsaq', $imsaq);
     }
 }

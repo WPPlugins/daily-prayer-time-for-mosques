@@ -28,9 +28,11 @@ class MonthlyTimetablePrinter extends TimetablePrinter
         if ($options['isRamadan']) {
             $fajrBegins = $this->localHeaders['fast_begins'];
             $maghribBegins = $this->localHeaders['fast_ends'];
+            $fajrColspan = 4;
         } else {
             $fajrBegins = $this->localHeaders['begins'];
             $maghribBegins = $this->localHeaders['begins'];
+            $fajrColspan = 3;
         }
 
         $fastingClass = $this->getFastingClass( $options );
@@ -42,7 +44,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
              <th></th>
              <th></th>
 
-             <th colspan='3'>" .$prayers['fajr']. "</th>
+             <th colspan='$fajrColspan'>" .$prayers['fajr']. "</th>
              <th colspan='2'>" .$prayers['zuhr']. "</th>";
         $table .= "<th colspan=".$this->getAsrMethodColspan().">" .$prayers['asr']. "</th>";
         $table .= "
@@ -52,7 +54,13 @@ class MonthlyTimetablePrinter extends TimetablePrinter
          <thead>
             <th class='tableHeading'>".$this->localTimes['date']."</th>
             <th class='tableHeading'>".$this->localTimes['day']."</th>
+            ";
 
+        if ($options['isRamadan']) {
+            $table .="<th class='tableHeading ". $fastingClass ."'>Imsaq</th>";
+        }
+
+            $table.="
             <th class='tableHeading ". $fastingClass ."'>" . $fajrBegins . "</th>
             <th class='tableHeading'>" .$this->localHeaders['iqamah']. "</th>
             <th class='tableHeading'>" .$prayers['sunrise']. "</th>
@@ -98,7 +106,11 @@ class MonthlyTimetablePrinter extends TimetablePrinter
              <tr " . $this->getClass($today[1], $today[2]) . ">
                 <td>" . date_i18n(get_option( 'date_format' ), strtotime($day['d_date'])). ' '. $this->getHijriDate($today[2], $today[1], $today[0], $day, true) ."</td>
                 <td class=" . $weekday . ">" . $weekday . "</td>
-
+";
+            if ($options['isRamadan']) {
+                $table .="<td ". $classFasting .">" . $this->formatDateForPrayer($day['fajr_begins'], true). "</td>";
+            }
+                $table .= "
                 <td ". $classFasting .">" . $this->formatDateForPrayer($day['fajr_begins']). "</td>
                 <td class='jamah'>" . $this->formatDateForPrayer($day['fajr_jamah']). "</td>
                 <td>" . $this->formatDateForPrayer($day['sunrise']). "</td>
