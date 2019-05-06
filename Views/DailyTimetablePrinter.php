@@ -174,7 +174,7 @@ class DailyTimetablePrinter extends TimetablePrinter
     {
       return '  <table class="customStyles dptUserStyles">
                 <tr style="text-align:center">
-                    <td colspan="3" class="fasting highlight">'. $this->localHeaders['fast_begins'].': '.$this->formatDateForPrayer($row['fajr_begins']).'</td>
+                    <td colspan="3" class="fasting highlight">'. $this->localHeaders['fast_begins'].': '.$this->formatDateForPrayer($row['fajr_begins'], true).'</td>
                     <td style="border:0px;"></td>
                     <td colspan="3" class="fasting highlight">'. $this->localHeaders['fast_ends'].': '.$this->formatDateForPrayer($row['maghrib_begins']).'</td>
                 </tr></table>';

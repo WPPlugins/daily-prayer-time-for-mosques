@@ -26,7 +26,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
     private function printFullTableTop($options)
     {
         if ($options['isRamadan']) {
-            $fajrBegins = $this->localHeaders['fast_begins'];
+            $fajrBegins = $this->localHeaders['begins'];
             $maghribBegins = $this->localHeaders['fast_ends'];
             $fajrColspan = 4;
         } else {
@@ -57,7 +57,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
             ";
 
         if ($options['isRamadan']) {
-            $table .="<th class='tableHeading ". $fastingClass ."'>Imsaq</th>";
+            $table .="<th class='tableHeading ". $fastingClass ."'>" . $this->localHeaders['fast_begins'] . "</th>";
         }
 
             $table.="

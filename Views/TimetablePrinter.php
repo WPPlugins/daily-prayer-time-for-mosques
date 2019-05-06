@@ -439,6 +439,6 @@ class TimetablePrinter
 
     private function isSunset($dbRow, $forMonth=false)
     {
-        return  !$forMonth && time() > strtotime($dbRow['maghrib_begins']);
+        return  !$forMonth && current_time('timestamp') > strtotime($dbRow['maghrib_begins']);
     }
 }
