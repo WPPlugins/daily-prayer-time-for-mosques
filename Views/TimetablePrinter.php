@@ -253,15 +253,25 @@ class TimetablePrinter
      * @param  bool $azanOnly
      * @return string|null
      */
-    protected function getFastingTdWithData($isRamadan, $data, $azanOnly=null)
+    protected function getFastingTdWithData($isRamadan, $data, $azanOnly=null, $imsaq=false)
     {
+        $html = "";
 
-        if ($isRamadan) {
-            return "<td class='fasting'>" . $this->formatDateForPrayer($data). "</td>";
+        if  ($isRamadan && ! $azanOnly && $imsaq) {
+            $html = "<td class='fasting'>" . $this->formatDateForPrayer($data, $imsaq) . "</td>";
+        } elseif ($isRamadan && $imsaq) {
+            $html = "<td class='fasting'>" . $this->formatDateForPrayer($data, $imsaq). "</td>";
+            $html .= "<td>" . $this->formatDateForPrayer($data). "</td>";
+
+        } elseif  ($isRamadan && ! $imsaq) {
+            $html = "<td class='fasting'>" . $this->formatDateForPrayer($data). "</td>";
+        } elseif  ($isRamadan && ! $azanOnly && $imsaq) {
+            $html = "<td class='fasting'>" . $this->formatDateForPrayer($data). "</td>";
         } elseif ($azanOnly) {
-            return "<td>" . $this->formatDateForPrayer($data). "</td>";
+            $html = "<td>" . $this->formatDateForPrayer($data). "</td>";
         }
-        return "";
+
+        return $html;
     }
 
 	/**

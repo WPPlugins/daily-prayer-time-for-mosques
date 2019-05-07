@@ -175,7 +175,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
                 <td>" . date_i18n(get_option( 'date_format' ), strtotime($day['d_date'])). ' '. $this->getHijriDate($today[2], $today[1], $today[0], $day, true) ."</td>
 
                 <td class=" . $weekday . ">" . $weekday . "</td>"
-                      . $this->getFastingTdWithData($options['isRamadan'], $day['fajr_begins'], true )."
+                      . $this->getFastingTdWithData($options['isRamadan'], $day['fajr_begins'], true, true )."
                 <td>" . $this->formatDateForPrayer($day['sunrise']). "</td>
                 <td>" . $this->formatDateForPrayer($day['zuhr_begins']). "</td>
                 <td>" . $this->formatDateForPrayer($day['asr_begins']). "</td>"
@@ -219,7 +219,8 @@ class MonthlyTimetablePrinter extends TimetablePrinter
             $fajrHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" .$this->localHeaders['fast_begins']. $fajr . "</th>";
             $maghribHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" .$this->localHeaders['fast_ends']. $maghrib . "</th>";
         } elseif ($options['isRamadan'] && $isAzanOnly) {
-            $fajrHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" .$this->localHeaders['fast_begins']. '/'. $fajr . "</th>";
+            $fajrHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" .$this->localHeaders['fast_begins'] . "</th>";
+            $fajrHeading .= "<th class='tableHeading ".$azanOnlyClass."'>"  . $fajr . "</th>";
             $maghribHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" .$this->localHeaders['fast_ends']. '/'. $maghrib . "</th>";
         } elseif ($isAzanOnly) {
             $fajrHeading = "<th class='tableHeading'>" . $fajr . "</th>";
@@ -264,7 +265,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
                 <td>" . date_i18n(get_option( 'date_format' ), strtotime($day['d_date'])). ' '. $this->getHijriDate($today[2], $today[1], $today[0], $day, true) ."</td>
 
                 <td class=" . $weekday . ">" . $weekday . "</td>"
-                      . $this->getFastingTdWithData($options['isRamadan'], $day['fajr_begins'] ) . "
+                      . $this->getFastingTdWithData($options['isRamadan'], $day['fajr_begins'], false, true ) . "
                 <td>" . $this->formatDateForPrayer($day['fajr_jamah']). "</td>
                 <td>" . $this->formatDateForPrayer($day['zuhr_jamah']). "</td>
                 <td>" . $this->formatDateForPrayer($day['asr_jamah']). "</td>"
