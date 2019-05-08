@@ -265,23 +265,34 @@ class DailyShortCode extends TimetablePrinter
         } else {
             $date = date_i18n( 'l ' . get_option( 'date_format' ) );
         }
+
+        $timeClass = "col-sm-3 ";
+        $dateClass = "col-sm-7 ";
+        $height = "height-100";
+        $verticalClass = "";
+        if ( $isVertical = get_option('vertical-chbox') ) {
+            $timeClass = "col-xs-12 vertical-time ";
+            $dateClass = "col-xs-12 ";
+            $height = "height-50 ";
+            $verticalClass = "vertical";
+        }
         $html = '
         <div class="container-fluid x-board">
             <div class="row top-row">
-                <div class="time col-sm-3 col-xs-12 text-center height-100">
+                <div class="time ' . $timeClass . 'col-xs-12 text-center ' . $height . '">
                     <div class="align-middle">
                         <span>' .  date_i18n( 'g:i A' ) . '</span>
                     </div>
                 </div>
-                <div class="col-sm-7 col-xs-12 text-center height-100">
+                <div class="' . $dateClass . ' col-xs-12 text-center bg-white ' . $height . '">
                     <div class="align-middle">
-                        <span class="date-eng h6">' .  $date . '</span>
-                        <span>' . $this->getHijriDate(date("d"), date("m"), date("Y"), $this->getRow($attr)) . '</span>
+                        <span class="date-eng h6 ' . $verticalClass . '">' .  $date . '</span>
+                        <span class="'. $verticalClass . 'hijri">' . $this->getHijriDate(date("d"), date("m"), date("Y"), $this->getRow($attr)) . '</span>
                     </div>
                 </div>
                 <div class="col-sm-2 col-xs-12 text-right align-middle padding-null">';
                 $isLogo = get_option('ds-logo');
-                if ( $isLogo ) {
+                if ( $isLogo && ! $isVertical) {
                     $html .= '<img class="logo" src="' . $isLogo . '">';
                 }
             $html .=
@@ -293,17 +304,18 @@ class DailyShortCode extends TimetablePrinter
     {
         $leftClass = "col-sm-5 col-xs-12 bg-red height-100 padding-null text-center";
         $rightClass = "col-sm-7 col-xs-12 padding-null text-center bg-green height-100 padding-null";
+        $verticalClass = "";
 
-        $isVertical = get_option('vertical-chbox');
-        if ($isVertical) {
-            $leftClass = "col-sm-12 bg-red height-100 padding-null text-center";
-            $rightClass = "col-sm-12 padding-null text-center bg-green height-100";
+        if ($isVertical = get_option('vertical-chbox')) {
+            $verticalClass = "vertical";
+            $leftClass = "col-sm-12 bg-red height-100 padding-null text-center height-50";
+            $rightClass = "col-sm-12 padding-null text-center bg-green height-50";
         }
 
         $html =  '
             <div class="row middle-row bg-red">
                 <div class="'. $leftClass .'">
-                    <table class="table height-100">
+                    <table class="table height-100 '. $verticalClass .'">
                         <thead class="bg-dark">
                             <tr>
                                 <td>
@@ -326,12 +338,12 @@ class DailyShortCode extends TimetablePrinter
                         </tr>
                         <tr>
                             <td class="prayerName"><span>' . $this->getLocalPrayerNames()['sunrise'] . '</span></td>
-                            <td class="l-red" colspan="2">' . do_shortcode("[sunrise]") . '</td>
+                            <td class="prayerName" colspan="2">' . do_shortcode("[sunrise]") . '</td>
                         </tr>';
         if ( get_option('jumuah') && $this->todayIsFriday()) {
             $html .= '<tr>
                             <td class="prayerName"><span>' . stripslashes($this->getLocalHeaders()['jumuah']) . '</span></td>
-                            <td colspan="2" class="l-red">' . get_option('jumuah') . '</td>
+                            <td colspan="2" class="prayerName">' . get_option('jumuah') . '</td>
                         </tr>';
         } else {
             $html .= '
@@ -361,7 +373,7 @@ class DailyShortCode extends TimetablePrinter
         if ( get_option('jumuah') && ! $this->todayIsFriday()) {
             $html .= '<tr>
                             <td class="prayerName"><span>' . stripslashes($this->getLocalHeaders()['jumuah']) . '</span></td>
-                            <td colspan="2" class="l-red">' . get_option('jumuah') . '</td>
+                            <td colspan="2" class="prayerName">' . get_option('jumuah') . '</td>
                         </tr>';
         }
 
@@ -386,7 +398,13 @@ class DailyShortCode extends TimetablePrinter
 
     private function getBottomRow()
     {
-        return '
+        $verticalClass = "";
+
+        if ($isVertical = get_option('vertical-chbox')) {
+            $verticalClass = "vertical";
+        }
+
+        $html = '
                 <div class="row bottom-row">
                     <div class="bg-dark col-sm-3 col-xs-12 text-center height-100 align-middle">
                         <div class="align-middle">
@@ -406,15 +424,45 @@ class DailyShortCode extends TimetablePrinter
                 </div>
             </div>
         ';
+
+        if ($isVertical) {
+            $html = '
+                <div class="row bottom-row">             
+                    <div class="col-sm-12 col-xs-12 height-30">
+                        <div class="align-middle">
+                            <h3 class="text-primary scrolling-vertical">
+                                <marquee scrollamount="11">'
+                . do_shortcode("[display_iqamah_update]")
+                . get_option('scrolling-text') . '
+                                </marquee> 
+                            </h3> 
+                        </div>
+                    </div>
+                    <div class="bg-dark col-sm-12 col-xs-12 text-center height-50 align-middle">
+                        <div class="align-middle">
+                                <span class="blink-'.$verticalClass.'">' . get_option('blink-text', 'SILENT YOUR MOBILE') . '</span>
+                        </div>
+                    </div>   
+                </div>
+            </div>
+        ';
+        }
+
+        return $html;
     }
 
     private function getFirstSlide()
     {
+        $verticalClass = "";
+        if ($isVertical = get_option('vertical-chbox')) {
+            $verticalClass = "vertical";
+        }
+
         $html =  '
             <div class="nextPrayer height-100">
                 <div class="align-middle">
-                <h3>'. $this->getLocalTimes()['next prayer'] . '</h3>
-                    <h2>' . do_shortcode("[daily_next_prayer]") . '</h2>
+                <h3 class="'.$verticalClass.'">'. $this->getLocalTimes()['next prayer'] . '</h3>
+                    <h2 class="'.$verticalClass.'">' . do_shortcode("[daily_next_prayer]") . '</h2>
                 </div>
             </div>';
 

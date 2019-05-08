@@ -73,11 +73,11 @@
                     </tr>
                     <tr>
                         <td>Iqamah</td>
-                        <td><input type="text" name="digitalScreenGreen" value="<?php echo get_option('digitalScreenGreen') ?>" class="color-field"></td>
+                        <td><input type="text" name="digitalScreenRed" value="<?php echo get_option('digitalScreenRed') ?>" class="color-field"></td>
                     </tr>
                     <tr>
                         <td>Next prayer section</td>
-                        <td><input type="text" name="digitalScreenRed" value="<?php echo get_option('digitalScreenRed') ?>" class="color-field"></td>
+                        <td><input type="text" name="digitalScreenGreen" value="<?php echo get_option('digitalScreenGreen') ?>" class="color-field"></td>
                     </tr>
                     <tr>
                         <td colspan="2">

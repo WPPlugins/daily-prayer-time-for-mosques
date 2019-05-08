@@ -329,6 +329,14 @@ div.todaySpan {
     height: 100%;
 }
 
+.x-board .height-50 {
+    height: 50%;
+}
+.x-board .height-30 {
+    height: 24%;
+    top: 10% !important;
+}
+
 .x-board .top-row {
     height: 15%;
 }
@@ -365,23 +373,40 @@ height: 70%;
     background-color: #000 !important;
     color: #eee;
 }
-
+.x-board .bg-white {
+    background-color: #fff !important;
+}
 .x-board .time{
     background-color: #000;
     color: #fff;
     font-size: 8vh;
     font-weight:bold;
 }
+.x-board .vertical-time{
+    font-size: 6vh;
+}
+
 .x-board .date-eng{
     font-weight: bold;
     color: maroon;
     padding-left: 5px;
     font-size: 6vh;
 }
+
+.x-board span.vertical {
+    font-size: 3vh !important;
+}
+
 .x-board h6.hijriDate{
     display: inline;
     color: blue;
-    font-size: 4vh;
+
+}
+.x-board span.hijri{
+    font-size: 4vh !important;
+}
+.x-board span.verticalhijri{
+    font-size: 2vh !important;
 }
 
 .x-board h3 {
@@ -411,6 +436,13 @@ height: 70%;
 .x-board table th, .x-board table td {
     padding: 15px;
     font-size: 5vh;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.x-board table.vertical th, .x-board table.vertical td{
+    padding: 0px;
+    font-size: 3vh;
     text-transform: none;
     letter-spacing: normal;
 }
@@ -455,6 +487,15 @@ height: 70%;
     opacity: .8
 }
 
+.x-board .nextPrayer h2.vertical {
+    font-size: 5vh !important;
+    margin: 50px;
+}
+.x-board .nextPrayer h3.vertical {
+    font-size: 5vh !important;
+    opacity: .8
+}
+
 .x-board .dptScTime{
     color: inherit;
 }
@@ -462,11 +503,21 @@ height: 70%;
     font-size: 5vh;
 }
 
+.x-board .timeLeft{
+    font-size: 0.7em;
+}
+
 .x-board .blink{
     animation: blink 1s infinite;
     color: red;
     font-weight: bold;
     font-size: 5vh;
+}
+.x-board .blink-vertical{
+    animation: blink 1s infinite;
+    color: red;
+    font-weight: bold;
+    font-size: 3vh;
 }
 
 .x-board span.tomorrow {
@@ -503,6 +554,10 @@ height: 70%;
     font-size: 5vh;
 }
 
+.x-board .scrolling-vertical{
+    font-size: 3vh;
+}
+
 @keyframes blink{
     0%{opacity: 1;}
     75%{opacity: 1;}
@@ -510,6 +565,8 @@ height: 70%;
     100%{opacity: 0;}
 }
 
+
+/*Print*/
 
 @media print {
     * {
