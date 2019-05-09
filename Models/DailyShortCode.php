@@ -377,11 +377,13 @@ class DailyShortCode extends TimetablePrinter
                         </tr>';
         }
 
+        $transitionEffect = get_option('transitionEffect');
+        $transitionSpeed = get_option('transitionSpeed');
         $html .='
             </table>
                 </div>
                 <div class="'. $rightClass .'">
-                    <div id="text-carousel" class="carousel slide height-100" data-ride="carousel">
+                    <div id="text-carousel" class="carousel slide ' . $transitionEffect . ' height-100" data-ride="carousel" data-interval="'. $transitionSpeed .'">
                         <div class="carousel-inner height-100">
                             <div class="item active height-100">
                             ' . $this->getFirstSlide() . '
@@ -485,8 +487,11 @@ class DailyShortCode extends TimetablePrinter
             $slides = array_filter($slides);
             foreach ($slides as $slideUrl) {
                 $html .= '
-                <div class="item">
+                <div class="item" >
                     <img class="carousel-slide" src="' . $slideUrl . '">
+                </div>
+                <div class="item active height-100">
+                            ' . $this->getFirstSlide() . '
                 </div>
                 ';
             }
@@ -514,12 +519,20 @@ class DailyShortCode extends TimetablePrinter
                 } else {
                     $prayerNames['zuhr'] = $this->prayerLocal['zuhr'];
                 }
-                $print .= "<span class='x-time-change'>" . $prayerNames[$prayer[0]] . " " .  $this->formatDateForPrayer($time) . "</span>";
+                $print .= "<span class='x-time-change'>" . $prayerNames[$prayer[0]] . " " .  $this->getTimeForIqamahUpdate($prayerNames[$prayer[0]], $time) . "</span>";
             }
         }
         $print .= "</span>";
 
         return $print;
+    }
+
+    private function getTimeForIqamahUpdate($key, $time)
+    {
+        if ( $key === $this->getLocalHeaders()['jumuah'] ) {
+            return get_option('jumuah');
+        }
+        return $this->formatDateForPrayer($time);
     }
 
     private function getRow($attr)

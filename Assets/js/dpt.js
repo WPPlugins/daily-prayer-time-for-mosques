@@ -38,7 +38,7 @@ DPT = {
         var sliderChbox = jQuery("input#slider-chbox");
 
         sliderChbox.on('click', function() {
-            jQuery(".ds-slides").toggle();
+            jQuery(".ds-slides").toggle("slow");
         });
 
         if (! sliderChbox.is(':checked')) {

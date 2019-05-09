@@ -32,6 +32,22 @@
                         <td><input type="checkbox" id="slider-chbox" name="slider-chbox" value="slider" <?php if(get_option("slider-chbox") === 'slider'){ echo 'checked'; } ?>></td>
                     </tr>
                     <tr class="ds-slides">
+                        <td>Transition Effect</td>
+                        <td>
+                            <label class="radio-inline">
+                                <input type="radio" name="transitionEffect" value="slide" <?php if(get_option("transitionEffect") === 'slide'){ echo 'checked'; } ?>>Slide
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="transitionEffect" value="carousel-fade" <?php if(get_option("transitionEffect") === 'carousel-fade'){ echo 'checked'; } ?>>Fade
+                            </label>
+                        </td>
+                    </tr>
+                    <tr class="ds-slides">
+                        <td>Transition Speed</td>
+                        <td><input type="number" class="slider-text" name="transitionSpeed" min="5" max="15" placeholder="5" value=<?= get_option("transitionSpeed")/1000 ?>> seconds </td>
+                    </tr>
+
+                    <tr class="ds-slides">
                         <td>Slider #1</td>
                         <td><input type="text" class="slider-text" placeholder="any valid image url" name="slider1Url" size="60" value=<?= get_option("slider1Url") ?>></td>
                     </tr>
@@ -51,7 +67,6 @@
                         <td>Slider #5</td>
                         <td><input type="text" class="slider-text" placeholder="any valid image url" name="slider5Url" size="60" value=<?= get_option("slider5Url") ?>></td>
                     </tr>
-
                 </table>
                 <?php submit_button('Save changes', 'primary', 'digitalScreen'); ?>
             </form>

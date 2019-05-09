@@ -40,6 +40,13 @@ class DigitalScreenProcessor
         delete_option('slider-chbox');
         add_option('slider-chbox', $slider);
 
+        $transitionEffect = $this->data['transitionEffect'];
+        update_option('transitionEffect', $transitionEffect);
+
+        $transitionSpeed = $this->data['transitionSpeed'];
+        $transitionSpeed = (int)$transitionSpeed * 1000;
+        update_option('transitionSpeed', $transitionSpeed);
+
         $slider1Url = $this->data['slider1Url'];
         update_option('slider1Url', $slider1Url);
 
