@@ -281,7 +281,6 @@ h2.dptScTime {
 .jamahChanges span{
     margin-left: 20px;
     margin-right: 20px;
-    word-spacing: 10px;
 }
 
 p.nextIqamah {
@@ -321,8 +320,9 @@ div.todaySpan {
 
 /* X BOARD */
 .x-board {
-    color: #ffffff;
+    color: #000;
     height: 100vh;
+    text-align: center;
 }
 
 .x-board .height-100 {
@@ -402,10 +402,10 @@ height: 70%;
     color: blue;
 
 }
-.x-board span.hijri{
+.x-board span.hijri h6{
     font-size: 4vh !important;
 }
-.x-board span.verticalhijri{
+.x-board span.verticalhijri h6{
     font-size: 2vh !important;
 }
 
@@ -523,7 +523,21 @@ height: 70%;
 .x-board span.tomorrow {
     margin-left: 10px;
 }
+div.jamahChanges-horizontal span{
+    font-size: 5vh;
+    word-spacing: 10px;
+    padding-bottom: 10px;
+}
+div.jamahChanges-vertical span{
+    font-size: 3vh;
+    word-spacing: 10px;
+    padding-bottom: 10px;
+}
+.x-time-text{
+    display: block;
+}
 .x-time-change{
+    word-spacing: 10px;
     background: #565656;
     color: #ffffff;
     padding-left: 10px;

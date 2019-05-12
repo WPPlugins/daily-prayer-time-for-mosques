@@ -16,6 +16,10 @@ class OtherProcessor
 
     public function process()
     {
+        $jumuah = $this->data['jumuah'];
+        delete_option('jumuah');
+        add_option('jumuah', $jumuah);
+
         $ramadan = ($this->data['ramadan-chbox']);
         delete_option('ramadan-chbox');
         add_option('ramadan-chbox', $ramadan);

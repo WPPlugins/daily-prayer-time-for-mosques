@@ -28,10 +28,6 @@ class DigitalScreenProcessor
         delete_option('ds-logo');
         add_option('ds-logo', $dsLogo);
 
-        $jumuah = $this->data['jumuah'];
-        delete_option('jumuah');
-        add_option('jumuah', $jumuah);
-
         $blinkText = $this->data['blink-text'];
         delete_option('blink-text');
         add_option('blink-text', $blinkText);

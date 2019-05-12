@@ -1,7 +1,7 @@
 DPT = {
     init: function() {
         this.monthlyCalendarChange();
-        this.digitalScreenCheckChange();
+        this.displaySliderOptions();
         this.changeInputBackground();
         this.printDiv();
         this.startTimer();
@@ -34,7 +34,7 @@ DPT = {
         jQuery('#month').trigger('change');
     },
 
-    digitalScreenCheckChange: function () {
+    displaySliderOptions: function () {
         var sliderChbox = jQuery("input#slider-chbox");
 
         sliderChbox.on('click', function() {
@@ -76,15 +76,13 @@ DPT = {
                 var s = DPT.checkSecond((timeArray[1] - 1));
                 if(s==59){m=m-1}
                 if ( m >= 0) {
-                    document.getElementsByClassName('timeLeftCountDown')[0].innerHTML =
-                        m + ":" + s;
+                    document.getElementsByClassName('timeLeftCountDown')[0].innerHTML = m + ":" + s;
                     setTimeout(DPT.startTimer, 1000);
-                    if(m == 0 && s == 0) {
-                        document.getElementsByClassName('timeLeftCountDown')[0].innerHTML = "";
-                        document.getElementsByClassName('timeLeft')[1].innerHTML = "";
-                        location.reload();
-                    }
                 }
+                if(m == 0 && s == 0) {
+                    window.location.reload();
+                }
+
             }
         }
     },

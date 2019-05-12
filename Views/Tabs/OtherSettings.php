@@ -5,6 +5,10 @@
             <form name="otherSettings" method="post" class="form-group">
                 <table class="table">
                     <tr>
+                        <td class="active-slider">Jumu'ah</td>
+                        <td><input type="text" class="jumuah" name="jumuah" size="60" value='<?= get_option("jumuah") ?>'></td>
+                    </tr>
+                    <tr>
                         <td>Activate Ramadan timetable</td>
                         <td><input  type="checkbox" name="ramadan-chbox" value="ramadan" <?php if(get_option("ramadan-chbox") === 'ramadan'){ echo 'checked'; } ?>></td>
                     </tr>

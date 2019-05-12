@@ -16,10 +16,6 @@
                         <td><input type="text" class="slider-text" placeholder="any valid image url" name="ds-logo" size="60" value=<?= get_option("ds-logo") ?>></td>
                     </tr>
                     <tr>
-                        <td class="active-slider">Jumu'ah</td>
-                        <td><input type="text" class="jumuah" name="jumuah" size="60" value='<?= get_option("jumuah") ?>'></td>
-                    </tr>
-                    <tr>
                         <td class="active-slider">Scrolling Text</td>
                         <td><input type="text" class="scrolling-text" placeholder="This text will scroll at the bottom" name="scrolling-text" size="60" value="<?= get_option("scrolling-text") ?>"></td>
                     </tr>

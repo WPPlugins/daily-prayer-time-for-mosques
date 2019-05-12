@@ -109,7 +109,7 @@ class TimetablePrinter
         return get_option('hideTableBorder');
     }
 
-    public function getLocalPrayerNames($forAdmin=false)
+    public function getLocalPrayerNames($forAdmin=false, $enableJumuah=false)
     {
         $prayers_local = get_option('prayersLocal');
 
@@ -121,7 +121,7 @@ class TimetablePrinter
             $localPrayerName = $this->prayerLocal;
         }
 
-        if (! $forAdmin){
+        if (! $forAdmin && $enableJumuah){
             if ($this->todayIsFriday()) {
                 $localPrayerName['zuhr'] = $this->getLocalHeaders()['jumuah'];
             }
@@ -302,6 +302,9 @@ class TimetablePrinter
                 if ($key == 'Sunrise') {
                     $this->nextIqamah = $this->localPrayerNames[lcfirst($key)] . ':';
                 }
+                if ($key == 'Zuhr' && $this->isJumahDisplay($row)) {
+                    $this->nextIqamah = $this->localPrayerNames[lcfirst($key)] . ':';
+                }
                 $toTime = strtotime( $jamah );
                 $fromTime = strtotime( $now );
                 $diff = round(abs($toTime - $fromTime)/60,2);
@@ -339,7 +342,7 @@ class TimetablePrinter
     {
         $value = array( $row["fajr_jamah"], $row['sunrise'], $row["zuhr_jamah"], $row["asr_jamah"], $row["maghrib_jamah"], $row["isha_jamah"]);
 
-        return array_combine( $this->prayerLocal, $value );
+        return array_combine( array_keys($this->prayerLocal), $value );
 
     }
 
@@ -352,7 +355,7 @@ class TimetablePrinter
     {
         $value = array( $row["fajr_begins"], $row['sunrise'], $row["zuhr_begins"], $row["asr_begins"], $row["maghrib_begins"], $row["isha_begins"]);
 
-        return array_combine( $this->prayerLocal, $value );
+        return array_combine( array_keys($this->prayerLocal), $value );
     }
 
     /**
@@ -387,14 +390,22 @@ class TimetablePrinter
         return 'red';
     }
 
-    protected function getJamahChange(array $row)
+    protected function getJamahChange(array $row, $isDigitalScreen=false, $orientation="")
     {
         $style = null;
-        if ($this->isVertical) {
+        if ($this->isVertical && ! $isDigitalScreen) {
             $style = "style='display: block;'";
         }
+        $timeClass = "";
+        $digitalScreenClass = "";
+        if ($isDigitalScreen) {
+            $timeClass = "class='x-time-change'";
+            $digitalScreenClass = "jamahChanges-" . $orientation;
+
+        }
         $timeRelated = $this->getLocalTimes();
-        $print = "<div class='jamahChanges'>" . $timeRelated['iqamah update'] . "</br>";
+        $print = "<div class='jamahChanges " . $digitalScreenClass . "'>
+            <span class='x-time-text'>" . $timeRelated['iqamah update'] . "</span>";
         $prayerNames = $this->getLocalPrayerNames();
 
         foreach($row['jamah_changes'] as $key=>$time) {
@@ -405,7 +416,7 @@ class TimetablePrinter
                 } else {
                     $prayerNames['zuhr'] = $this->prayerLocal['zuhr'];
                 }
-                $print .= "<span " . $style . ">" . $prayerNames[$prayer[0]] . ": " .  $this->formatDateForPrayer($time) . "</span>";
+                $print .= "<span " . $style . $timeClass ." >" . $prayerNames[$prayer[0]] . ": " .  $this->getTimeForIqamahUpdate($prayerNames[$prayer[0]], $time) . "</span>";
             }
         }
         $print .= "</div>";
@@ -413,14 +424,23 @@ class TimetablePrinter
         return $print;
     }
 
+    private function getTimeForIqamahUpdate($key, $time)
+    {
+        $jumuahTime = get_option('jumuah');
+        if ( $key === $this->getLocalHeaders()['jumuah'] && $jumuahTime) {
+            return $jumuahTime;
+        }
+        return $this->formatDateForPrayer($time);
+    }
+
     protected function todayIsFriday()
     {
-        return date('D') == 'Fri';
+        return date_i18n('D') == 'Fri';
     }
 
     protected function tomorrowIsFriday()
     {
-        return date('D') == 'Thu';
+        return date_i18n('D') == 'Thu';
     }
 
     /**
@@ -445,6 +465,18 @@ class TimetablePrinter
             return '<h6 class="hijriDate">('. $hijriDate .')</h6>';
         }
         return;
+    }
+
+    public function isJumahDisplay($dbRow)
+    {
+        if ( date_i18n('D') == 'Fri' &&
+            current_time('timestamp') > strtotime($dbRow['sunrise']) &&
+            current_time('timestamp') <= strtotime($dbRow['zuhr_jamah']) + 60
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     private function isSunset($dbRow, $forMonth=false)

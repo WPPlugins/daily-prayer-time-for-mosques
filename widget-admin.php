@@ -5,7 +5,6 @@ require_once('Models/Processors/OtherProcessor.php');
 require_once('Models/Processors/HijriProcessor.php');
 require_once('Models/Processors/QuickUpdateProcessor.php');
 require_once('Models/Processors/ThemeSettingsProcessor.php');
-require_once('Models/DailyTimeTable.php');
 
 require_once ('Models/HijriDate.php');
 
