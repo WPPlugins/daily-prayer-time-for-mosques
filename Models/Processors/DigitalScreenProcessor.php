@@ -16,10 +16,6 @@ class DigitalScreenProcessor
 
     public function process()
     {
-        $displayVertical = $this->data['vertical-chbox'];
-        delete_option('vertical-chbox');
-        add_option('vertical-chbox', $displayVertical);
-
         $scrollingText = $this->data['scrolling-text'];
         delete_option('scrolling-text');
         add_option('scrolling-text', $scrollingText);

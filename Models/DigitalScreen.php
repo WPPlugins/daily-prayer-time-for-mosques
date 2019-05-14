@@ -1,31 +1,32 @@
 <?php
-require_once('db.php');
 
 class DigitalScreen extends DailyShortCode
 {
-    /** $var db */
-    private $db;
-
     /** @var array */
     private $row = array();
 
-    public function __construct()
+    private $isPortrait;
+
+    public function __construct($attr=array())
     {
-        $this->db = new DatabaseConnection();
-        $this->row = $this->db->getPrayerTimeForToday();
         parent::__construct();
+
+        if ( isset($attr['view']) ) {
+            $this->isPortrait = ( strtolower($attr['view']) == 'vertical' );
+        }
     }
 
-    public function scDigitalScreen($attr)
+    public function displayDigitalScreen()
     {
-        $html = $this->getTopRow($attr)
+
+        $html = $this->getTopRow()
             . $this->getMiddleRow()
             .$this->getBottomRow();
 
         return $html;
     }
 
-    private function getTopRow($attr)
+    private function getTopRow()
     {
         if ( get_option('hijri-chbox')) {
             $date = date_i18n( 'D jS  M' );
@@ -37,7 +38,7 @@ class DigitalScreen extends DailyShortCode
         $dateClass = "col-sm-7 ";
         $height = "height-100";
         $verticalClass = "";
-        if ( $isVertical = get_option('vertical-chbox') ) {
+        if (  $this->isPortrait  ) {
             $timeClass = "col-xs-12 vertical-time ";
             $dateClass = "col-xs-12 ";
             $height = "height-50 ";
@@ -54,12 +55,12 @@ class DigitalScreen extends DailyShortCode
                 <div class="' . $dateClass . ' col-xs-12 text-center bg-white ' . $height . '">
                     <div class="align-middle">
                         <span class="date-eng h6 ' . $verticalClass . '">' .  $date . '</span>
-                        <span class="'. $verticalClass . 'hijri">' . $this->getHijriDate(date("d"), date("m"), date("Y"), $this->getRow($attr)) . '</span>
+                        <span class="'. $verticalClass . 'hijri">' . $this->getHijriDate(date("d"), date("m"), date("Y"), $this->getRow()) . '</span>
                     </div>
                 </div>
                 <div class="col-sm-2 col-xs-12 text-right align-middle padding-null">';
         $isLogo = get_option('ds-logo');
-        if ( $isLogo && ! $isVertical) {
+        if ( $isLogo && ! $this->isPortrait) {
             $html .= '<img class="logo" src="' . $isLogo . '">';
         }
         $html .=
@@ -73,7 +74,7 @@ class DigitalScreen extends DailyShortCode
         $rightClass = "col-sm-7 col-xs-12 padding-null text-center bg-green height-100 padding-null";
         $verticalClass = "";
 
-        if ($isVertical = get_option('vertical-chbox')) {
+        if ( $this->isPortrait ) {
             $verticalClass = "vertical";
             $leftClass = "col-sm-12 bg-red padding-null text-center height-50";
             $rightClass = "col-sm-12 padding-null text-center bg-green height-50";
@@ -169,7 +170,7 @@ class DigitalScreen extends DailyShortCode
     {
         $verticalClass = "";
 
-        if ($isVertical = get_option('vertical-chbox')) {
+        if ( $this->isPortrait ) {
             $verticalClass = "vertical";
         }
 
@@ -198,7 +199,7 @@ class DigitalScreen extends DailyShortCode
             </div>
         ';
 
-        if ($isVertical) {
+        if ($this->isPortrait) {
             $html = '
                 <div class="row bottom-row">             
                     <div class="col-sm-12 col-xs-12 height-30">
@@ -231,7 +232,7 @@ class DigitalScreen extends DailyShortCode
     private function getFirstSlide()
     {
         $verticalClass = "";
-        if ($isVertical = get_option('vertical-chbox')) {
+        if ( $this->isPortrait ) {
             $verticalClass = "vertical";
         }
 

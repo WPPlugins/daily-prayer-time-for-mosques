@@ -257,7 +257,14 @@ class DailyShortCode extends TimetablePrinter
         return $this->getJamahChange($row, true, $attr['orientation']);
     }
 
-    protected function getRow($attr)
+    public function scDigitalScreen($attr)
+    {
+        $ds =  new DigitalScreen($attr);
+
+        return $ds->displayDigitalScreen();
+    }
+
+    protected function getRow($attr=array())
     {
 
         $this->setDisplayForShortCode($attr);

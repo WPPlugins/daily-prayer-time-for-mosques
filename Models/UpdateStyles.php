@@ -35,6 +35,7 @@ class UpdateStyles
 
     private function setStyles()
     {
+        $css = '';
         $tableBackground = get_option('tableBackground');
         if (! empty($tableBackground)) {
             $css = "

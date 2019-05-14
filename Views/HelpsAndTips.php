@@ -24,7 +24,7 @@
         <li>[asr_start]</li>
         <li>[maghrib_start]</li>
         <li>[isha_start]</li>
-        <li>[digital_screen] <i>(no shortcode options)</i></li>
+        <li>[digital_screen]</li>
         <li>[display_iqamah_update]</li>
     </ol>
 
@@ -38,7 +38,8 @@
         <li>heading="any text"</li>
         <li>display_hijri_date=true</li>
         <li>use_div_layout=true (only for horizontal table and you can easily update html/css using this mode)</li>
-        <li>start_time=true(only for single prayer time)</li>
+        <li>start_time=true (only for single prayer time)</li>
+        <li>view='vertical' (only for digital_screen)</li>
     </ol>
 </p>
 <p>
@@ -62,6 +63,7 @@
         <li><b>[dailytable_horizontal asr=hanafi display=azan_only]</b> - Display daily iqamah only timetable horizontally with Hanafi Asr start method</li>
         <li><b>[dailytable_vertical asr=hanafi announcement="First Khutbah: 1:15. Second Khutbah: 1:45" day=friday]</b> - Display announcement on your given day or everyday</li>
         <li><b>[digital_screen]</b> - Display prayer time on big monitors in the masjid</li>
+        <li><b>[digital_screen view='vertical']</b> - Display prayer time in Portrait mode</li>
 
     </ol>
         <a href="https://wordpress.org/plugins/daily-prayer-time-for-mosques/screenshots/" target="_new">Please check the screen shots <i class="fa fa-external-link" aria-hidden="true"></i></a>

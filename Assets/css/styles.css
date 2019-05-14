@@ -1,6 +1,6 @@
 /*Default styling*/
-body {
-    font-family: 'Ubuntu', sans-serif !important;
+-body {
+    font-family: 'Ubuntu', sans-serif;
 }
 
 td.Sat, td.Sun{
@@ -318,11 +318,19 @@ div.todaySpan {
     font-weight: bold;
 }
 
+.grow { transition: all .2s ease-in-out; }
+.grow:hover {
+    transform: scale(9);
+    cursor: pointer;
+    transform-origin: right 2px;
+}
+
 /* X BOARD */
 .x-board {
     color: #000;
     height: 100vh;
     text-align: center;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 .x-board .height-100 {
@@ -403,7 +411,7 @@ height: 70%;
 
 }
 .x-board span.hijri h6{
-    font-size: 4vh !important;
+    font-size: 5vh !important;
 }
 .x-board span.verticalhijri h6{
     font-size: 2vh !important;
@@ -509,13 +517,13 @@ height: 70%;
 
 .x-board .blink{
     animation: blink 1s infinite;
-    color: red;
+    color: #fff;
     font-weight: bold;
     font-size: 5vh;
 }
 .x-board .blink-vertical{
     animation: blink 1s infinite;
-    color: red;
+    color: #fff;
     font-weight: bold;
     font-size: 3vh;
 }
@@ -547,7 +555,7 @@ div.jamahChanges-vertical span{
     padding: 0;
 }
 
-.x-board .carousel,.item,.active {
+.x-board .carousel .item{
    height:100%;
  }
 .x-board .carousel-inner {
