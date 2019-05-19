@@ -1,11 +1,25 @@
+var isTimerOn = false;
+
 DPT = {
     init: function() {
+
         this.monthlyCalendarChange();
         this.displaySliderOptions();
         this.changeInputBackground();
         this.printDiv();
-        this.startTimer();
         this.bs3screenOptions();
+
+        this.startTimer();
+
+        this.dsRefresh('get_ds_clock', '#dsClock');
+        this.dsRefresh('get_ds_date', '#dsDate', 65);
+        this.dsRefresh('get_ds_hijri_date', '#dsHijriDate', 70);
+        this.dsRefresh('get_ds_prayer_timetable', '#dsPrayerTimetable', 75);
+        this.dsRefreshNextPrayer();
+        this.dsRefresh('get_ds_iqamah_update', '#dsIqamahUpdate', 80);
+
+        this.dsRefresh('get_ds_blink', '#dsBlink', 85);
+
     },
 
     monthlyCalendarChange: function () {
@@ -65,25 +79,96 @@ DPT = {
         }
     },
 
+    bs3screenOptions: function( ) {
+        jQuery("#contextual-help-link").click(function () {
+            jQuery("#contextual-help-wrap").css("cssText", "display: block !important;");
+        });
+        jQuery("#show-settings-link").click(function () {
+            jQuery("#screen-options-wrap").css("cssText", "display: block !important;");
+        });
+    },
+
+    dsRefresh: function (method, element, seconds=60) {
+        if (! jQuery('.x-board')[0]) {
+            return;
+        }
+        jQuery.ajax({
+            url: timetable_params.ajaxurl,
+            data: {
+                'action':method,
+            },
+            success: function(response){
+                setTimeout(DPT.dsRefresh, (1000 * parseInt(seconds)), method, element );
+                jQuery(element).html(response);
+            },
+            error: function(errorThrown){
+                DPT.dsRefresh(method, element, seconds);
+            }
+        });
+    },
+
+    dsRefreshNextPrayer: function () {
+        if (! jQuery('.x-board')[0]) {
+            return;
+        }
+        jQuery.ajax({
+            url: timetable_params.ajaxurl,
+            data: {
+                'action':'get_ds_next_prayer',
+            },
+            success: function(response){
+                setTimeout(DPT.dsRefreshNextPrayer, (1000 * 60));
+                jQuery('.dsNextPrayer').html(response);
+                if (! isTimerOn ) {
+                    DPT.startTimer();
+                    isTimerOn = true;
+                }
+            },
+            error: function(errorThrown){
+                DPT.dsRefreshNextPrayer(method, element, seconds)
+            }
+        });
+    },
+
     startTimer: function () {
         var presentTime = '';
+
         if (document.getElementsByClassName('timeLeftCountDown')[0]) {
             presentTime = document.getElementsByClassName('timeLeftCountDown')[0].innerHTML.trim();
             presentTime = presentTime.split(' ')[0];
+
             var timeArray = presentTime.split(/[:]+/);
             if (timeArray && timeArray.length === 2) {
+
                 var m = timeArray[0];
                 var s = DPT.checkSecond((timeArray[1] - 1));
-                if(s==59){m=m-1}
+
+                if(s == "59"){ m = m - 1;}
+
                 if ( m >= 0) {
-                    document.getElementsByClassName('timeLeftCountDown')[0].innerHTML = m + ":" + s;
-                    setTimeout(DPT.startTimer, 1000);
-                }
-                if(m == 0 && s == 0) {
-                    window.location.reload();
+                    var timeLeftCountDownElement = document.getElementsByClassName('timeLeftCountDown');
+                    for(var i = 0; i < timeLeftCountDownElement.length; i++) {
+                        document.getElementsByClassName('timeLeftCountDown')[i].innerHTML = m + ":" + s;
+                    }
                 }
 
+                if(m == 0 && s == 0) {
+                    DPT.timeoutScreen();
+                }
             }
+            setTimeout(DPT.startTimer, 1000);
+        }
+    },
+
+    timeoutScreen: function() {
+        var min = jQuery('#screenTimeout').val()
+        if (min) {
+            jQuery("body").append("<div id='overlay'></div>");
+            jQuery('#overlay').animate({
+                opacity: 0.9,
+            }, (10000), function() {
+            });
+            setTimeout(function() { jQuery('#overlay').remove(); }, 1000 * 60 * parseInt(min) );
         }
     },
 
@@ -92,15 +177,6 @@ DPT = {
         if (sec < 0) {sec = "59"};
         return sec;
     },
-
-    bs3screenOptions: function( ) {
-            jQuery("#contextual-help-link").click(function () {
-                jQuery("#contextual-help-wrap").css("cssText", "display: block !important;");
-            });
-            jQuery("#show-settings-link").click(function () {
-                jQuery("#screen-options-wrap").css("cssText", "display: block !important;");
-            });
-    }
 };
 jQuery(document).ready(function() { DPT.init(); });
 

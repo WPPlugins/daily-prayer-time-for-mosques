@@ -10,6 +10,8 @@ class MonthlyShortCode
     public function __construct()
     {
         $this->printer = new MonthlyTimetablePrinter();
+        add_action( 'wp_ajax_get_monthly_timetable', array( $this, 'get_monthly_timetable') );
+        add_action( 'wp_ajax_nopriv_get_monthly_timetable', array( $this, 'get_monthly_timetable') );
     }
 
     public function printMonthlyTimeTable($attr)
@@ -89,30 +91,28 @@ class MonthlyShortCode
 
         return $options;
     }
+
+    public function get_monthly_timetable()
+    {
+        $month = $_REQUEST["month"];
+        $display = $_REQUEST["display"];
+        $timetable = new MonthlyTimeTable($month);
+
+        $options = array();
+        if ($month == 13) {
+            $options['isRamadan'] = true;
+        }
+
+        if ($display === 'iqamah_only') {
+            $data = $timetable->displayTableJamahOnly($options);
+        } elseif ($display === 'azan_only') {
+            $data = $timetable->displayTableAzanOnly($options);
+        } else {
+            $data = $timetable->displayTable($options);
+        }
+
+        echo $data;
+        die();
+    }
 }
 
-add_action( 'wp_ajax_get_monthly_timetable', 'get_monthly_timetable' );
-add_action( 'wp_ajax_nopriv_get_monthly_timetable', 'get_monthly_timetable' );
-
-function get_monthly_timetable()
-{
-    $month = $_REQUEST["month"];
-    $display = $_REQUEST["display"];
-    $timetable = new MonthlyTimeTable($month);
-
-    $options = array();
-    if ($month == 13) {
-        $options['isRamadan'] = true;
-    }
-
-    if ($display === 'iqamah_only') {
-        $data = $timetable->displayTableJamahOnly($options);
-    } elseif ($display === 'azan_only') {
-        $data = $timetable->displayTableAzanOnly($options);
-    } else {
-        $data = $timetable->displayTable($options);
-    }
-
-    echo $data;
-    die();
-}

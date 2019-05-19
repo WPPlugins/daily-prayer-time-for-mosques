@@ -53,5 +53,8 @@ class DigitalScreenProcessor
 
         $slider5Url = $this->data['slider5Url'];
         update_option('slider5Url', $slider5Url);
+
+        $slider6Url = $this->data['slider6Url'];
+        update_option('slider6Url', $slider6Url);
     }
 }

@@ -1,18 +1,20 @@
 <?php
 /*
 Plugin Name: Daily Prayer Time
-Version: 2019.5.14
+Version: 2019.5.19
 Plugin URI: https://wordpress.org/plugins/daily-prayer-time-for-mosques/
 Description: Display yearly, monthly and daily prayer time, ramadan time vertically or horizontally, in any language
 Author: <a href="http://mmrs151.wordpress.com">mmrs151</a>
 Contributors: <a href="http://vergedesign.co.uk/">Hjeewa</a>, <a href="https://profiles.wordpress.org/kams01">kams01</a>
 */
-require_once('Models/Init.php');
-require_once('Models/DailyShortCode.php');
-require_once('Models/MonthlyShortCode.php');
-require_once('Models/UpdateStyles.php');
-require_once('Models/DSTemplateLoader.php');
+require_once ('Models/Init.php');
+require_once ('Models/DailyShortCode.php');
+require_once ('Models/MonthlyShortCode.php');
+require_once ('Models/UpdateStyles.php');
+require_once ('Models/DSTemplateLoader.php');
+require_once ('Models/DPTAjaxHandler.php');
 require_once ('Models/DigitalScreen.php');
+
 
 class DailyPrayerTime extends WP_Widget
 {
@@ -61,7 +63,7 @@ class DailyPrayerTime extends WP_Widget
     }
 
     private function add_stylesheet() {
-        wp_register_style( 'timetable-style', plugins_url('Assets/css/styles.css', __FILE__) );
+        wp_register_style( 'timetable-style', plugins_url('Assets/css/styles.css', __FILE__), array(), '2019.5.19' );
         wp_enqueue_style( 'timetable-style' );
 
         wp_register_style( 'verge-style', plugins_url('Assets/css/vergestyles.css', __FILE__) );
@@ -86,23 +88,12 @@ class DailyPrayerTime extends WP_Widget
 
     private function add_scripts()
     {
-        // Get the Path to this plugin's folder
         $path = plugin_dir_url( __FILE__ ); // I am in Models
-//        $path .= '../';
 
-        // Enqueue our script
-        wp_enqueue_script( 'dpt',
-            $path. 'Assets/js/dpt.js',
-            array( 'jquery' ),
-            '1.0.0', true );
+        wp_enqueue_script( 'dpt',$path. 'Assets/js/dpt.js', array( 'jquery' ), '2019.5.19', true );
 
-        // Get the protocol of the current page
         $protocol = isset( $_SERVER['HTTPS'] ) ? 'https://' : 'http://';
-
-        // Set the ajaxurl Parameter which will be output right before
-        // our ajax-delete-posts.js file so we can use ajaxurl
         $params = array(
-            // Get the url to the admin-ajax.php file using admin_url()
             'ajaxurl' => admin_url( 'admin-ajax.php', $protocol ),
         );
 
@@ -131,8 +122,8 @@ function init_dpt_widget()
 ############################# END OF WIDGET ############################################
 
 #============================= SHORTCODE =================================================
-$monthlyShortCode = new MonthlyShortCode();
-add_shortcode( 'monthlytable', array($monthlyShortCode, 'printMonthlyTimeTable') );
+$monthlyShortcode = new MonthlyShortcode();
+add_shortcode( 'monthlytable', array($monthlyShortcode, 'printMonthlyTimeTable') );
 
 $dailyShortCode = new DailyShortCode();
 add_shortcode( 'dailytable_vertical', array($dailyShortCode, 'verticalTime') );
@@ -151,9 +142,9 @@ add_shortcode( 'asr_start', array($dailyShortCode, 'scAsrStart') );
 add_shortcode( 'maghrib_start', array($dailyShortCode, 'scMaghribStart') );
 add_shortcode( 'isha_start', array($dailyShortCode, 'scIshaStart') );
 add_shortcode( 'display_iqamah_update', array($dailyShortCode, 'scIqamahUpdate') );
-
 add_shortcode( 'digital_screen', array($dailyShortCode, 'scDigitalScreen') );
 
+$ajax = new DPTAjaxHandler();
 
 #============================= MENU PAGES =========================================== #
 add_action( 'admin_menu', "prayer_settings");

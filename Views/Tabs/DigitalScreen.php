@@ -69,6 +69,12 @@
                             <img src="<?= get_option("slider5Url") ?>" style="max-height: 25px;" class="grow">
                         </td>
                     </tr>
+                    <tr class="ds-slides">
+                        <td>Slider #6</td>
+                        <td><input type="text" class="slider-text" placeholder="any valid image url" name="slider6Url" size="60" value=<?= get_option("slider6Url") ?>>
+                            <img src="<?= get_option("slider6Url") ?>" style="max-height: 25px;" class="grow">
+                        </td>
+                    </tr>
                 </table>
                 <?php submit_button('Save changes', 'primary', 'digitalScreen'); ?>
             </form>
@@ -84,6 +90,7 @@
             <li><a class="url" href="post-new.php?post_type=page">Create a new page</a></li>
             <li>Use shortcode <code>[digital_screen]</code> to display horizontally/Landscape</li>
             <li>Use shortcode <code>[digital_screen view='vertical']</code> to display vertically/Portrait</li>
+            <li>Use shortcode <code>[digital_screen view='vertical' dim=10]</code> to dim vertically screen for 10 mins when prayer starts</li>
             <li>Select page template <code>Digital Screen Prayer Time</code></li>
         </div>
     </div>

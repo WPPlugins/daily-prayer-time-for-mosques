@@ -277,7 +277,9 @@ span.dptScNextPrayer {
 h2.dptScTime {
     margin: 0px;
 }
-
+h2.vertical div span h2.dptScTime {
+    margin: 10px;
+}
 .jamahChanges span{
     margin-left: 20px;
     margin-right: 20px;
@@ -332,6 +334,9 @@ div.todaySpan {
     text-align: center;
     font-family: 'Ubuntu', sans-serif;
 }
+
+#overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: black; opacity: 0; z-index: 99;}
+
 
 .x-board .height-100 {
     height: 100%;
@@ -491,7 +496,7 @@ height: 70%;
     margin: 50px;
 }
 .x-board .nextPrayer h3 {
-    font-size: 9vh;
+    font-size: 10vh;
     opacity: .8
 }
 
@@ -541,9 +546,13 @@ div.jamahChanges-vertical span{
     word-spacing: 10px;
     padding-bottom: 10px;
 }
-.x-time-text{
-    display: block;
+
+h3.scrolling-vertical > marquee > div > span {
+    font-size: 3vh;
+    word-spacing: 10px;
+    padding-bottom: 10px;
 }
+
 .x-time-change{
     word-spacing: 10px;
     background: #565656;

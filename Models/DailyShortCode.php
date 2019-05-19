@@ -16,7 +16,7 @@ class DailyShortCode extends TimetablePrinter
     private $isHanafiAsr = false;
 
     /** @var array */
-    private $row = array();
+    protected $row = array();
 
     /** @var  DailyTimetablePrinter */
     private $timetablePrinter;

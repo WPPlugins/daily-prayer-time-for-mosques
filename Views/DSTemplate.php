@@ -7,7 +7,6 @@
         <title><?php wp_title(); ?></title>
     <?php endif; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="refresh" content="60">
     <link rel="profile" href="http://gmpg.org/xfn/11">
 
     <?php wp_head(); ?>

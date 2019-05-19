@@ -25,13 +25,20 @@ class DatabaseConnection
      */
     public function getPrayerTimeForToday()
     {
-        global $wpdb;
+        $result = $this->getTransient( 'prayerTimeForToday' );
 
-        $today = user_current_time( 'Y-m-d' );
-        $sql = "SELECT * FROM  $this->dbTable WHERE d_date = '$today' LIMIT 1";
-        $result = $wpdb->get_row($sql, ARRAY_A);
-        $result['jamah_changes'] = $this->getJamahChanges();
+        if ( false === $result ) {
 
+            global $wpdb;
+
+            $today = user_current_time( 'Y-m-d' );
+            $sql = "SELECT * FROM  $this->dbTable WHERE d_date = '$today' LIMIT 1";
+            $result = $wpdb->get_row($sql, ARRAY_A);
+            $result['jamah_changes'] = $this->getJamahChanges();
+
+            set_transient( 'prayerTimeForToday', $result, HOUR_IN_SECONDS );
+
+        }
         return $result;
     }
 
@@ -40,12 +47,20 @@ class DatabaseConnection
      */
     public function getFajrJamahForTomorrow()
     {
-        global $wpdb;
+        $result = $this->getTransient( 'fajrJamahForTomorrow' );
 
-        $sql = "SELECT fajr_jamah FROM  $this->dbTable WHERE d_date =  CURDATE()  + INTERVAL 1 DAY;";
-        $result = $wpdb->get_row($sql, ARRAY_A);
+        if ( false === $result ) {
 
-        return $result['fajr_jamah'];
+            global $wpdb;
+
+            $sql = "SELECT fajr_jamah FROM  $this->dbTable WHERE d_date =  CURDATE()  + INTERVAL 1 DAY;";
+            $row = $wpdb->get_row($sql, ARRAY_A);
+            $result = $row['fajr_jamah'];
+
+            set_transient( 'fajrJamahForTomorrow', $result, HOUR_IN_SECONDS );
+        }
+
+        return $result;
     }
 
     /**
@@ -54,16 +69,20 @@ class DatabaseConnection
      */
     public function getJamahChanges($min=null)
     {
-        $xmin = get_option( 'jamah_changes' );
-        $xmin = empty($min) ? $xmin : $min;
+        $result = $this->getTransient( 'jamahChanges' );
 
-        if ( $xmin < 1) {
-            return;
-        }
+        if ( false === $result ) {
 
-        global $wpdb;
+            $xmin = get_option( 'jamah_changes' );
+            $xmin = empty($min) ? $xmin : $min;
 
-        $sql = "SELECT
+            if ( $xmin < 1) {
+                return;
+            }
+
+            global $wpdb;
+
+            $sql = "SELECT
                     abs(TIME_TO_SEC(TIMEDIFF(today.fajr_jamah, tomorrow.fajr_jamah)) / 60) as fajr_jamah,
                     abs(TIME_TO_SEC(TIMEDIFF(today.zuhr_jamah, tomorrow.zuhr_jamah)) /60) as zuhr_jamah,
                     abs(TIME_TO_SEC(TIMEDIFF(today.asr_jamah, tomorrow.asr_jamah)) /60) as asr_jamah,
@@ -74,32 +93,36 @@ class DatabaseConnection
                 ON today.d_date = tomorrow.d_date + INTERVAL 1 DAY
                 WHERE today.d_date = CURDATE() + INTERVAL 1 DAY;";
 
-        $result = $wpdb->get_row($sql, ARRAY_A);
+            $result = $wpdb->get_row($sql, ARRAY_A);
 
-        if ( empty($result) ) {
-            return null;
-        }
-
-        // get jamah name that has changes more than x min
-        $jamahNamesArray = array();
-        foreach($result as $key=>$time) {
-            if ((int)$time >= (int)$xmin) {
-                $diff = (int)$time - (int)$xmin;
-                $jamahNamesArray[$key] = $diff;
+            if ( empty($result) ) {
+                return null;
             }
-        }
 
-        $jamahNamesString = implode(",", array_keys($jamahNamesArray));
+            // get jamah name that has changes more than x min
+            $jamahNamesArray = array();
+            foreach($result as $key=>$time) {
+                if ((int)$time >= (int)$xmin) {
+                    $diff = (int)$time - (int)$xmin;
+                    $jamahNamesArray[$key] = $diff;
+                }
+            }
 
-        if (empty($jamahNamesString)) {
-            return null;
-        }
+            $jamahNamesString = implode(",", array_keys($jamahNamesArray));
 
-        $sql = "SELECT " . $jamahNamesString . "
+            if (empty($jamahNamesString)) {
+                return null;
+            }
+
+            $sql = "SELECT " . $jamahNamesString . "
                 FROM $this->dbTable
                 WHERE d_date = CURDATE() + INTERVAL 1 DAY;";
 
-        $result = $wpdb->get_row($sql, ARRAY_A);
+            $result = $wpdb->get_row($sql, ARRAY_A);
+
+            set_transient( 'jamahChanges', $result, HOUR_IN_SECONDS );
+
+        }
 
         return $result;
     }
@@ -213,6 +236,17 @@ class DatabaseConnection
         $result = $wpdb->get_results($sql, ARRAY_A);
         return $result;
     }
+
+    private function getTransient($transientName)
+    {
+
+        if (date_i18n( 'g:ia' ) === '12:00am') {
+            delete_transient($transientName);
+        }
+
+        return get_transient($transientName);
+    }
+
 }
 
 

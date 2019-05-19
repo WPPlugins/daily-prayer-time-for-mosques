@@ -39,12 +39,15 @@ if ( empty($data)) {
                 </select>               
             </div> 
             <div class='col-sm-2'>
-                <input type='submit' value='Load month' class='button-primary'>
+                <input type='submit' value='Load month' class='button-secondary' style='float: left; margin-right: 20px;'>
+    </form>
+    <form name='quickUpdate' method='post'>
+                <input type='submit' name='quickUpdate' id='quickUpdate' class='button button-primary' value='Update changes'>
             </div>
         </div>
-    </form>
     <div class='row'>
-        <form name='quickUpdate' method='post'>
+        
+        
         <table class='table table-condensed'>
             <thead class='bg-primary text-white'>
                 <tr>
@@ -85,11 +88,6 @@ if ( empty($data)) {
         ";
     }
     echo "
-            <tr>
-                <td colspan='7' class='submit'>
-                    <input type='submit' name='quickUpdate' id='quickUpdate' class='button button-primary' value='Update changes'>
-                </td>
-            </tr>
         </table>
         </form>
         </div>
