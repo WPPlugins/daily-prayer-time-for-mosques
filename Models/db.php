@@ -10,6 +10,8 @@ class DatabaseConnection
     /** @var string */
     private $tableName = "";
 
+    private $transients = array('prayerTimeForToday', 'fajrJamahForTomorrow', 'jamahChanges');
+
     public function __construct()
     {
         global $wpdb;
@@ -160,6 +162,8 @@ class DatabaseConnection
      */
     public function insertRow($row)
     {
+        $this->deleteTransients();
+        
         global $wpdb;
 
         $createIfNotUpdate = "INSERT INTO " .$this->dbTable. " VALUES (";
@@ -212,6 +216,8 @@ class DatabaseConnection
 
     public function updateRow($monthData)
     {
+        $this->deleteTransients();
+
         global $wpdb;
 
         foreach ($monthData as $day) {
@@ -245,6 +251,13 @@ class DatabaseConnection
         }
 
         return get_transient($transientName);
+    }
+
+    private function deleteTransients()
+    {
+        foreach( $this->transients as $transientName ) {
+            delete_transient($transientName);
+        }
     }
 
 }

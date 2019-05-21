@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Daily Prayer Time
-Version: 2019.5.19.1
+Version: 2019.5.21
 Plugin URI: https://wordpress.org/plugins/daily-prayer-time-for-mosques/
 Description: Display yearly, monthly and daily prayer time, ramadan time vertically or horizontally, in any language
 Author: <a href="http://mmrs151.wordpress.com">mmrs151</a>
@@ -18,6 +18,8 @@ require_once ('Models/DigitalScreen.php');
 
 class DailyPrayerTime extends WP_Widget
 {
+    private $version = '2019.5.21';
+
     public function __construct()
     {
         $widget_details = array(
@@ -63,7 +65,7 @@ class DailyPrayerTime extends WP_Widget
     }
 
     private function add_stylesheet() {
-        wp_register_style( 'timetable-style', plugins_url('Assets/css/styles.css', __FILE__), array(), '2019.5.19' );
+        wp_register_style( 'timetable-style', plugins_url('Assets/css/styles.css', __FILE__), array(), $this->version );
         wp_enqueue_style( 'timetable-style' );
 
         wp_register_style( 'verge-style', plugins_url('Assets/css/vergestyles.css', __FILE__) );
@@ -90,7 +92,7 @@ class DailyPrayerTime extends WP_Widget
     {
         $path = plugin_dir_url( __FILE__ ); // I am in Models
 
-        wp_enqueue_script( 'dpt',$path. 'Assets/js/dpt.js', array( 'jquery' ), '2019.5.19', true );
+        wp_enqueue_script( 'dpt',$path. 'Assets/js/dpt.js', array( 'jquery' ), $this->version, true );
 
         $protocol = isset( $_SERVER['HTTPS'] ) ? 'https://' : 'http://';
         $params = array(

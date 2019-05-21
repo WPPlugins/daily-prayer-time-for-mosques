@@ -17,9 +17,11 @@ DPT = {
         this.dsRefresh('get_ds_prayer_timetable', '#dsPrayerTimetable', 75);
         this.dsRefreshNextPrayer();
         this.dsRefresh('get_ds_iqamah_update', '#dsIqamahUpdate', 80);
-
         this.dsRefresh('get_ds_blink', '#dsBlink', 85);
 
+        this.refreshAt(2, 0, 0);
+        this.refreshAt(12, 0, 0);
+        this.refreshAt(18, 0, 0);
     },
 
     monthlyCalendarChange: function () {
@@ -40,7 +42,7 @@ DPT = {
                     jQuery('#monthlyTimetable').html(response);
                 },
                 error: function(errorThrown){
-                    alert(JSON.stringify(errorThrown));
+                    console.log(errorThrown);
                 }
             });
         });
@@ -102,7 +104,7 @@ DPT = {
                 jQuery(element).html(response);
             },
             error: function(errorThrown){
-                DPT.dsRefresh(method, element, seconds);
+                console.log(errorThrown);
             }
         });
     },
@@ -125,7 +127,7 @@ DPT = {
                 }
             },
             error: function(errorThrown){
-                DPT.dsRefreshNextPrayer(method, element, seconds)
+                console.log(errorThrown);
             }
         });
     },
@@ -168,7 +170,8 @@ DPT = {
                 opacity: 0.9,
             }, (10000), function() {
             });
-            setTimeout(function() { jQuery('#overlay').remove(); }, 1000 * 60 * parseInt(min) );
+            // setTimeout(function() { jQuery('#overlay').remove(); }, 1000 * 60 * parseInt(min) );
+            setTimeout(function() { window.location.reload() }, 1000 * 60 * parseInt(min) );
         }
     },
 
@@ -177,6 +180,23 @@ DPT = {
         if (sec < 0) {sec = "59"};
         return sec;
     },
+
+    refreshAt: function (hours, minutes, seconds) {
+        var now = new Date();
+        var then = new Date();
+    
+        if(now.getHours() > hours ||
+           (now.getHours() == hours && now.getMinutes() > minutes) ||
+            now.getHours() == hours && now.getMinutes() == minutes && now.getSeconds() >= seconds) {
+            then.setDate(now.getDate() + 1);
+        }
+        then.setHours(hours);
+        then.setMinutes(minutes);
+        then.setSeconds(seconds);
+    
+        var timeout = (then.getTime() - now.getTime());
+        setTimeout(function() { window.location.reload(true); }, timeout);
+    }
 };
 jQuery(document).ready(function() { DPT.init(); });
 
