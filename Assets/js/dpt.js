@@ -1,5 +1,5 @@
 var isTimerOn = false;
-
+const DAYS_IN_SECONDS = (60 * 60 * 24);
 DPT = {
     init: function() {
 
@@ -11,17 +11,16 @@ DPT = {
 
         this.startTimer();
 
-        this.dsRefresh('get_ds_clock', '#dsClock');
-        this.dsRefresh('get_ds_date', '#dsDate', 65);
-        this.dsRefresh('get_ds_hijri_date', '#dsHijriDate', 70);
-        this.dsRefresh('get_ds_prayer_timetable', '#dsPrayerTimetable', 75);
+        this.dsRefresh( 'get_ds_date', '#dsDate', DAYS_IN_SECONDS );
+        this.dsRefresh('get_ds_hijri_date', '#dsHijriDate', DAYS_IN_SECONDS );
+        this.dsRefresh('get_ds_prayer_timetable', '#dsPrayerTimetable', DAYS_IN_SECONDS);
         this.dsRefreshNextPrayer();
-        this.dsRefresh('get_ds_iqamah_update', '#dsIqamahUpdate', 80);
-        this.dsRefresh('get_ds_blink', '#dsBlink', 85);
+        this.dsRefresh('get_ds_iqamah_update', '#dsIqamahUpdate', DAYS_IN_SECONDS );
+        this.dsRefresh('get_ds_blink', '#dsBlink', DAYS_IN_SECONDS );
 
-        this.refreshAt(2, 0, 0);
-        this.refreshAt(12, 0, 0);
-        this.refreshAt(18, 0, 0);
+        this.refreshBeforeIqamah();
+
+        this.digitialClock();
     },
 
     monthlyCalendarChange: function () {
@@ -41,8 +40,8 @@ DPT = {
                 success: function(response){
                     jQuery('#monthlyTimetable').html(response);
                 },
-                error: function(errorThrown){
-                    console.log(errorThrown);
+                error: function(responseObj, strError){
+                    console.log(strError);
                 }
             });
         });
@@ -100,12 +99,13 @@ DPT = {
                 'action':method,
             },
             success: function(response){
-                setTimeout(DPT.dsRefresh, (1000 * parseInt(seconds)), method, element );
+                setTimeout(DPT.dsRefresh, ( 1000 * parseInt(seconds)), method, element );
                 jQuery(element).html(response);
             },
-            error: function(errorThrown){
-                console.log(errorThrown);
-            }
+            error: function(responseObj, strError){
+                console.log(strError);
+            },
+            timeout: (1000 * 30) // 30 seconds
         });
     },
 
@@ -119,16 +119,17 @@ DPT = {
                 'action':'get_ds_next_prayer',
             },
             success: function(response){
-                setTimeout(DPT.dsRefreshNextPrayer, (1000 * 60));
+                setTimeout(DPT.dsRefreshNextPrayer, (1000 * 60 * 1) );
                 jQuery('.dsNextPrayer').html(response);
                 if (! isTimerOn ) {
                     DPT.startTimer();
                     isTimerOn = true;
                 }
             },
-            error: function(errorThrown){
-                console.log(errorThrown);
-            }
+            error: function(responseObj, strError){
+                console.log(strError);
+            },
+            timeout: (1000 * 30) // 30 seconds
         });
     },
 
@@ -172,6 +173,8 @@ DPT = {
             });
             // setTimeout(function() { jQuery('#overlay').remove(); }, 1000 * 60 * parseInt(min) );
             setTimeout(function() { window.location.reload() }, 1000 * 60 * parseInt(min) );
+        } else {
+            setTimeout(function() { window.location.reload() }, 1000 * 60 );
         }
     },
 
@@ -196,6 +199,50 @@ DPT = {
     
         var timeout = (then.getTime() - now.getTime());
         setTimeout(function() { window.location.reload(true); }, timeout);
+    },
+
+    refreshBeforeIqamah: function()
+    {
+        var iqamah = jQuery('#refreshPoint').val();
+        if ( ! iqamah ) {
+            return;
+        }
+        iqamah = JSON.parse(iqamah);
+        for(var i = 0; i < iqamah.length; i ++)
+        {
+            var timeParts = iqamah[i].split(":");
+            DPT.refreshAt(timeParts[0], timeParts[1], timeParts[2]);
+        }
+
+        DPT.refreshAt('00', '00', '00');
+        DPT.refreshAt('02', '00', '00');
+
+    },
+
+    digitialClock: function ()
+    {
+        var newDate = new Date();
+
+        newDate.setDate(newDate.getDate());
+
+        setInterval( function() {
+            var minutes = new Date().getMinutes();
+            jQuery("#min").html(( minutes < 10 ? "0" : "" ) + minutes);
+            },1000);
+            
+        setInterval( function() {
+            var date = new Date();
+            var hours = date.getHours() == 0
+                ? 12 : date.getHours() > 12
+                ? date.getHours() - 12
+                : date.getHours();
+            jQuery("#hours").html(( hours < 10 ? "0" : "" ) + hours);
+            }, 1000);
+
+        setInterval( function() {
+            var ampm = new Date().getHours() < 12 ? 'AM' : 'PM';
+            jQuery("#ampm").html( ampm );
+            }, 1000);
     }
 };
 jQuery(document).ready(function() { DPT.init(); });

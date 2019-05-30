@@ -26,7 +26,6 @@ class DigitalScreen extends DailyShortCode
 
     public function displayDigitalScreen()
     {
-
         $html = $this->getTopRow()
             . $this->getMiddleRow()
             .$this->getBottomRow();
@@ -49,11 +48,17 @@ class DigitalScreen extends DailyShortCode
         $html = '
         <div class="container-fluid x-board">
             <input type="hidden" value="' . $this->screenTimeout . '" id="screenTimeout">
+            <input type="hidden" value="' . htmlspecialchars(json_encode($this->getRefreshPoint())) . '" id="refreshPoint">
             <div class="row top-row">
                 <div class="time ' . $timeClass . 'col-xs-12 text-center ' . $height . '">
-                    <div class="align-middle">
-                        <span id="dsClock"></span>
-                    </div>
+                <div class="clock align-middle">
+                  <ul class="clock">
+                      <li id="hours"></li>
+                      <li id="point">:</li>
+                      <li id="min"></li>
+                      <li id="ampm"></li>
+                  </ul>
+                </div>
                 </div>
                 <div class="' . $dateClass . ' col-xs-12 text-center bg-white ' . $height . '">
                     <div class="align-middle">
@@ -215,6 +220,17 @@ class DigitalScreen extends DailyShortCode
         }
 
         return null;
+    }
+
+    private function getRefreshPoint()
+    {
+        $result = array();
+        $iqamahTimes = $this->db->getIqamahTimeForToday();
+        foreach($iqamahTimes as $iqamah) {
+            $result[] = date( "H:i:s", strtotime( $iqamah . "-15 minutes" ) );
+        }
+
+        return $result;
     }
 
 }

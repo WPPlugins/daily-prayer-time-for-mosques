@@ -34,7 +34,7 @@ class DailyShortCode extends TimetablePrinter
     private $displayHijriDate = false;
 
     /** $var db */
-    private $db;
+    protected $db;
 
     public function __construct()
     {

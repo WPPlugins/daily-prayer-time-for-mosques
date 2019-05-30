@@ -91,7 +91,7 @@ $timetable = new TimetablePrinter();
                     </tr>
                     <tr>
                         <?php foreach ($names as $key => $val) { ?>
-                            <td><input style="width:210px;" type="text" name="timesLocal[<?php echo $key; ?>]" value="<?php echo $val; ?>" /></td>
+                            <td><input style="width:210px;" type="text" name="timesLocal[<?php echo $key; ?>]" value="<?php echo stripslashes($val); ?>" /></td>
                         <?php } ?>
                     </tr>
                 </table>

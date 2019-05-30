@@ -273,6 +273,7 @@ h3.printSiteName {
 span.dptScNextPrayer {
     font-weight: bold;
     text-transform: uppercase;
+    word-spacing: 30px;
 }
 h2.dptScTime {
     margin: 0px;
@@ -280,6 +281,10 @@ h2.dptScTime {
 h2.vertical div span h2.dptScTime {
     margin: 10px;
 }
+h2#dsNextPrayer div span h2.dptScTime {
+    font-size: 2em !important;
+}
+
 .jamahChanges span{
     margin-left: 20px;
     margin-right: 20px;
@@ -461,14 +466,17 @@ height: 70%;
 }
 
 .x-board table td.prayerName {
-    background: #423f3f;
+    background: #423f3f !important;
     color: #eee;
 }
 
 .x-board table thead tr th,
+.x-board table thead tr td,
 .x-board table tbody tr td {
     padding: 0px !important;
     border-bottom: 1px solid rgba(155,96,91,1);
+    border-left: none;
+    border-right: none;
     vertical-align: middle;
     border-collapse: collapse;
     color: #eee;
@@ -488,15 +496,17 @@ height: 70%;
 }
 
 .x-board .nextPrayer {
-    color: #fff;
+    color: #fff !important;
 }
 
 .x-board .nextPrayer h2 {
-    font-size: 10vh;
-    margin: 50px;
+    color: #fff !important;
+    font-size: 10vh !important;
+    margin: 30px;
 }
 .x-board .nextPrayer h3 {
-    font-size: 10vh;
+    color: #fff !important;
+    font-size: 10vh !important;
     opacity: .8
 }
 
@@ -650,7 +660,67 @@ now override the 3.3 new styles for modern browsers & apply opacity
     }
 }
 
+.clock {
+    margin: 0 auto;
+    color: #fff;
+}
 
+ul.clock {
+    margin: 0 auto;
+    padding: 0px;
+    list-style: none;
+    border: none;
+    word-spacing: -10px;
+}
+
+ul.clock li {
+    display: inline;
+    font-family: 'BebasNeueRegular', Arial, Helvetica, sans-serif;
+    text-shadow: 0 0 5px #00c6ff;
+}
+
+ul.clock li#sec {
+    font-size: 20px !important;
+}
+#point {
+    position: relative;
+    -moz-animation: mymove 1s ease infinite;
+    -webkit-animation: mymove 1s ease infinite;
+}
+
+/* Simple Animation */
+@-webkit-keyframes mymove {
+    0% {opacity: 1.0;
+    text-shadow: 0 0 20px #00c6ff;
+    }
+
+    50% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    100% {
+        opacity: 1.0;
+        text-shadow: 0 0 20px #00c6ff;
+    }
+}
+
+@-moz-keyframes mymove {
+    0% {
+        opacity: 1.0;
+        text-shadow: 0 0 20px #00c6ff;
+    }
+
+    50% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    100% {
+        opacity: 1.0;
+        text-shadow: 0 0 20px #00c6ff;
+    }
+}
 
 /*Print*/
 @media print {

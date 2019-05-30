@@ -274,9 +274,10 @@ class TimetablePrinter
         return $html;
     }
 
-	/**
+    /**
      * @param array $row
      *
+     * @param int $countStart
      * @return string
      */
     protected function getNextIqamahTime(array $row, $countStart=60)
@@ -405,7 +406,7 @@ class TimetablePrinter
         }
         $timeRelated = $this->getLocalTimes();
         $print = "<div class='jamahChanges " . $digitalScreenClass . "'>
-            <span class='x-time-text'>" . $timeRelated['iqamah update'] . "</span>";
+            <span class='x-time-text'>" . stripslashes($timeRelated['iqamah update']) . "</span>";
         $prayerNames = $this->getLocalPrayerNames();
 
         foreach($row['jamah_changes'] as $key=>$time) {

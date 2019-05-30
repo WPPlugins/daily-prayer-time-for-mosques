@@ -378,6 +378,7 @@ class DailyTimetablePrinter extends TimetablePrinter
         if ( is_null($nextPrayer) ) {
             $nextPrayerName = $nextFajr;
         }
+
         if ($nextIqamah) {
             $timeLeftText = $this->getLocalizedNumber( $nextIqamah ) .':00';
             $minLeftText = '<span class="timeLeft '.$this->getIqamahClass( $nextIqamah ).'">'. $this->localTimes["minute"] .'</span>';
@@ -401,7 +402,7 @@ class DailyTimetablePrinter extends TimetablePrinter
                 .'</h2>
             </span>
             ';
-        if (! $this->isJumahDisplay($row)) {
+        if (! $this->isJumahDisplay($row) ) {
             $nextPrayerString .= '<span class="green">
                 <span class="timeLeftCountDown timeLeft '.$this->getIqamahClass( $nextIqamah ).'">'.  $timeLeftText .' </span>
                 ' . $minLeftText . '
