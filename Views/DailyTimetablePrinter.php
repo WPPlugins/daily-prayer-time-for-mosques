@@ -36,8 +36,16 @@ class DailyTimetablePrinter extends TimetablePrinter
             '</tr>
             <tr><th class="tableHeading">' .$this->localHeaders['iqamah']. '</th>'
                   .$this->printJamahTime($row, false).
-            '</tr>
-        </table>';
+            '</tr>';
+
+        if ( get_option('jumuah') && ! $this->todayIsFriday() ) {
+            $table .= '<tr>
+                            <th class="tableHeading">' . stripslashes($this->getLocalHeaders()['jumuah']) . '</th>
+                            <td colspan="6" class="prayerName">' . get_option('jumuah') . '</td>
+                        </tr>';
+        }
+
+        $table .= '</table>';
 
         return $table;
     }
@@ -153,10 +161,6 @@ class DailyTimetablePrinter extends TimetablePrinter
         }
         $colspan = 7;
         $ramadanTds = '<td></td>';
-        if ( get_option('jumuah') && ! $this->todayIsFriday() ) {
-            $colspan = 8;
-            $ramadanTds = '<td></td><td></td>';
-        }
 
         if (get_option('ramadan-chbox') && ! $row['hideRamadan']) {
             $ramadan = '
@@ -207,9 +211,7 @@ class DailyTimetablePrinter extends TimetablePrinter
             $class = $nextPrayer == $key ? 'highlight' : '';
             $ths .= "<th class='tableHeading" . $this->tableClass . " ". $class."'>".$prayerName."</th>";
         }
-        if ( get_option('jumuah') && ! $this->todayIsFriday() ) {
-            $ths .= "<th class='tableHeading" . $this->tableClass . " ". $class."'>". $this->localHeaders['jumuah']."</th>";
-        }
+
         return $ths;
     }
 
@@ -235,9 +237,7 @@ class DailyTimetablePrinter extends TimetablePrinter
             }
             $tds .= "<td ". $rowspan ." ".$class.">".$this->getFormattedDateForPrayer( $azan, $key )."</th>";
         }
-        if ( get_option('jumuah') && ! $this->todayIsFriday() ) {
-            $tds .= "<td rowspan='2'>".get_option('jumuah')."</th>";
-        }
+
         return $tds;
     }
 

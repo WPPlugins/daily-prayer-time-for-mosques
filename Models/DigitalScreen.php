@@ -45,10 +45,19 @@ class DigitalScreen extends DailyShortCode
             $height = "height-50 ";
             $verticalClass = "vertical";
         }
+
+        if ( get_option('hijri-chbox')) {
+            $date = date_i18n( 'D jS  M' );
+        } else {
+            $date = date_i18n( 'l ' . get_option( 'date_format' ) );
+        }
+
         $html = '
         <div class="container-fluid x-board">
             <input type="hidden" value="' . $this->screenTimeout . '" id="screenTimeout">
-            <input type="hidden" value="' . htmlspecialchars(json_encode($this->getRefreshPoint())) . '" id="refreshPoint">
+            <input type="hidden" value="' . htmlspecialchars(json_encode($this->getRefreshPoints())) . '" id="refreshPoint">
+            <input type="hidden" value="' . htmlspecialchars(json_encode($this->getAdhanTimes())) . '" id="adhanTime">
+            <input type="hidden" value="' . htmlspecialchars(json_encode($this->getFajrAdhanTime())) . '" id="fajrAdhanTime">
             <div class="row top-row">
                 <div class="time ' . $timeClass . 'col-xs-12 text-center ' . $height . '">
                 <div class="clock align-middle">
@@ -62,8 +71,10 @@ class DigitalScreen extends DailyShortCode
                 </div>
                 <div class="' . $dateClass . ' col-xs-12 text-center bg-white ' . $height . '">
                     <div class="align-middle">
-                        <span id="dsDate" class="date-eng h6 ' . $verticalClass . '"></span>
-                        <span id="dsHijriDate" class="'. $verticalClass . 'hijri"></span>
+                        <span id="dsDate" class="date-eng h6 ' . $verticalClass . '">' . $date. '</span>
+                        <span id="dsHijriDate" class="'. $verticalClass . 'hijri">
+                        ' . $this->getHijriDate(date("d"), date("m"), date("Y"), $this->getRow()) . '
+                        </span>
                     </div>
                 </div>
                 <div class="col-sm-2 col-xs-12 text-right align-middle padding-null">';
@@ -91,10 +102,73 @@ class DigitalScreen extends DailyShortCode
         $html =  '
             <div class="row middle-row bg-red">
                 <div class="'. $leftClass .'">
-                    <table id="dsPrayerTimetable" class="table height-100 '. $verticalClass .'">';
+                    <table id="dsPrayerTimetable" class="table height-100 '. $verticalClass .'">
+                    <thead class="bg-dark">
+                <tr>
+                    <td>
+                        <span class="dpt_start">' . strtoupper($this->getLocalHeaders()['prayer']) . '</span>
+                    </td>
+                    <td>
+                        <span class="dpt_start">' . strtoupper($this->getLocalHeaders()['begins']) . '</span>
+                    </td>
+                    <td> 
+                        <span class="dpt_jamah">' . strtoupper($this->getLocalHeaders()['iqamah']) . '</span>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="prayerName">
+                        <span>' . $this->getLocalPrayerNames()['fajr'] . '</span>
+                    </td>
+                    <td class="l-red">' . do_shortcode("[fajr_start]") . '</td>
+                    <td>' . do_shortcode("[fajr_prayer]") . '</td>
+                </tr>
+                <tr>
+                    <td class="prayerName"><span>' . $this->getLocalPrayerNames()['sunrise'] . '</span></td>
+                    <td class="prayerName" colspan="2">' . do_shortcode("[sunrise]") . '</td>
+                </tr>';
 
+        if ( get_option('jumuah') && $this->todayIsFriday() && $this->isJumahDisplay($this->row)) {
+            $html .= '<tr>
+                            <td class="prayerName"><span>' . stripslashes($this->getLocalHeaders()['jumuah']) . '</span></td>
+                            <td colspan="2" class="prayerName">' . get_option('jumuah') . '</td>
+                        </tr>';
+        } else {
+            $html .= '
+            <tr>
+                <td class="prayerName"><span>' . $this->getLocalPrayerNames()['zuhr'] . '</span></td>
+                <td class="l-red">' . do_shortcode("[zuhr_start]") . '</td>
+                <td>' . do_shortcode("[zuhr_prayer]") . '</td>
+            </tr>
+    ';
+        }
+
+        $html .= '<tr>
+            <td class="prayerName"><span>' . $this->getLocalPrayerNames()['asr'] . '</span></td>
+            <td class="l-red">' . do_shortcode("[asr_start]") . '</td>
+            <td>' . do_shortcode("[asr_prayer]") . '</td>
+        </tr>
+        <tr>
+            <td class="prayerName"><span>' . $this->getLocalPrayerNames()['maghrib'] . '</span></td>
+            <td class="l-red">' . do_shortcode("[maghrib_start]") . '</td>
+            <td>' . do_shortcode("[maghrib_prayer]") . '</td>
+        </tr>
+        <tr>
+            <td class="prayerName"><span>' . $this->getLocalPrayerNames()['isha'] . '</span></td>
+            <td class="l-red">' . do_shortcode("[isha_start]") . '</td>
+            <td>' . do_shortcode("[isha_prayer]") . '</td>
+        </tr>';
+        if ( get_option('jumuah') && (! $this->todayIsFriday() || ! $this->isJumahDisplay($this->row)) ) {
+            $html .= '
+                <tr>
+                    <td class="prayerName"><span>' . stripslashes($this->getLocalHeaders()['jumuah']) . '</span></td>
+                    <td colspan="2" class="prayerName">' . get_option('jumuah') . '</td>
+                </tr>';
+            }
         $html .= '
-            </table>
+            </tbody>
+                    </table>
         </div>';
 
         $transitionEffect = get_option('transitionEffect');
@@ -129,13 +203,13 @@ class DigitalScreen extends DailyShortCode
                 <div class="row bottom-row">
                     <div class="bg-dark col-sm-3 col-xs-12 text-center height-100 align-middle">
                         <div class="align-middle">
-                                <span id="dsBlink" class="blink"></span>
+                                <span id="dsBlink" class="blink">' . $this->getBlink() . '</span>
                         </div>
                     </div>                
                     <div class="col-sm-9 col-xs-12 height-100">
                         <div class="align-middle">
                             <h3 class="text-primary scrolling">
-                                <marquee id="dsIqamahUpdate" scrollamount="11"></marquee> 
+                                <marquee id="dsIqamahUpdate" scrollamount="11">' . $this->getIqamahUpdate() . '</marquee> 
                             </h3> 
                         </div>
                     </div>
@@ -149,13 +223,13 @@ class DigitalScreen extends DailyShortCode
                     <div class="col-sm-12 col-xs-12 height-30">
                         <div class="align-middle">
                             <h3 class="text-primary scrolling-vertical">
-                                <marquee id="dsIqamahUpdate" scrollamount="11"></marquee> 
+                                <marquee id="dsIqamahUpdate" scrollamount="11">' . $this->getIqamahUpdate() . '</marquee> 
                             </h3> 
                         </div>
                     </div>
                     <div class="bg-dark col-sm-12 col-xs-12 text-center height-50 align-middle">
                         <div class="align-middle">
-                                <span id="dsBlink" class="blink-'.$verticalClass.'"></span>
+                                <span id="dsBlink" class="blink-'.$verticalClass.'">' . $this->getBlink() . '</span>
                         </div>
                     </div>   
                 </div>
@@ -164,6 +238,20 @@ class DigitalScreen extends DailyShortCode
         }
 
         return $html;
+    }
+
+    private function getIqamahUpdate()
+    {
+        if ( get_option('scrolling-text')) {
+            return get_option('scrolling-text');
+        } else {
+            return do_shortcode("[display_iqamah_update orientation='horizontal']");
+        }
+    }
+
+    private function getBlink()
+    {
+        return get_option('blink-text', 'SILENT YOUR MOBILE');
     }
 
     private function getFirstSlide()
@@ -222,15 +310,38 @@ class DigitalScreen extends DailyShortCode
         return null;
     }
 
-    private function getRefreshPoint()
+    private function getRefreshPoints()
     {
         $result = array();
         $iqamahTimes = $this->db->getIqamahTimeForToday();
+        foreach($iqamahTimes as $iqamah) {
+            $result[] = date( "H:i:s", strtotime( $iqamah . "-16 minutes" ) );
+        }
+
+        return $result;
+    }
+
+    private function getAdhanTimes()
+    {
+        $result = array();
+        $iqamahTimes = $this->db->getIqamahTimeForToday();
+        unset($iqamahTimes[0]); // FAJR
+        unset($iqamahTimes[1]); // sunrise
         foreach($iqamahTimes as $iqamah) {
             $result[] = date( "H:i:s", strtotime( $iqamah . "-15 minutes" ) );
         }
 
         return $result;
     }
+
+    private function getFajrAdhanTime()
+    {
+        $iqamahTimes = $this->db->getIqamahTimeForToday();
+
+        return date( "H:i:s", strtotime( $iqamahTimes[0] . "-15 minutes" ) ); // fajr
+    }
+
+    
+    
 
 }

@@ -1,5 +1,5 @@
 var isTimerOn = false;
-const DAYS_IN_SECONDS = (60 * 60 * 24);
+
 DPT = {
     init: function() {
 
@@ -8,18 +8,9 @@ DPT = {
         this.changeInputBackground();
         this.printDiv();
         this.bs3screenOptions();
-
         this.startTimer();
-
-        this.dsRefresh( 'get_ds_date', '#dsDate', DAYS_IN_SECONDS );
-        this.dsRefresh('get_ds_hijri_date', '#dsHijriDate', DAYS_IN_SECONDS );
-        this.dsRefresh('get_ds_prayer_timetable', '#dsPrayerTimetable', DAYS_IN_SECONDS);
         this.dsRefreshNextPrayer();
-        this.dsRefresh('get_ds_iqamah_update', '#dsIqamahUpdate', DAYS_IN_SECONDS );
-        this.dsRefresh('get_ds_blink', '#dsBlink', DAYS_IN_SECONDS );
-
         this.refreshBeforeIqamah();
-
         this.digitialClock();
     },
 
@@ -86,26 +77,6 @@ DPT = {
         });
         jQuery("#show-settings-link").click(function () {
             jQuery("#screen-options-wrap").css("cssText", "display: block !important;");
-        });
-    },
-
-    dsRefresh: function (method, element, seconds=60) {
-        if (! jQuery('.x-board')[0]) {
-            return;
-        }
-        jQuery.ajax({
-            url: timetable_params.ajaxurl,
-            data: {
-                'action':method,
-            },
-            success: function(response){
-                setTimeout(DPT.dsRefresh, ( 1000 * parseInt(seconds)), method, element );
-                jQuery(element).html(response);
-            },
-            error: function(responseObj, strError){
-                console.log(strError);
-            },
-            timeout: (1000 * 30) // 30 seconds
         });
     },
 
@@ -216,6 +187,15 @@ DPT = {
 
         DPT.refreshAt('00', '00', '00');
         DPT.refreshAt('02', '00', '00');
+    },
+
+    adhaanBeforeIqamah: function() 
+    {
+
+    },
+
+    fajrAdhaanBeforeIqamah: function() 
+    {
 
     },
 

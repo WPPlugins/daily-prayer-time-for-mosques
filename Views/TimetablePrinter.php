@@ -463,7 +463,7 @@ class TimetablePrinter
                 $hijriDate = $hijridateArray['day']. ' '. $hijridateArray['month'] . ' ' . $hijridateArray['year'];
             }
 
-            return '<h6 class="hijriDate">('. $hijriDate .')</h6>';
+            return '<p class="hijriDate">('. $hijriDate .')</p>';
         }
         return;
     }

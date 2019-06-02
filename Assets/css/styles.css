@@ -268,6 +268,7 @@ h3.printSiteName {
     font-weight: initial;
     font-style: italic;
     display: block;
+    margin-bottom: 0px;
 }
 
 span.dptScNextPrayer {
@@ -337,7 +338,7 @@ div.todaySpan {
     color: #000;
     height: 100vh;
     text-align: center;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'BebasNeueRegular', Arial, Helvetica, sans-serif;
 }
 
 #overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: black; opacity: 0; z-index: 99;}
@@ -415,15 +416,15 @@ height: 70%;
     font-size: 3vh !important;
 }
 
-.x-board h6.hijriDate{
+.x-board p.hijriDate{
     display: inline;
     color: blue;
 
 }
-.x-board span.hijri h6{
-    font-size: 5vh !important;
+.x-board span.hijri p{
+    font-size: 4vh !important;
 }
-.x-board span.verticalhijri h6{
+.x-board span.verticalhijri p{
     font-size: 2vh !important;
 }
 
@@ -433,10 +434,10 @@ height: 70%;
     margin-top: 10px;
 }
 .x-board .bg-red {
-    background-color: #641E16;
+    background-color: #0066bf;
 }
 .x-board .bg-green {
-    background-color: #003300;
+    background-color: #008743;
 }
 .x-board .bg-green h2{}
 
@@ -448,7 +449,7 @@ height: 70%;
 }
 
 .x-board .l-red {
-    background-color: #7d3732;
+    background-color: #dd8500;
 }
 
 .x-board table th, .x-board table td {
@@ -466,7 +467,7 @@ height: 70%;
 }
 
 .x-board table td.prayerName {
-    background: #423f3f !important;
+    background: #383838;
     color: #eee;
 }
 
@@ -512,7 +513,6 @@ height: 70%;
 
 .x-board .nextPrayer h2.vertical {
     font-size: 5vh !important;
-    margin: 50px;
 }
 .x-board .nextPrayer h3.vertical {
     font-size: 5vh !important;
@@ -534,7 +534,7 @@ height: 70%;
     animation: blink 1s infinite;
     color: #fff;
     font-weight: bold;
-    font-size: 5vh;
+    font-size: 4vh;
 }
 .x-board .blink-vertical{
     animation: blink 1s infinite;
@@ -582,7 +582,7 @@ h3.scrolling-vertical > marquee > div > span {
 }
 
 .x-board img.logo{
-    max-width: 60%;
+    max-width: 50%;
     max-height: 100%;
 }
 
@@ -761,7 +761,7 @@ ul.clock li#sec {
     table.customStyles tr.highlight, th.highlight, td.highlight {
         background: transparent !important;
     }
-    h6.hijriDate{
+    p.hijriDate{
         display: none;
     }
 }
