@@ -274,7 +274,7 @@ h3.printSiteName {
 span.dptScNextPrayer {
     font-weight: bold;
     text-transform: uppercase;
-    word-spacing: 30px;
+    word-spacing: 10px;
 }
 h2.dptScTime {
     margin: 0px;
@@ -532,15 +532,15 @@ height: 70%;
 
 .x-board .blink{
     animation: blink 1s infinite;
-    color: #fff;
+    color: red;
     font-weight: bold;
     font-size: 4vh;
 }
 .x-board .blink-vertical{
     animation: blink 1s infinite;
-    color: #fff;
+    color: red;
     font-weight: bold;
-    font-size: 3vh;
+    font-size: 4.5vw;
 }
 
 .x-board span.tomorrow {
@@ -597,6 +597,14 @@ h3.scrolling-vertical > marquee > div > span {
 
 .x-board .scrolling-vertical{
     font-size: 3vh;
+}
+
+.x-board h2.dptScTime p.jumuah {
+    font-size: 12vh;
+}
+
+h2.vertical > div > span > h2 > p {
+    font-size: 6vh !important;
 }
 
 @keyframes blink{

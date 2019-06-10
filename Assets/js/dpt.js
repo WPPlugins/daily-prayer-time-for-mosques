@@ -1,4 +1,6 @@
 var isTimerOn = false;
+var fajrAdhaanUrl = 'http://display.hockwellringmasjid.org.uk/wp/wp-content/uploads/2019/06/Fajr_Mecca.mp3';
+var otherAdhaanUrl = 'http://display.hockwellringmasjid.org.uk/wp/wp-content/uploads/2019/06/adhaan_Inani.mp3';
 
 DPT = {
     init: function() {
@@ -12,6 +14,8 @@ DPT = {
         this.dsRefreshNextPrayer();
         this.refreshBeforeIqamah();
         this.digitialClock();
+        this.playFajrAdhaanBeforeIqamah();
+        this.playOtherAdhaanBeforeIqamah();
     },
 
     monthlyCalendarChange: function () {
@@ -155,7 +159,7 @@ DPT = {
         return sec;
     },
 
-    refreshAt: function (hours, minutes, seconds) {
+    executeFunctionOnTime: function (hours, minutes, seconds, func) {
         var now = new Date();
         var then = new Date();
     
@@ -169,7 +173,7 @@ DPT = {
         then.setSeconds(seconds);
     
         var timeout = (then.getTime() - now.getTime());
-        setTimeout(function() { window.location.reload(true); }, timeout);
+        setTimeout(func, timeout);
     },
 
     refreshBeforeIqamah: function()
@@ -182,21 +186,62 @@ DPT = {
         for(var i = 0; i < iqamah.length; i ++)
         {
             var timeParts = iqamah[i].split(":");
-            DPT.refreshAt(timeParts[0], timeParts[1], timeParts[2]);
+            DPT.executeFunctionOnTime(timeParts[0], timeParts[1], timeParts[2], function() { window.location.reload(true); });
         }
 
-        DPT.refreshAt('00', '00', '00');
-        DPT.refreshAt('02', '00', '00');
+        DPT.executeFunctionOnTime('00', '00', '00', function() { window.location.reload(true); });
+        DPT.executeFunctionOnTime('02', '00', '00', function() { window.location.reload(true); });
     },
 
-    adhaanBeforeIqamah: function() 
+    playOtherAdhaanBeforeIqamah: function() 
     {
-
+        var iqamah = jQuery('#otherAdhanTimes').val();
+        if ( ! iqamah ) {
+            return;
+        }
+        iqamah = JSON.parse(iqamah);
+        for(var i = 0; i < iqamah.length; i ++)
+        {
+            var timeParts = iqamah[i].split(":");
+            DPT.executeFunctionOnTime(timeParts[0], timeParts[1], timeParts[2], function(){
+                var audio = new Audio(otherAdhaanUrl);
+                var playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                      // Automatic playback started!
+                      // Show playing UI.
+                    })
+                    .catch(error => {
+                      // Auto-play was prevented
+                      // Show paused UI.
+                    })
+                }
+            });
+        }
     },
 
-    fajrAdhaanBeforeIqamah: function() 
+    playFajrAdhaanBeforeIqamah: function() 
     {
-
+        var iqamah = jQuery('#fajrAdhanTime').val();
+        if ( ! iqamah ) {
+            return;
+        }
+        iqamah = JSON.parse(iqamah);
+        var timeParts = iqamah.split(":");
+        DPT.executeFunctionOnTime(timeParts[0], timeParts[1], timeParts[2], function(adhaan){
+            var audio = new Audio(fajrAdhaanUrl);
+            var playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                  // Automatic playback started!
+                  // Show playing UI.
+                })
+                .catch(error => {
+                  // Auto-play was prevented
+                  // Show paused UI.
+                })
+            }
+        });
     },
 
     digitialClock: function ()

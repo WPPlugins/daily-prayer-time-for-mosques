@@ -56,7 +56,7 @@ class DigitalScreen extends DailyShortCode
         <div class="container-fluid x-board">
             <input type="hidden" value="' . $this->screenTimeout . '" id="screenTimeout">
             <input type="hidden" value="' . htmlspecialchars(json_encode($this->getRefreshPoints())) . '" id="refreshPoint">
-            <input type="hidden" value="' . htmlspecialchars(json_encode($this->getAdhanTimes())) . '" id="adhanTime">
+            <input type="hidden" value="' . htmlspecialchars(json_encode($this->getOtherAdhanTimes())) . '" id="otherAdhanTimes">
             <input type="hidden" value="' . htmlspecialchars(json_encode($this->getFajrAdhanTime())) . '" id="fajrAdhanTime">
             <div class="row top-row">
                 <div class="time ' . $timeClass . 'col-xs-12 text-center ' . $height . '">
@@ -321,15 +321,17 @@ class DigitalScreen extends DailyShortCode
         return $result;
     }
 
-    private function getAdhanTimes()
+    private function getOtherAdhanTimes()
     {
         $result = array();
         $iqamahTimes = $this->db->getIqamahTimeForToday();
-        unset($iqamahTimes[0]); // FAJR
-        unset($iqamahTimes[1]); // sunrise
-        foreach($iqamahTimes as $iqamah) {
-            $result[] = date( "H:i:s", strtotime( $iqamah . "-15 minutes" ) );
-        }
+        unset($iqamahTimes[0]); // remoe FAJR
+        unset($iqamahTimes[1]); // remove sunrise
+
+        $result[] = date( "H:i:s", strtotime( $iqamahTimes[2] . "-15 minutes" ) ); // zuhr
+        $result[] = date( "H:i:s", strtotime( $iqamahTimes[3] . "-15 minutes" ) ); // asr
+        $result[] = date( "H:i:s", strtotime( $iqamahTimes[4] . "0 minutes" ) ); // maghrib
+        $result[] = date( "H:i:s", strtotime( $iqamahTimes[5] . "-15 minutes" ) ); // isha
 
         return $result;
     }

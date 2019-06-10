@@ -428,7 +428,7 @@ class DailyTimetablePrinter extends TimetablePrinter
     private function getNextPrayerTime($nextPrayerName, $dbRow)
     {
         if ( $this->isJumahDisplay($dbRow) ) {
-            return get_option('jumuah');
+            return '<p class="jumuah">' . get_option('jumuah') . '</span>';
         }
         return $this->formatDateForPrayer($nextPrayerName);
     }
