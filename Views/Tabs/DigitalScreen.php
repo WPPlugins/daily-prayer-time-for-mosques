@@ -36,7 +36,7 @@
                     </tr>
                     <tr class="ds-slides">
                         <td>Transition Speed</td>
-                        <td><input type="number" class="slider-text" name="transitionSpeed" min="5" max="15" placeholder="5" value=<?= get_option("transitionSpeed")/1000 ?>> seconds </td>
+                        <td><input type="number" class="slider-text" name="transitionSpeed" placeholder="5" value=<?= get_option("transitionSpeed")/1000 ?>> seconds </td>
                     </tr>
 
                     <tr class="ds-slides">
@@ -95,6 +95,9 @@
             <li>Use shortcode <code>[digital_screen view='vertical' dim=10]</code> to dim vertically screen for 10 mins when prayer starts</li>
             <li>Select page template <code>Digital Screen Prayer Time</code></li>
         </div>
+    </div>
+    <div class="row">
+        <?php include 'subscription.php' ?>
     </div>
 </div>
 

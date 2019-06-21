@@ -36,16 +36,20 @@ try {
                 <li><a class="url" href="<?= $readFile ?>"> Download current timetable <i class="fa fa-cloud-download" aria-hidden="true"></i></a> (<i>do not change the column heading</i>)</li>
                 <li><a class="url" target="_blank" href="https://www.salahtimes.com/search"> Get prayer start time for your city <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
                 <li>Valid date formats are:
-                    <ul class="red">
-                        <li> - Y-M-D</li>
-                        <li> - M/D/Y </li>
-                        <li> - D-M-Y</li>
-                        <li> - D.M.Y</li>
+                    <ul class='green' style="padding-left: 20px;">
+                        <li type="disc"> YYYY-MM-DD <i class='smallFont'>(2023-10-20)</i></li>
+                        <li type="disc"> YY-MM-DD <i class='smallFont'>(23-10-20)</i></li>
+                        <li type="disc"> MM/DD/YYYY <i class='smallFont'>(10/20/2021)</i></li>
+                        <li type="disc"> DD-MM-YYYY <i class='smallFont'>(20-10-2023)</i></li>
+                        <li type="disc"> DD.MM.YYYY <i class='smallFont'>(13.10.2034)</i></li>
                     </ul>
                 </li>
                 <li>Valid time format is <span class="red">HH:MM</span> [24 hours]</li>
                 <li><a class="url" href="admin.php?page=helps-and-tips">Check Helps and Tips for usage <i class="fa fa-cogs" aria-hidden="true"></i></a></li>
             </ol>
         </div>
+    </div>
+    <div class="row">
+        <?php include 'subscription.php' ?>
     </div>
 </div>

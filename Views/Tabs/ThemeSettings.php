@@ -49,11 +49,11 @@
                         <td><input type="text" name="highlight" value="<?php echo get_option('highlight') ?>" class="color-field"></td>
                     </tr>
                     <tr>
-                        <td>Notification background</td>
+                        <td>Notification/blink background</td>
                         <td><input type="text" name="notificationBackground" value="<?php echo get_option('notificationBackground') ?>" class="color-field"></td>
                     </tr>
                     <tr>
-                        <td>Notification Font</td>
+                        <td>Notification/blink Font</td>
                         <td><input type="text" name="notificationFont" value="<?php echo get_option('notificationFont') ?>" class="color-field"></td>
                     </tr>
                 </table>

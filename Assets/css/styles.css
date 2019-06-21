@@ -284,6 +284,7 @@ h2.vertical div span h2.dptScTime {
 }
 h2#dsNextPrayer div span h2.dptScTime {
     font-size: 2em !important;
+    font-weight: 700;
 }
 
 .jamahChanges span{
@@ -402,7 +403,11 @@ height: 70%;
     font-weight:bold;
 }
 .x-board .vertical-time{
-    font-size: 6vh;
+    font-size: 17vw;
+    height: 70%;
+}
+.x-board .vertical-date{
+    height: 30%;
 }
 
 .x-board .date-eng{
@@ -532,15 +537,13 @@ height: 70%;
 
 .x-board .blink{
     animation: blink 1s infinite;
-    color: red;
     font-weight: bold;
     font-size: 4vh;
 }
 .x-board .blink-vertical{
     animation: blink 1s infinite;
-    color: red;
     font-weight: bold;
-    font-size: 4.5vw;
+    font-size: 5vw;
 }
 
 .x-board span.tomorrow {
@@ -641,6 +644,17 @@ inspired from https://codepen.io/Rowno/pen/Afykb
 .carousel-fade .carousel-control {
     z-index: 2;
 }
+
+@media only screen and (max-width: 900px) {
+    h2#dsNextPrayer div span h2.dptScTime{
+        font-size: 1em !important;
+        font-weight: 700;
+    }
+    .x-board .nextPrayer h2 {
+        margin: 0px;
+    }
+}
+
 
 /*
 WHAT IS NEW IN 3.3: "Added transforms to improve carousel performance in modern browsers."

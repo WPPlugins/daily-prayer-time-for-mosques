@@ -52,6 +52,8 @@ class DatabaseConnection
         return array($result['fajr_jamah'], $result['sunrise'], $result['zuhr_jamah'], $result['asr_jamah'], $result['maghrib_jamah'], $result['isha_jamah']);
     }
 
+
+
     /**
      * @return array
      */

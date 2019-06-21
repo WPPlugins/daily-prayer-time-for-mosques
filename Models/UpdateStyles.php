@@ -59,7 +59,10 @@ class UpdateStyles
                 table.customStyles th.notificationBackground{
                     background:" . get_option('notificationBackground') . ";" .
                     "color: " . get_option( 'notificationFont' )
-                ."}";
+                ."}" .
+                ".notificationBackground{
+                    background:" . get_option('notificationBackground') . ";" .
+                    "color: " . get_option( 'notificationFont' ) ."}";
         }
 
         $evenRow = get_option('evenRow');

@@ -41,7 +41,7 @@ class DigitalScreen extends DailyShortCode
         $verticalClass = "";
         if (  $this->isPortrait  ) {
             $timeClass = "col-xs-12 vertical-time ";
-            $dateClass = "col-xs-12 ";
+            $dateClass = "col-xs-12 vertical-date";
             $height = "height-50 ";
             $verticalClass = "vertical";
         }
@@ -201,7 +201,7 @@ class DigitalScreen extends DailyShortCode
 
         $html = '
                 <div class="row bottom-row">
-                    <div class="bg-dark col-sm-3 col-xs-12 text-center height-100 align-middle">
+                    <div class="notificationBackground col-sm-3 col-xs-12 text-center height-100 align-middle">
                         <div class="align-middle">
                                 <span id="dsBlink" class="blink">' . $this->getBlink() . '</span>
                         </div>
@@ -227,7 +227,7 @@ class DigitalScreen extends DailyShortCode
                             </h3> 
                         </div>
                     </div>
-                    <div class="bg-dark col-sm-12 col-xs-12 text-center height-50 align-middle">
+                    <div class="notificationBackground col-sm-12 col-xs-12 text-center height-50 align-middle">
                         <div class="align-middle">
                                 <span id="dsBlink" class="blink-'.$verticalClass.'">' . $this->getBlink() . '</span>
                         </div>
@@ -312,35 +312,36 @@ class DigitalScreen extends DailyShortCode
 
     private function getRefreshPoints()
     {
-        $result = array();
-        $iqamahTimes = $this->db->getIqamahTimeForToday();
+        $result = $this->db->getPrayerTimeForToday();
+        $iqamahTimes =  array($result['fajr_jamah'], $result['sunrise'], $result['zuhr_jamah'], $result['asr_jamah'], $result['maghrib_jamah'], $result['isha_jamah']);
+
+        $refreshPoints = array();
         foreach($iqamahTimes as $iqamah) {
-            $result[] = date( "H:i:s", strtotime( $iqamah . "-16 minutes" ) );
+            $refreshPoints[] = date( "H:i:s", strtotime( $iqamah . "-16 minutes" ) );
         }
 
-        return $result;
+        return $refreshPoints;
     }
 
     private function getOtherAdhanTimes()
     {
-        $result = array();
-        $iqamahTimes = $this->db->getIqamahTimeForToday();
-        unset($iqamahTimes[0]); // remoe FAJR
-        unset($iqamahTimes[1]); // remove sunrise
+        $result = $this->db->getPrayerTimeForToday();
+        $iqamahTimes =  array($result['zuhr_jamah'], $result['asr_jamah'], $result['maghrib_begins'], $result['isha_jamah']);
 
-        $result[] = date( "H:i:s", strtotime( $iqamahTimes[2] . "-15 minutes" ) ); // zuhr
-        $result[] = date( "H:i:s", strtotime( $iqamahTimes[3] . "-15 minutes" ) ); // asr
-        $result[] = date( "H:i:s", strtotime( $iqamahTimes[4] . "0 minutes" ) ); // maghrib
-        $result[] = date( "H:i:s", strtotime( $iqamahTimes[5] . "-15 minutes" ) ); // isha
+        $adhanTimes = array();
+        $adhanTimes[] = date( "H:i:s", strtotime( $iqamahTimes[0] . "-15 minutes" ) ); // zuhr
+        $adhanTimes[] = date( "H:i:s", strtotime( $iqamahTimes[1] . "-15 minutes" ) ); // asr
+        $adhanTimes[] = date( "H:i:s", strtotime( $iqamahTimes[2] . "0 minutes" ) ); // maghrib
+        $adhanTimes[] = date( "H:i:s", strtotime( $iqamahTimes[3] . "-15 minutes" ) ); // isha
 
-        return $result;
+        return $adhanTimes;
     }
 
     private function getFajrAdhanTime()
     {
-        $iqamahTimes = $this->db->getIqamahTimeForToday();
+        $result = $this->db->getPrayerTimeForToday();
 
-        return date( "H:i:s", strtotime( $iqamahTimes[0] . "-15 minutes" ) ); // fajr
+        return date( "H:i:s", strtotime( $result['fajr_jamah'] . "-15 minutes" ) ); // fajr
     }
 
     
