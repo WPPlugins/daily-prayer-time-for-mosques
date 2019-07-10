@@ -163,7 +163,7 @@ class DigitalScreen extends DailyShortCode
             $html .= '
                 <tr>
                     <td class="prayerName"><span>' . stripslashes($this->getLocalHeaders()['jumuah']) . '</span></td>
-                    <td colspan="2" class="prayerName">' . get_option('jumuah') . '</td>
+                    <td colspan="2" class="prayerName"><span>' . get_option('jumuah') . '</span></td>
                 </tr>';
             }
         $html .= '
