@@ -3,6 +3,17 @@ require_once( 'TimetablePrinter.php' );
 
 class MonthlyTimetablePrinter extends TimetablePrinter
 {
+
+        /** @var DPTHelper */
+        protected $dptHelper;
+
+        public function __construct()
+        {
+            $this->dptHelper = new DPTHelper();
+    
+            parent::__construct();
+        }
+    
     /**
      * @param $rows
      * @param $options
@@ -11,9 +22,12 @@ class MonthlyTimetablePrinter extends TimetablePrinter
      */
     public function displayTable($rows, $options)
     {
-        $table = $this->printFullTableTop($options);
+        $table = '<div class="dpt-monthly-table-wrapper" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">';
+        $table .= $this->printFullTableTop($options);
 
         $table .= $this->printFullTableRow( $rows, $options, 'both' );
+
+        $table .= '</div>';
 
         return $table;
     }
@@ -25,14 +39,22 @@ class MonthlyTimetablePrinter extends TimetablePrinter
      */
     private function printFullTableTop($options)
     {
-        if ($options['isRamadan']) {
-            $fajrBegins = $this->localHeaders['begins'];
-            $maghribBegins = $this->localHeaders['fast_ends'];
-            $fajrColspan = 4;
+        if ($this->isRamadan()) {
+            $monthName = 'Ramadan';
+            if ((int)get_option('imsaq') > 0 ) {
+                $fajrBegins = esc_attr($this->localHeaders['begins']);
+                $fajrColspan = 4;
+            } else {
+                $fajrBegins = esc_attr($this->localHeaders['fast_begins']);
+                $fajrColspan = 3;
+            }
+            $maghribBegins = esc_attr($this->localHeaders['fast_ends']);
         } else {
-            $fajrBegins = $this->localHeaders['begins'];
-            $maghribBegins = $this->localHeaders['begins'];
+            $fajrBegins = esc_attr($this->localHeaders['begins']);
+            $maghribBegins = esc_attr($this->localHeaders['begins']);
             $fajrColspan = 3;
+            $dt = DateTime::createFromFormat('!m', $options['monthNumber']);
+            $monthName = $dt->format('F');
         }
 
         $fastingClass = $this->getFastingClass( $options );
@@ -41,42 +63,44 @@ class MonthlyTimetablePrinter extends TimetablePrinter
         $table = "
         <table class='dptTimetable customStyles dptUserStyles'>
          <thead class='prayerName'>
-             <th class='prayerName'></th>
-             <th class='prayerName'></th>
+             <th class='prayerName' colspan='2'>" . $monthName . "</th>
 
-             <th class='prayerName' colspan='$fajrColspan'>" .$prayers['fajr']. "</th>
-             <th class='prayerName' colspan='2'>" .$prayers['zuhr']. "</th>";
-        $table .= "<th class='prayerName' colspan=".$this->getAsrMethodColspan().">" .$prayers['asr']. "</th>";
+             <th class='prayerName' colspan='$fajrColspan'>" . esc_attr($prayers['fajr']) . "</th>
+             <th class='prayerName' colspan=".$this->getZuhrColspan().">" . esc_attr($prayers['zuhr']) . "</th>";
+        $table .= "<th class='prayerName' colspan=".$this->getAsrMethodColspan().">" . esc_attr($prayers['asr']) . "</th>";
         $table .= "
-             <th class='prayerName' colspan='2'>" .$prayers['maghrib']. "</th>
-             <th class='prayerName' colspan='2'>" .$prayers['isha']. "</th>
+             <th class='prayerName' colspan='2'>" . esc_attr($prayers['maghrib']) . "</th>
+             <th class='prayerName' colspan='2'>" . esc_attr($prayers['isha']) . "</th>
          </thead>
          <thead>
-            <th class='tableHeading'>".$this->localTimes['date']."</th>
-            <th class='tableHeading'>".$this->localTimes['day']."</th>
+            <th class='tableHeading'>" . esc_attr($this->localTimes['date']) . "</th>
+            <th class='tableHeading'>" . esc_attr($this->localTimes['day']) . "</th>
             ";
 
-        if ($options['isRamadan']) {
-            $table .="<th class='tableHeading ". $fastingClass ."'>" . $this->localHeaders['fast_begins'] . "</th>";
+        if ($this->isRamadan() && (int)get_option('imsaq') > 0) {
+            $table .="<th class='tableHeading ". $fastingClass ."'>" . esc_attr($this->localHeaders['fast_begins']) . "</th>";
         }
 
             $table.="
             <th class='tableHeading ". $fastingClass ."'>" . $fajrBegins . "</th>
-            <th class='tableHeading'>" .$this->localHeaders['iqamah']. "</th>
-            <th class='tableHeading'>" .$prayers['sunrise']. "</th>
+            <th class='tableHeading'>" . esc_attr($this->localHeaders['iqamah']) . "</th>
+            <th class='tableHeading'>" . esc_attr($prayers['sunrise']) . "</th>";
 
-            <th class='tableHeading'>" .$this->localHeaders['begins']. "</th>
-            <th class='tableHeading'>" .$this->localHeaders['iqamah']. "</th>";
+            if (get_option('zawal')) {
+                $table .=" <th class='tableHeading'>" . esc_attr($prayers['zawal']) . "</th>";
+            }
+            $table .="<th class='tableHeading'>" . esc_attr($this->localHeaders['begins']) . "</th>
+            <th class='tableHeading'>" . esc_attr($this->localHeaders['iqamah']) . "</th>";
 
         $table .= $this->getAsrMethodTh();
 
-        $table .= "<th class='tableHeading'>" .$this->localHeaders['iqamah']. "</th>
+        $table .= "<th class='tableHeading'>" . esc_attr($this->localHeaders['iqamah']) . "</th>
 
             <th class='tableHeading ". $fastingClass ."'>" . $maghribBegins . "</th>
-            <th class='tableHeading'>" .$this->localHeaders['iqamah']. "</th>
+            <th class='tableHeading'>" . esc_attr($this->localHeaders['iqamah']) . "</th>
 
-            <th class='tableHeading'>" .$this->localHeaders['begins']. "</th>
-            <th class='tableHeading'>" .$this->localHeaders['iqamah']. "</th>
+            <th class='tableHeading'>" . esc_attr($this->localHeaders['begins']) . "</th>
+            <th class='tableHeading'>" . esc_attr($this->localHeaders['iqamah']) . "</th>
         </thead>";
 
         return $table;
@@ -95,28 +119,34 @@ class MonthlyTimetablePrinter extends TimetablePrinter
         $table = '';
         $asrMethod = get_option('asrSelect');
         $classFasting = $this->getClassFasting( $options );
-
+        
         foreach($rows as $day) {
             $day['asr_begins'] = ($asrMethod == 'hanafi') ? $day['asr_mithl_2'] : $day['asr_mithl_1'];
 
             $today = explode('-', $day['d_date']);
-            $weekday = date("D", strtotime($day['d_date']));
+            $weekday = date_i18n("l", strtotime($day['d_date']), wp_timezone_string());
+            $classFriday = $this->getClass($today[1], $today[2], $weekday);
 
             $table .= "
-             <tr " . $this->getClass($today[1], $today[2]) . ">
+             <tr " . $classFriday . ">
                 <td>" . date_i18n(get_option( 'date_format' ), strtotime($day['d_date'])). ' '. $this->getHijriDate($today[2], $today[1], $today[0], $day, true) ."</td>
-                <td class=" . $weekday . ">" . $weekday . "</td>
-";
-            if ($options['isRamadan']) {
+                <td class=" . $weekday . ">" . $weekday . "</td>";
+            
+            if ($this->isRamadan() && (int)get_option('imsaq') > 0) {
                 $table .="<td ". $classFasting .">" . $this->formatDateForPrayer($day['fajr_begins'], true). "</td>";
             }
+            
                 $table .= "
                 <td ". $classFasting .">" . $this->formatDateForPrayer($day['fajr_begins']). "</td>
-                <td class='jamah'>" . $this->formatDateForPrayer($day['fajr_jamah']). "</td>
-                <td>" . $this->formatDateForPrayer($day['sunrise']). "</td>
+                <td class='highlight'>" . $this->formatDateForPrayer($day['fajr_jamah']). "</td>
+                <td>" . $this->formatDateForPrayer($day['sunrise']). "</td>";
 
-                <td>" . $this->formatDateForPrayer($day['zuhr_begins']). "</td>
-                <td class='jamah'>" . $this->formatDateForPrayer($day['zuhr_jamah']). "</td>";
+                if (get_option('zawal')) {
+                    $table .="<td>" . $this->formatDateForPrayer($this->dptHelper->getZawalTime($day['zuhr_begins'])). "</td>";
+                }
+                
+                $table .="<td>" . $this->formatDateForPrayer($day['zuhr_begins']). "</td>
+                <td class='highlight'>" . $this->formatDateForPrayer($day['zuhr_jamah']). "</td>";
 
             if ($asrMethod != 'both') {
                 $table .= "<td>" . $this->formatDateForPrayer($day['asr_begins']). "</td>";
@@ -125,13 +155,13 @@ class MonthlyTimetablePrinter extends TimetablePrinter
                     <td>" . $this->formatDateForPrayer($day['asr_mithl_2']). "</td>";
             }
             $table .= "
-                <td class='jamah'>" . $this->formatDateForPrayer($day['asr_jamah']). "</td>
+                <td class='highlight'>" . $this->formatDateForPrayer($day['asr_jamah']). "</td>
 
                 <td ". $classFasting .">" . $this->formatDateForPrayer($day['maghrib_begins']). "</td>
-                <td class='jamah'>" . $this->formatDateForPrayer($day['maghrib_jamah']). "</td>
+                <td class='highlight'>" . $this->formatDateForPrayer($day['maghrib_jamah']). "</td>
 
                 <td>" . $this->formatDateForPrayer($day['isha_begins']). "</td>
-                <td class='jamah'>" . $this->formatDateForPrayer($day['isha_jamah']). "</td>
+                <td class='highlight'>" . $this->formatDateForPrayer($day['isha_jamah']). "</td>
                 </tr>";
         }
 
@@ -146,9 +176,12 @@ class MonthlyTimetablePrinter extends TimetablePrinter
      */
     public function displayTableJamahOnly($rows, $options)
     {
-        $table = $this->printTableTop( $options );
+        $table = '<div class="dpt-monthly-table-wrapper" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">';
+        $table .= $this->printTableTop( $options );
 
         $table .= $this->printTableRow( $rows, $options );
+
+        $table .= '</div>';
 
         return $table;
     }
@@ -161,28 +194,33 @@ class MonthlyTimetablePrinter extends TimetablePrinter
      */
     public function displayTableAzanOnly($rows, $options)
     {
-        $table = $this->printTableTop( $options, true );
+        $table = '<div class="dpt-monthly-table-wrapper" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">';
+        $table .= $this->printTableTop( $options, true );
         $asrMethod = get_option('asrSelect');
 
         foreach($rows as $day) {
             $day['asr_begins'] = ($asrMethod == 'hanafi') ? $day['asr_mithl_2'] : $day['asr_mithl_1'];
 
             $today = explode('-', $day['d_date']);
-            $weekday = date("D", strtotime($day['d_date']));
+            $weekday = date_i18n("l", strtotime($day['d_date']), wp_timezone_string());
+            $classFriday = $this->getClass($today[1], $today[2], $weekday);
+
 
             $table .= "
-             <tr " . $this->getClass($today[1], $today[2]) . ">
+             <tr " . $classFriday . ">
                 <td>" . date_i18n(get_option( 'date_format' ), strtotime($day['d_date'])). ' '. $this->getHijriDate($today[2], $today[1], $today[0], $day, true) ."</td>
 
                 <td class=" . $weekday . ">" . $weekday . "</td>"
-                      . $this->getFastingTdWithData($options['isRamadan'], $day['fajr_begins'], true, true )."
+                      . $this->getFastingTdWithData($day['fajr_begins'], true, true )."
                 <td>" . $this->formatDateForPrayer($day['sunrise']). "</td>
                 <td>" . $this->formatDateForPrayer($day['zuhr_begins']). "</td>
                 <td>" . $this->formatDateForPrayer($day['asr_begins']). "</td>"
-                      . $this->getFastingTdWithData($options['isRamadan'], $day['maghrib_begins'], true )."
+                      . $this->getFastingTdWithData($day['maghrib_begins'], true )."
                 <td>" . $this->formatDateForPrayer($day['isha_begins']). "</td>
                 </tr>";
         }
+
+        $table .= '</div>';
 
         return $table;
     }
@@ -201,27 +239,29 @@ class MonthlyTimetablePrinter extends TimetablePrinter
         $fajrJamah = '';
         $maghribJamah = '';
         $azanOnlyClass = '';
+        $fajrHeading = '';
+        $maghribHeading = '';
 
         $prayers = $this->getLocalPrayerNames(true);
         if ($isAzanOnly) {
-            $fajr = $prayers['fajr'];
-            $maghrib = $prayers['maghrib'];
-            $sunrise =  "<th class='tableHeading'>" .$prayers['sunrise']. "</th>";
+            $fajr = esc_attr($prayers['fajr']);
+            $maghrib = esc_attr($prayers['maghrib']);
+            $sunrise =  "<th class='tableHeading'>" . esc_attr($prayers['sunrise']) . "</th>";
             $azanOnlyClass = 'azanOnly';
         } else {
-            $fajrJamah = "<th class='tableHeading'>" .$prayers['fajr']. "</th>";
-            $maghribJamah = "<th class='tableHeading'>" .$prayers['maghrib']. "</th>";
+            $fajrJamah = "<th class='tableHeading'>" . esc_attr($prayers['fajr']) . "</th>";
+            $maghribJamah = "<th class='tableHeading'>" . esc_attr($prayers['maghrib']) . "</th>";
         }
 
-        if ($options['isRamadan'] && !$isAzanOnly) {
+        if ($this->isRamadan() && !$isAzanOnly) {
             $fajr = '';
             $maghrib = '';
-            $fajrHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" .$this->localHeaders['fast_begins']. $fajr . "</th>";
-            $maghribHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" .$this->localHeaders['fast_ends']. $maghrib . "</th>";
-        } elseif ($options['isRamadan'] && $isAzanOnly) {
-            $fajrHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" .$this->localHeaders['fast_begins'] . "</th>";
+            $fajrHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" . esc_attr($this->localHeaders['fast_begins']) . $fajr . "</th>";
+            $maghribHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" . esc_attr($this->localHeaders['fast_ends']) . $maghrib . "</th>";
+        } elseif ($this->isRamadan() && $isAzanOnly) {
+            $fajrHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" . esc_attr($this->localHeaders['fast_begins']) . "</th>";
             $fajrHeading .= "<th class='tableHeading ".$azanOnlyClass."'>"  . $fajr . "</th>";
-            $maghribHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" .$this->localHeaders['fast_ends']. '/'. $maghrib . "</th>";
+            $maghribHeading = "<th class='tableHeading fasting ".$azanOnlyClass."'>" . esc_attr($this->localHeaders['fast_ends']) . '/'. $maghrib . "</th>";
         } elseif ($isAzanOnly) {
             $fajrHeading = "<th class='tableHeading'>" . $fajr . "</th>";
             $maghribHeading = "<th class='tableHeading'>" . $maghrib . "</th>";;
@@ -230,16 +270,16 @@ class MonthlyTimetablePrinter extends TimetablePrinter
         $table = "
         <table class='dptTimetable customStyles'>
          <tr>
-            <th class='tableHeading'>".$this->localTimes['date']."</th>
-            <th class='tableHeading'>".$this->localTimes['day']."</th>"
+            <th class='tableHeading'>" . esc_attr($this->localTimes['date']) ."</th>
+            <th class='tableHeading'>" . esc_attr($this->localTimes['day']) ."</th>"
                  . $fajrHeading .""
                  .$fajrJamah.""
                  .$sunrise.
-             "<th class='tableHeading'>" .$prayers['zuhr']. "</th>
-             <th class='tableHeading'>" .$prayers['asr']. "</th>"
+             "<th class='tableHeading'>" . esc_attr($prayers['zuhr']) . "</th>
+             <th class='tableHeading'>" . esc_attr($prayers['asr']) . "</th>"
                  . $maghribHeading . ""
                  .$maghribJamah ."".
-             "<th class='tableHeading'>" .$prayers['isha']. "</th>
+             "<th class='tableHeading'>" . esc_attr($prayers['isha']) . "</th>
          </tr>";
 
         return $table;
@@ -258,18 +298,19 @@ class MonthlyTimetablePrinter extends TimetablePrinter
         foreach($rows as $day) {
 
             $today = explode('-', $day['d_date']);
-            $weekday = date("D", strtotime($day['d_date']));
+            $weekday = date_i18n("l", strtotime($day['d_date']), wp_timezone_string());
+            $classFriday = $this->getClass($today[1], $today[2], $weekday);
 
             $table .= "
-             <tr " . $this->getClass($today[1], $today[2]) . ">
+             <tr " . $classFriday . ">
                 <td>" . date_i18n(get_option( 'date_format' ), strtotime($day['d_date'])). ' '. $this->getHijriDate($today[2], $today[1], $today[0], $day, true) ."</td>
 
                 <td class=" . $weekday . ">" . $weekday . "</td>"
-                      . $this->getFastingTdWithData($options['isRamadan'], $day['fajr_begins'], false, true ) . "
+                      . $this->getFastingTdWithData($day['fajr_begins'], false, true ) . "
                 <td>" . $this->formatDateForPrayer($day['fajr_jamah']). "</td>
                 <td>" . $this->formatDateForPrayer($day['zuhr_jamah']). "</td>
                 <td>" . $this->formatDateForPrayer($day['asr_jamah']). "</td>"
-                      . $this->getFastingTdWithData($options['isRamadan'], $day['maghrib_begins'] ) . "
+                      . $this->getFastingTdWithData($day['maghrib_begins'] ) . "
                 <td>" . $this->formatDateForPrayer($day['maghrib_jamah']). "</td>
                 <td>" . $this->formatDateForPrayer($day['isha_jamah']). "</td>
                 </tr>";
@@ -285,7 +326,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
      */
     private function getFastingClass($options)
     {
-        if ( $options['isRamadan'] ) {
+        if ( $this->isRamadan() ) {
             return 'fasting';
         }
         return '';
@@ -298,7 +339,7 @@ class MonthlyTimetablePrinter extends TimetablePrinter
      */
     private function getClassFasting($options)
     {
-        if ( $options['isRamadan'] ) {
+        if ( $this->isRamadan() ) {
             return "class='fasting'";
         }
         return '';
@@ -314,6 +355,17 @@ class MonthlyTimetablePrinter extends TimetablePrinter
             return 2;
         }
         return 3;
+    }
+
+        /**
+     * @return int
+     */
+    private function getZuhrColspan()
+    {
+        if (!empty(get_option('zawal'))) {
+            return 3;
+        }
+        return 2;
     }
 
     /**

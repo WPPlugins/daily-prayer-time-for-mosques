@@ -7,14 +7,55 @@ Template: vergeFramework
 */
 /*@import url("../css/vergestyles.css");*/
 /* Fonts start here */
+
+.dpt-horizontal-wrapper.customStyles {
+  background-color: #134a43;
+}
 .dpt-horizontal-wrapper.customStyles .dpt-heading {
-  font-size: 0;
+  border-bottom: 1px solid #3e605c;
+}
+.dpt-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #3e605c;
 }
 
+.dpt-heading h3 {
+  margin: 0;
+  padding: 10px 30px;
+  font-size: 18px;
+  color: #e2e2e2;
+}
+
+.dpt-heading .date {
+  flex: 1;
+  text-align: left;
+}
+
+.dpt-heading .timetable-link {
+  flex: 1;
+  text-align: right;
+}
 .dpt-horizontal-wrapper.customStyles .dpt-heading h3, .dpt-horizontal-wrapper.customStyles .dpt-heading p {
   display: inline-block;
+  padding-bottom: 0px;
+  font-size: 18px;
+  padding: 10px 30px;
+  color: #e2e2e2;
+}
+
+.dpt-heading .side-by-side {
   width: 50%;
-  margin: 5px 0;
+  border-bottom: 1px solid #3e605c;
+}
+
+h3.date {
+  float: left;
+}
+
+h3.timetable-link {
+  text-align: right;
 }
 
 .dpt-horizontal-wrapper.customStyles .dpt-heading p {
@@ -23,17 +64,20 @@ Template: vergeFramework
 }
 
 .dpt-horizontal-wrapper.customStyles .dpt-wrapper-container {
-  background-color: #eeeeee;
   text-align: center;
-  font-size: 0;
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 .dpt-horizontal-wrapper.customStyles .dpt-wrapper-container .prayer-time {
-  width: calc(100%/6);
+  flex: 1;
   height: 90px;
   display: inline-table;
-  border-right: 1px solid #e2e2e2;
-  padding: 15px 0;
+  border-right: 1px solid #3e605c;
+  padding: 10px 0;
 }
 
 .dpt-horizontal-wrapper.customStyles .dpt-wrapper-container .prayer-time:last-child {
@@ -41,13 +85,13 @@ Template: vergeFramework
 }
 
 .dpt-horizontal-wrapper.customStyles .dpt-wrapper-container .prayer-time.highlight {
-  background-color: #a9b9c9;
+  background-color: #00302a;
 }
 
 .dpt-horizontal-wrapper.customStyles .dpt-wrapper-container .prayer-time h3 {
-  text-align: center;
-  margin: 10px;
   font-size: 18px;
+  color:#e2e2e2;
+  padding-bottom: 0px;
 }
 
 .dpt-horizontal-wrapper.customStyles .dpt-wrapper-container .prayer-time div {
@@ -68,6 +112,20 @@ Template: vergeFramework
   text-align: center;
 }
 
+.prayer-start {
+  color: #bbbbbb;;
+}
+
+.prayer-jamaat {
+  color: #e2e2e2;
+  font-weight: 800;
+}
+
+.dptPrayerIcon{
+  color: yellow;
+  font-size: 25px;
+}
+
 @media only screen and (max-width: 767px) {
   .dpt-horizontal-wrapper.customStyles .dpt-wrapper-container {
     overflow-x: scroll;
@@ -83,12 +141,14 @@ Template: vergeFramework
   }
 }
 
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 500px) {
   .dpt-horizontal-wrapper.customStyles .dpt-heading h3, .dpt-horizontal-wrapper.customStyles .dpt-heading p {
     display: block;
     width: 100%;
   }
-  .dpt-horizontal-wrapper.customStyles .dpt-heading p {
-    text-align: left;
+  .side-by-side {
+    text-align: left !important;
+    float: none !important;
+    border: 0px !important;
   }
 }

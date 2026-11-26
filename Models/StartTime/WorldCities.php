@@ -1,0 +1,93 @@
+<?php
+    class WorldCities
+    {
+        private $citiesFile;
+        
+        private $dbTable;
+
+        private $tableName;
+        
+        public function __construct()
+        {
+            global $wpdb;
+    
+            $this->citiesFile = plugin_dir_path(__FILE__) . '../../Assets/world-cities.csv';
+            $this->tableName = $wpdb->prefix . "timetable_cities";
+            $this->dbTable = "`".DB_NAME ."`.`" .$this->tableName."`";
+            
+            $this->createTable();
+        }
+        
+        public function importCities()
+        {
+            global $wpdb;
+
+            $file = fopen($this->citiesFile, "r");
+            $columns = $row = fgetcsv($file, 10000, ",");
+            $sqlInsert = "INSERT INTO " . $this->dbTable. " (" . implode(',', $columns) . ") VALUES ";
+            $values = "";
+            while (($row = fgetcsv($file, 10000, ",")) !== FALSE) {
+                $city = esc_sql($row[0]); // Assuming the city is the first column
+                $country = esc_sql($row[3]); // Assuming the country is the fourth column
+
+                // Check if the city already exists in the database
+                $exists = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM " . $this->dbTable . " WHERE city = %s AND country = %s", $city, $country));
+                if ($exists == 0) {
+                    $values .= "('". implode("','", $this->getEscapedRow($row)) . "'),";
+                }
+            }
+            $values = rtrim($values, ",");
+            if (!empty($values)) {
+                $sqlInsert .= $values . ';';
+                $wpdb->query($sqlInsert);
+            }
+
+            fclose($file);
+        }
+        
+        private function getEscapedRow($row)
+        {
+            $escapedRow = [];
+            foreach ($row as $item) {
+                $escapedRow[] = esc_sql($item);
+                
+            }
+            return $escapedRow;
+        }
+        
+        private function createTable()
+        {
+            global $wpdb;
+            $charset_collate = $wpdb->get_charset_collate();
+            
+            $sql = "CREATE TABLE IF NOT EXISTS " . $this->dbTable. " (
+                id INT NOT NULL AUTO_INCREMENT,
+                city VARCHAR(64) NULL,
+                lat VARCHAR(64) NULL,
+                lng VARCHAR(64) NULL,
+                country VARCHAR(64) NULL,
+                PRIMARY KEY  (id),
+                INDEX (lat),
+                INDEX (lng)
+                ) $charset_collate;";
+    
+            $wpdb->get_var("SHOW TABLES LIKE '". $this->tableName . "'");
+            if($wpdb->num_rows != 1) {
+                dbDelta( $sql );
+            }
+        }
+        
+        public function getCities()
+        {
+            global $wpdb;
+            $sql = "SELECT * FROM " . $this->dbTable . " ORDER BY country, city ASC";
+            return $wpdb->get_results($sql, ARRAY_A);
+        }
+
+        public function getCityById($id)
+        {
+            global $wpdb;
+            $sql = $wpdb->prepare("SELECT city FROM " . $this->dbTable . " WHERE id = %d", $id);
+            return $wpdb->get_var($sql);
+        }
+    }

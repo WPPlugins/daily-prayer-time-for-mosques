@@ -1,88 +1,121 @@
 <?php
-$nextPrayer = ucfirst( $this->getNextPrayer( $row ) );
-
+$nextPrayer = ucfirst($this->getNextPrayer($row));
 foreach ($this->localPrayerNames as $name) {
     if ($nextPrayer == $name) {
         $highlight = 'highlight';
     }
 }
-if (! $row['hideTimeRemaining']) {
-    $nextIqamah = $isAzanOnly == true ? '' : $this->getNextIqamahTime( $row );
-}
 if(isset($row['announcement']) && ! empty( $row['announcement'] )) {
-    $announcement = "<tr><th colspan='7' style='text-align:center' class='notificationBackground'>".$row['announcement']. "</th></tr>";
+    $announcement = "<tr><th colspan='8' style='text-align:center' class='notificationBackground notificationFont'>".$row['announcement']. "</th></tr>";
 }
-
+$sunriseOrZawal = $this->dptHelper->getSunriseOrZawalOrIshraq($row);
+if ($sunriseOrZawal == 'zawal') {
+    $sunriseOrZawalTime = $this->dptHelper->getZawalTime($row['zuhr_begins']);
+} elseif ($sunriseOrZawal == 'ishraq') {
+    $sunriseOrZawalTime = $this->dptHelper->getIshraqTime($row['sunrise']);
+} else {
+    $sunriseOrZawalTime = $this->formatDateForPrayer($row['sunrise']);
+}
 ?>
+
 <div class="dpt-horizontal-wrapper customStyles">
     <div class="dpt-heading">
-        <h3 class="date">
+        <h3 class="date side-by-side">
             <?php
-                echo $row['widgetTitle'].
+                echo esc_html($row['widgetTitle']) .
                 ' ' . date_i18n( get_option( 'date_format' ) );
-                 if($row['displayHijriDate']) echo ' - '. $this->hijriDate->getDate(date("d"), date("m"), date("Y"), true)
+                 if($row['displayHijriDate']) echo ' - '. $this->hijriDate->getDate(date("d"), date("m"), date("Y"), true, true)
             ?>
         </h3>
-        <?= $nextIqamah ?>
+        <h3 class="timetable-link side-by-side">
+            <a href="/monthly">Full Timetable <i class="fa fa-chevron-right"></i></a>
+        </h3>
     </div>
     <div class="dpt-wrapper-container">
 
         <div class="prayer-time prayer-fajr <?php if ($nextPrayer == $this->localPrayerNames['fajr']) echo "highlight"; ?>">
+        <span class="iconify-inline dptPrayerIcon" data-icon="lucide:sunrise"></span>
 
-            <h3 id="fajrRamadhan"><?=$this->localPrayerNames['fajr']?></h3>
+            <h3 id="fajrRamadhan"><?php echo esc_html($this->localPrayerNames['fajr']) ?></h3>
             <div
                 class="prayer-start">
-                <?= $this->formatDateForPrayer($row["fajr_begins"]);?>
+                <?php echo  esc_html( $this->formatDateForPrayer($row["fajr_begins"]) );?>
             </div>
-            <div class="prayer-jamaat"><?= $this->formatDateForPrayer($row["fajr_jamah"]);?></div>
+            <div class="prayer-jamaat"><?php echo  esc_html( $this->formatDateForPrayer($row["fajr_jamah"]) );?></div>
 
         </div> <!-- END of prayer time-->
-        <div class="prayer-time prayer-sunrise <?php if ($nextPrayer == $this->localPrayerNames['sunrise']) echo "highlight"; ?>">
+        <div class="prayer-time prayer-sunrise <?php if ($sunriseOrZawal == 'ishraq' && strtolower($nextPrayer) == 'ishraq') echo "highlight"; ?>">
+        <span class="iconify-inline dptPrayerIcon" data-icon="bi:sunrise-fill"></span>
 
-            <h3><?=$this->localPrayerNames['sunrise']?></h3>
-            <div class="prayer-start"><?= $this->formatDateForPrayer($row["sunrise"]);?></div>
+            <h3><?php echo esc_html( $this->localPrayerNames[$sunriseOrZawal] ?? ucfirst($sunriseOrZawal) )?></h3>
+            <div class="prayer-jamaat"><?php echo  esc_html( $sunriseOrZawalTime );?></div>
             <div>&nbsp;</div>
 
         </div> <!-- END of prayer time-->
-        <div class="prayer-time prayer-dhuhr <?php if ($nextPrayer == $this->localPrayerNames['zuhr']) echo "highlight"; ?>">
+        <div class="prayer-time prayer-dhuhr <?php if ('nextPrayer' ==  $this->getNextPrayerClass('zuhr', $row)) echo "highlight"; ?>">
+        <span class="iconify-inline dptPrayerIcon" data-icon="emojione:sun"></span>
 
-            <h3><?=$this->localPrayerNames['zuhr']?></h3>
-            <div class="prayer-start"><?= $this->formatDateForPrayer($row["zuhr_begins"]);?></div>
-            <div class="prayer-jamaat"><?= $this->formatDateForPrayer($row["zuhr_jamah"]);?></div>
+            <h3><?php echo esc_html( $this->localPrayerNames['zuhr'] )?></h3>
+            <div class="prayer-start"><?php echo  esc_html( $this->formatDateForPrayer($row["zuhr_begins"]) );?></div>
+            <div class="prayer-jamaat"><?php echo  esc_html( $this->formatDateForPrayer($row["zuhr_jamah"]) );?></div>
 
         </div> <!-- END of prayer time-->
         <div class="prayer-time prayer-asr <?php if ($nextPrayer == $this->localPrayerNames['asr']) echo "highlight"; ?>">
+        <span class="iconify-inline dptPrayerIcon" data-icon="bi:sun"></span>
 
-            <h3><?=$this->localPrayerNames['asr']?></h3>
-            <div class="prayer-start"><?= $this->formatDateForPrayer($row["asr_begins"]);?></div>
-            <div class="prayer-jamaat"><?= $this->formatDateForPrayer($row["asr_jamah"]);?></div>
+            <h3><?php echo esc_html( $this->localPrayerNames['asr'] )?></h3>
+            <div class="prayer-start"><?php echo  esc_html( $this->formatDateForPrayer($row["asr_begins"]) );?></div>
+            <div class="prayer-jamaat"><?php echo  esc_html( $this->formatDateForPrayer($row["asr_jamah"]) );?></div>
 
         </div> <!-- END of prayer time-->
         <div class="prayer-time prayer-maghrib <?php if ($nextPrayer == $this->localPrayerNames['maghrib']) echo "highlight"; ?>">
+        <span class="iconify-inline dptPrayerIcon" data-icon="carbon:sunset"></span>
 
-            <h3 id="maghribRamadhan"><?=$this->localPrayerNames['maghrib']?></h3>
-            <div class="prayer-start"><?= $this->formatDateForPrayer($row["maghrib_begins"]);?></div>
-            <div class="prayer-jamaat"><?= $this->formatDateForPrayer($row["maghrib_jamah"]);?></div>
+            <h3 id="maghribRamadhan"><?php echo esc_html( $this->localPrayerNames['maghrib'] )?></h3>
+            <div class="prayer-start"><?php echo  esc_html( $this->formatDateForPrayer($row["maghrib_begins"]) );?></div>
+            <div class="prayer-jamaat"><?php echo  esc_html( $this->formatDateForPrayer($row["maghrib_jamah"]) );?></div>
 
         </div> <!-- END of prayer time-->
         <div class="prayer-time prayer-isha <?php if ($nextPrayer == $this->localPrayerNames['isha']) echo "highlight"; ?>">
+        <span class="iconify-inline dptPrayerIcon" data-icon="bi:moon-stars-fill"></span>
 
-            <h3><?=$this->localPrayerNames['isha']?></h3>
-            <div class="prayer-start"><?= $this->formatDateForPrayer($row["isha_begins"]);?></div>
-            <div class="prayer-jamaat"><?= $this->formatDateForPrayer($row["isha_jamah"]);?></div>
+            <h3><?php echo esc_html( $this->localPrayerNames['isha'] )?></h3>
+            <div class="prayer-start"><?php echo  esc_html( $this->formatDateForPrayer($row["isha_begins"]) );?></div>
+            <div class="prayer-jamaat"><?php echo  esc_html( $this->formatDateForPrayer($row["isha_jamah"]) );?></div>
 
         </div> <!-- END of prayer time-->
+        <?php 
+        // Check if Jumuah times are set and current time is before last Jumuah
+        $jumuahOptions = array_filter([ get_option('jumuah1'), get_option('jumuah2'), get_option('jumuah3') ]);
+        $showJumuah = !empty($row['showJumuah']);
+        $isFriday = $this->todayIsFriday();
+        if (!$showJumuah && !empty($jumuahOptions) && $isFriday) {
+            $nowTs = strtotime(user_current_time('H:i'));
+            $lastJumuahTs = max(array_map('strtotime', $jumuahOptions));
+            if ($nowTs < $lastJumuahTs) {
+                $showJumuah = true;
+            }
+        }
+        if ($showJumuah) { ?>
+            <div class="prayer-time prayer-jumuah <?php if ($isFriday && $showJumuah) echo "highlight"; ?>">
+                <span class="iconify-inline dptPrayerIcon" data-icon="fa-solid:mosque""></span>
+
+                <h3><?php echo esc_html( $this->headersLocal['jumuah'] )?></h3>
+                <div class="prayer-jamaat"><?php echo $this->getJumuahTimesArray(true);?></div>
+                <div>&nbsp;</div>
+            </div> <!-- END of prayer time-->
+        <?php } ?>
 
     </div> <!-- END of wrapper container-->
 
 <?php if(isset($row['announcement']) && ! empty( $row['announcement'] )) {?>
-    <div class="dpt-announcement"><h3><?= $row['announcement'] ?></h3></div>
+    <div class="dpt-announcement"><h3><?php echo  $row['announcement'] ?></h3></div>
 <?php } ?>
 </div>
 
 <?php
 
-if (get_option('ramadan-chbox') && ! $row['hideRamadan']) { ?>
+if ( $this->dptHelper->isRamadan() && ! $row['hideRamadan']) { ?>
 
 <script>
 

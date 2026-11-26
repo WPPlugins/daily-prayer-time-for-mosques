@@ -58,9 +58,9 @@ class MonthlyTimeTable
     private function getMonthlyCalendar($month)
     {
         $db = new DatabaseConnection();
-        if ( $month == 13 ) {
-            return $db->getPrayerTimeForRamadan($month);
+        if ( $month == 13 ) { // ramadan
+            return $db->getPrayerTimeForRamadan();
         }
-        return $db->getPrayerTimeForMonth($month);
+        return $db->getPrayerTimeForMonth($month, date('Y'));
     }
 }

@@ -1,8 +1,39 @@
 <?php
+require_once "Hijri/hijri.class.php";
 
 class HijriDate
 {
-    private $hijriMonth = array ("Muharram", "Safar", "Rabī al-Awwal", "Rabī ath-Thānī ", "Jumādā al-Ula", "Jumādā ath-Thāniya", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhū al-Qa'da", "Dhū al-Hijjah");
+    private $isRamadan = false;
+
+    private $hijriMonth = array ("Muharram", "Safar", "Rabī al-Awwal", "Rabī ath-Thānī", "Jumādā al-Ula", "Jumādā ath-Thāniya", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhū al-Qa'da", "Dhū al-Hijjah");
+    
+    private $arabicMonth = array (
+        "Muharram" => "ٱلْمُحَرَّم",  
+        "Safar" => "صَفَر",  
+        "Rabī al-Awwal" => "رَبِيع ٱلْأَوَّل",
+        "Rabī ath-Thānī" => "رَبِيع ٱلثَّانِي",
+        "Jumādā al-Ula" => "جُمَادَىٰ ٱلْأُولَىٰ",
+        "Jumādā ath-Thāniya" => "جُمَادَىٰ ٱلثَّانِيَة",
+        "Rajab" => "رَجَب",
+        "Sha'ban" => "شَعْبَان",
+        "Ramadan" => "رَمَضَان",
+        "Shawwal" => "شَوَّال",
+        "Dhū al-Qa'da" => "ذُو ٱلْقَعْدَة",
+        "Dhū al-Hijja" => "ذُو ٱلْحِجَّة"
+    );
+    
+    private $arabicNumbers = [
+        0 => '٠',
+        1 => '١',
+        2 => '٢',
+        3 => '٣',
+        4 => '٤',
+        5 => '٥',
+        6 => '٦',
+        7 => '٧',
+        8 => '٨',
+        9 => '٩'
+    ];
 
     /**
      * @param $day
@@ -24,14 +55,26 @@ class HijriDate
             $year = $parts[2];
         }
 
+        $isUmmulQura = get_option('hijri-ummul-qura');
         $date = $this->greg2Hijri($day, $month, $year);
+        if ($isUmmulQura) {
+            $date = $this->getUmmulQuraDate($day, $month, $year);
+        }
 
         $day = $date['day'];
         $month = $this->hijriMonth[(int) $date['month'] - 1];
         $year = $date['year'];
 
+        $this->isRamadan = strpos($month, 'Ramadan');
+
+        if ( get_option('hijri-arabic-chbox') ) {
+            $day = $this->getArabicNumber($day);
+            $month = $this->getArabicMonth($month);
+            $year = $this->getArabicNumber($year);
+        }
+
         if ($stringDate) {
-            return "{$month} {$day}, {$year}";
+            return "{$day} {$month} {$year}";
         }
 
         return array(
@@ -39,6 +82,15 @@ class HijriDate
             'month' => $month,
             'year' => $year
         );
+    }
+
+    public function getToday() {
+        return $this->getDate(date("d"), date("m"), date("Y"), true, false);
+    }
+
+    public function isRamadan()
+    {
+        return $this->isRamadan OR get_option('ramadan_chbox');
     }
 
     /**
@@ -95,5 +147,37 @@ class HijriDate
         else
             return floor($float + 0.0000001);
 
+    }
+
+    private function getArabicNumber($number)
+    {
+        $arabicNumber = '';
+        $numbers = str_split($number);
+        foreach($numbers as $key) {
+            $arabicNumber .= $this->arabicNumbers[$key];
+        }
+
+        return $arabicNumber;
+    }
+
+    private function getArabicMonth($month)
+    {
+        return $this->arabicMonth[$month];
+    }
+
+    private function getUmmulQuraDate(int $day, int $month, int $year)
+    {
+        $day = $day + (int) get_option('hijri-adjust');
+
+        $settings['umalqura'] = false; //get from settings 
+        $d = new dpt\Calendar($settings);
+
+        $hijri = $d->GregorianToHijri($year, $month,$day);
+
+        return array(
+            'day' => $hijri["d"],
+            'month' => $hijri["m"],
+            'year' => $hijri['y']
+        );
     }
 }

@@ -1,52 +1,65 @@
 <?php
-
-class DigitalScreenProcessor
-{
-    /**
-     * @var array
-     */
-    private $data;
-
-    /**
-     * @param array $data
-     */
-    public function __construct(array $data) {
-        $this->data = $data;
-    }
-
-    public function process()
+if ( !class_exists('DPTDigitalScreenProcessor')) {
+    class DPTDigitalScreenProcessor
     {
-        $dsLogo = $this->data['ds-logo'];
-        delete_option('ds-logo');
-        add_option('ds-logo', $dsLogo);
-        
-        $slider = $this->data['slider-chbox'];
-        delete_option('slider-chbox');
-        add_option('slider-chbox', $slider);
+        /**
+         * @var array
+         */
+        private $data;
 
-        $transitionEffect = $this->data['transitionEffect'];
-        update_option('transitionEffect', $transitionEffect);
+        /**
+         * @param array $data
+         */
+        public function __construct(array $data) {
+            $this->data = $data;
+        }
 
-        $transitionSpeed = $this->data['transitionSpeed'];
-        $transitionSpeed = (int)$transitionSpeed * 1000;
-        update_option('transitionSpeed', $transitionSpeed);
+        public function process()
+        {
+            update_option('ds-logo',           sanitize_text_field($this->data['ds-logo']           ?? ''));
+            update_option('ds-scroll-text',    sanitize_text_field($this->data['ds-scroll-text']    ?? ''));
+            update_option('ds-scroll-speed',   sanitize_text_field($this->data['ds-scroll-speed']   ?? ''));
+            update_option('ds-blink-text',     sanitize_text_field($this->data['ds-blink-text']     ?? ''));
+            update_option('ds-additional-css', sanitize_textarea_field($this->data['ds-additional-css'] ?? ''));
+            update_option('ds-fading-msg',     sanitize_textarea_field($this->data['ds-fading-msg']     ?? ''));
+            update_option('template-chbox',    sanitize_text_field($this->data['template-chbox']    ?? ''));
+            update_option('quran-chbox',       sanitize_text_field($this->data['quran-chbox']       ?? ''));
+            update_option('slider-chbox',      sanitize_text_field($this->data['slider-chbox']      ?? ''));
+            update_option('nextPrayerSlide',   sanitize_text_field($this->data['nextPrayerSlide']   ?? ''));
+            update_option('dsTemplate',        sanitize_text_field($this->data['ds-template']       ?? ''));
+            update_option('transitionEffect',  sanitize_text_field($this->data['transitionEffect']  ?? ''));
+            update_option('transitionSpeed',   (int) sanitize_text_field($this->data['transitionSpeed'] ?? 0) * 1000);
 
-        $slider1Url = $this->data['slider1Url'];
-        update_option('slider1Url', $slider1Url);
+            for ($i = 1; $i <= 13; $i++) {
+                $value = sanitize_text_field($this->data["slider$i"] ?? '');
+                $url   = esc_url_raw($this->data["slider{$i}Url"] ?? '');
 
-        $slider2Url = $this->data['slider2Url'];
-        update_option('slider2Url', $slider2Url);
-
-        $slider3Url = $this->data['slider3Url'];
-        update_option('slider3Url', $slider3Url);
-
-        $slider4Url = $this->data['slider4Url'];
-        update_option('slider4Url', $slider4Url);
-
-        $slider5Url = $this->data['slider5Url'];
-        update_option('slider5Url', $slider5Url);
-
-        $slider6Url = $this->data['slider6Url'];
-        update_option('slider6Url', $slider6Url);
+                if ($value !== '') {
+                    update_option("slider$i", $value);
+                    if (array_key_exists("slider{$i}Days", $this->data)) {
+                        $submittedDays = $this->data["slider{$i}Days"];
+                        $days = array_values(array_unique(array_intersect(
+                            array_map('strval', array_filter(
+                                is_array($submittedDays) ? $submittedDays : array(), 'is_scalar'
+                            )),
+                            array('0', '1', '2', '3', '4', '5', '6')
+                        )));
+                        if (count($days) === 7) {
+                            delete_option("slider{$i}Days");
+                        } else {
+                            update_option("slider{$i}Days", implode(',', $days));
+                        }
+                    }
+                } else {
+                    delete_option("slider$i");
+                    delete_option("slider{$i}Days");
+                }
+                if ($url !== '') {
+                    update_option("slider{$i}Url", $url);
+                } else {
+                    delete_option("slider{$i}Url");
+                }
+            }
+        }
     }
 }

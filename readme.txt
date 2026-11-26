@@ -1,37 +1,38 @@
 === Daily Prayer Time ===
-Contributors: mmrs151, Hjeewa, kams01
-Donate link: http://www.uwt.org/
-Tags: prayer time, ramadan time, salah time, mosque timetable, islam, muslim, salat, namaz, fasting
-Requires at least: 4.5
-Requires PHP: 5.6
-Tested up to: 5.2
-Stable tag: 2019.10.16
-License: GPLv2
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Contributors: mmrs151, yasin84
+Donate link: https://donate.uwt.org/Account/Index.aspx
+Tags: prayer time, salah time, salat, namaz, Quran verse
+Requires at least: 6.6
+Requires PHP: 8.2
+Tested up to: 7.1
+Stable tag: 2026.10.30
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Display Yearly, Monthly and Daily prayer time vertically or horizontally, in any language.
+Display your mosque's prayer times on websites and digital screens.
 
 == Description ==
-For video tutorial please follow these links
-How to use the plugin [youtube https://www.youtube.com/watch?v=SaE-2VS5Ru0]
-How to setup digital screen in mosque with this plugin [youtube https://www.youtube.com/watch?v=WzXc7nY4974]
+For video tutorial please follow these links:
+- (Latest) How to tutorial [youtube https://youtu.be/ka5WxQfkFww]
 
-Alhamdulillah that you can Display Yearly and Monthly prayer time with ajax month selector using shortcode [timetable]
-Daily prayer time can be displayed vertically or horizontally in your preferable widget area. Designed for any Mosque or Islamic institutes.
+Display monthly prayer times with a month selector using [monthlytable], or show today's times with [dailytable_horizontal] and [dailytable_vertical]. The [digital_screen] shortcode provides a full-screen display for mosque TVs, including media slides that can run daily or on selected weekdays. Other shortcodes show upcoming prayers and Quran verses. The plugin supports multilingual labels and custom styling.
 
-**You need to upload your masjid's timetable from plugin admin section.**
+**Upload your mosque's timetable in the plugin settings to display prayer times.**
 
 = PULL REQUEST =
-[GIT Repository] https://bitbucket.org/mmrs151/daily-prayer-time-for-mosques
+[GITHUB https://github.com/mmrs151/daily-prayer-time/pulls]
 Add your commit and make a pull request. Please describe your feature, I will add it to the core.
-Also, feel free to release my code with a new plugin name with your exiting new ideas added to it.
+
+[IMPORTANT]
+If you don't see any update of this plugin for over a year, I might have departed.
+Please feel free to copy the whole code and relase in a different name, so the masajid can be served. 
 My sole intention is to support the ummah.
-So I have absolutely no complain as long as you have the same intention.
+So I have absolutely no complain as long as you have the same intention, Fi Sabilillah.
 
 Mustafiz.
 
 = Features =
-Once the installation above is done, this will allow you
+Once the installation above is done, this will allow the **Admin/Editor**
 
 - To display prayer start and jamah time
 
@@ -65,6 +66,10 @@ Once the installation above is done, this will allow you
 
 - Display prayer time on big monitors in the masjid
 
+- Display Quran verse in a shortcode
+
+- Schedule individual digital-screen media slides for selected weekdays; slides without a schedule display daily
+
 = shortcodes =
 1. **[monthlytable]** - Display Yearly and Monthly prayer time with ajax month selector
 2. **[dailytable_horizontal]** - Display daily timetable horizontally
@@ -76,6 +81,8 @@ Once the installation above is done, this will allow you
 8. **[monthlytable display=azan_only]** - Display Azan only for Yearly and Monthly prayer time with ajax month selector
 9. **[monthlytable heading="Månedlige Tidsplan"]** - Display monthly time table heading in any language, default is 'Monthly Time Table for'
 10. **[digital_screen]** - Display prayer time on big monitors in the masjid
+11. **[quran_verse]** - Display a random verse from the Holy Quran 
+12. **[disable_overnight_dim] - disable overnight dimming of the digital screen
 ... and more. Check the 'helps-and-tips' page in plugin settings once you install it.
 
 == Installation ==
@@ -106,30 +113,127 @@ Please check/update your timezone settings in Settings > General
 Please look at https://trello.com/b/6Re5Dga7/salah-time-wordpress-plugin
 
 == Screenshots ==
-1. Upload timetable
-2. Translate in any language
-3. Hijri date settings
-4. Change timetable look and feel
-5. Update monthly prayer time from admin section
-6. Ramadan, Asr and Iqamah notification settings
-7. Widget settings
-8. Dark and no border styling
-9. Support for any language
-10. Custom title in widget
-11. Change monthly time table heading and month name
-12. Highlight next prayer, time remaining for iqamah, ramadan timing
-13. Ramadan calendar for current year
-14. Shortcode for displaying next prayer
-15. Shortcode for displaying daily ramadan times
-16. Iqamah change notification for tomorrow
-17. Display prayer time on big monitors in the masjid
+1. Masjid and Mobile display
+2. Display time remaining for next prayer
+3. Random Quran verse
+4. Add hadith or your own message
+5. Design anyway you like
+6. Design anyway you like
+7. Design anyway you like
+8. Default Website daily view
+9. Default Website monthly view
+10. Settings page
+11. Sample 1
+12. Sample 2
 
 == Changelog ==
 
-= 2019.10.16 =
-* Fix next fajr time
+= 2026.10.30 =
+* Add optional weekday scheduling for individual digital-screen media slides. Existing slides continue to display daily.
+* Refresh the horizontal and vertical daily timetable layouts and improve weekday checkbox visibility in settings.
+* Add WordPress integration checks for shortcodes, screen templates, CSV import, slide schedules, and selected security regressions.
+* Require PHP 8.2 or newer.
+* Require WordPress 6.6 or newer and protect the timetable year reset with a nonce.
+
+= 2026.08.20 =
+* Fix: Individual start-time shortcodes ([fajr_start], [zuhr_start], [asr_start],
+  [maghrib_start], [isha_start]) now keep showing today's start time until the
+  prayer's Jamat/Iqamah time has passed before switching to tomorrow's time
+* Fix: next_prayer API now returns correct azanTime and iqamahTime
+  for jumuah, ishraq, and after-isha (null) edge cases instead of null
+
+= 2026.05.20 =
+* Feat: Add digitalScreenSlideBg option for slide/card background
+* Feat: Separate row background from slide background control
+* Fix: Remove td span.nextPrayer from slide background CSS
+* Fix: Add null checks for .trim() calls in dpt.js (JS error fix)
+* Fix: ThemeSettingsProcessor now deletes option when value is '0' or empty
+
+= 2026.05.11 =
+* Feat: Two-column layout for Theme settings (Daily Prayer Table | Digital Screen)
+* Feat: Native HTML color picker for each color setting
+* Feat: Page-level "Reset All" button deletes all theme options
+* Feat: Only valid hex colors (#RRGGBB) are saved; '0' or empty are ignored
+* Feat: Add digitalScreenGreenFont color option for next prayer font
+* Fix: Stop sunrise/zawal toggle after zawal time has passed
+
+= 2026.05.05 =
+* Fix: Display Quran verse on right panel for Usman template
+* Fix: Show top header with logo and mosque name on mobile, bottom on desktop
+* Refactor: Simplify CSS with clamp() for responsive fonts
+* Refactor: Use flexbox layouts for full height utilization
+* Style: Add decorative border around Quran verse
+* Fix: Reduce spacing in prayer section on mobile
+* Style: Larger font sizes for prayers and headings
+
+= 2026.05.04 =
+* Feat: Glassmorphism prayer cards with blur effect in EICT template
+* Feat: Glow animation on next prayer highlight
+* Feat: Hover transitions with smooth card lift
+* Feat: Gradient backgrounds (top section and banner)
+* Feat: Fluid typography using clamp() for responsive sizing
+* Feat: Mobile responsive - 2-column centered layout for prayer cards
+* Fix: Jumuah font sizing - smaller font when jumuah3 is set
+* Fix: Correct spelling from jumah to jummah in CSS selectors
+
+= 2026.05.03 =
+* Fix: Timezone issue in isZawalTimeNext by using user_current_time for consistent comparison
+* Fix: Show zawal name instead of sunrise when zawal is next (with fallback)
+* Fix: Only highlight ishraq row when ishraq is next (not zawal)
+* Fix: Only highlight zuhr row when zawal is next (not sunrise row)
+* Fix: Ishraq highlighting in horizontal table's printAzanTime method
+* Fix: Jumuah display logic - show row only when times set and before last jumuah time
+
+= 2026.05.01 =
+* Feat: Add media gallery button for selecting slider images from WordPress media library
+* Feat: Add dynamic slider management - show 1 initially, add more up to 7 sliders
+* Feat: Add template selection with checkbox to enable/disable templates (EICT, Usman)
+* Feat: Add two-section slider card layout - fields on left, thumbnail preview on right
+* Feat: Make template grid responsive (stacks on mobile)
+* Fix: Template display logic - now requires both checkbox AND template selection enabled
+* Fix: Preserve textarea formatting without extra spaces
+* Fix: Remove duplicate CSS rules causing extra spacing
+
+= 2026.04.28.1 =
+* Fix: Add horizontal scroll wrapper to monthly table for mobile display
+
+= 2026.04.28 =
+* Feat: Add Ishraq time feature with admin toggle in settings
+* Feat: Redesign Helps & Tips page with accordion layout and click-to-copy shortcodes
+* Feat: Redesign Language Settings page with accordion layout and language presets
+* Fix: Correct isIshraqTimeNext logic - check if now is between Fajr and Ishraq
+* Fix: Handle ishraq in daily timetable - merge into sunrise row
+* Fix: Remove ishraq/zawal from getAzanTime array to prevent errors
+* Fix: Add CSV row validation in QuranDB import
+* Fix: Various bug fixes and improvements
+
+= 2026.04.26 =
+* Feat: show detailed CSV upload results - inserted and updated rows in accordion
+* Fix: change Hijri date to update after Maghrib (sunset) instead of midnight
+* Feat: add iqamahTime and azanTime to next_prayer API response
+
+= 2025.10.26 =
+* Fix: Fix JS bug
 
 == Upgrade Notice ==
 
-= 2019.10.16 =
-* Fix next fajr time
+= 2026.10.30 =
+* PHP 8.2 and WordPress 6.6 or newer are required. Media slides can now be scheduled for selected weekdays; existing slides remain daily.
+
+= 2026.08.20 =
+* Fix: next_prayer API azanTime/iqamahTime null for asr, jumuah, ishraq, after-isha
+* Fix: Start times ([fajr_start] etc.) now hold today's value until Jamat time
+
+= 2026.04.28.1 =
+* Fix: Monthly table mobile display - now scrolls horizontally on small screens
+
+= 2026.04.28 =
+* New: Ishraq time feature - display calculated Ishraq time in timetable
+* New: Improved Helps & Tips page with copyable shortcodes
+* New: Improved Language Settings with presets for common languages
+
+= 2026.04.26 =
+* Improvements: CSV upload results display, Hijri date calculation, and API enhancements
+
+= 2025.10.26 =
+* Fix: Fix JS bug

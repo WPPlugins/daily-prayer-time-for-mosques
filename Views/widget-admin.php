@@ -2,96 +2,210 @@
 require_once(__DIR__.'/../Models/Processors/CsvProcessor.php');
 require_once(__DIR__.'/../Models/Processors/LanguageProcessor.php');
 require_once(__DIR__.'/../Models/Processors/OtherProcessor.php');
+require_once(__DIR__.'/../Models/Processors/AdhanProcessor.php');
+require_once(__DIR__.'/../Models/Processors/DebugProcessor.php');
 require_once(__DIR__.'/../Models/Processors/HijriProcessor.php');
 require_once(__DIR__.'/../Models/Processors/QuickUpdateProcessor.php');
 require_once(__DIR__.'/../Models/Processors/ThemeSettingsProcessor.php');
 require_once(__DIR__.'/../Models/Processors/DigitalScreenProcessor.php');
+require_once(__DIR__.'/../Models/Processors/StartTimeProcessor.php');
 require_once(__DIR__.'/../Models/DailyShortCode.php');
 require_once(__DIR__.'/../Models/db.php');
 require_once(__DIR__.'/../Models/HijriDate.php');
+require_once(__DIR__.'/../Models/StartTime/WorldCities.php');
+require_once( 'TimetablePrinter.php' );
 
-ini_set('auto_detect_line_endings', true);
 
-if (isset($_POST['submit'])) {
-    $csvProcessor = new CsvProcessor($_FILES);
+if (isset($_POST['set-start-time'])  && check_admin_referer( 'csvUpload' )) {
+    $data = [
+        'city' => sanitize_text_field($_POST['city']),
+        'method' => sanitize_text_field($_POST['method']),
+        'fajr-delay' => sanitize_text_field($_POST['fajr-delay']),
+        'zuhr-delay' => sanitize_text_field($_POST['zuhr-delay']),
+        'asr-delay' => sanitize_text_field($_POST['asr-delay']),
+        'maghrib-delay' => sanitize_text_field($_POST['maghrib-delay']),
+        'isha-delay' => sanitize_text_field($_POST['isha-delay']),
+        'higher-lat' => sanitize_text_field($_POST['higher-lat']),
+        'method' => sanitize_text_field($_POST['method']),
+        'fajr-angle' => sanitize_text_field($_POST['fajr-angle']),
+        'isha-angle' => sanitize_text_field($_POST['isha-angle']),
+        'isha-angle' => sanitize_text_field($_POST['isha-angle']),
+        'asr-method' => sanitize_text_field($_POST['asr-method']),
+    ];
+    $startTimeProcessor = new DPTStartTimeProcessor($data);
+    $startTimeProcessor->process();
+}
+
+if (isset($_POST['submit']) && check_admin_referer( 'csvUpload' )) {
+    $csvProcessor = new DPTCsvProcessor($_FILES);
 
     if ( $csvProcessor->isValidFile() ) {
         $csvProcessor->process();
+        delete_transient('nearest_city');
+        delete_option('fajr-delay');
+        delete_option('zuhr-delay');
+        delete_option('asr-delay');
+        delete_option('maghrib-delay');
+        delete_option('isha-delay');
+        delete_option('higher-lat');
+        delete_option('calc-method');
+        delete_option('asr-method');
     } else {
         echo "<p class='ui-state-error dptCenter'><b>Invalid csv file ?</b>";
-        echo "</br>Found: <i>(". $csvProcessor->getFileType() .")</i></p>";
+        echo "</br>Found: <i>(". esc_html($csvProcessor->getFileType()) .")</i></p>";
     }
 }
 
-if (! empty($_POST['languageSettings'])) {
-    $languageProcessor = new LanguageProcessor($_POST);
+if (! empty($_POST['languageSettings'])  && check_admin_referer( 'languageSettings' )) {
+    $data = [
+        'prayersLocal' => array_map( 'sanitize_text_field', $_POST['prayersLocal']),
+        'headersLocal' => array_map( 'sanitize_text_field', $_POST['headersLocal']),
+        'monthsLocal' => array_map( 'sanitize_text_field', $_POST['monthsLocal']),
+        'numbersLocal' => array_map( 'sanitize_text_field', $_POST['numbersLocal']),
+        'timesLocal' => array_map( 'sanitize_text_field', $_POST['timesLocal']),
+    ];
+    $languageProcessor = new DPTLanguageProcessor($data);
     $languageProcessor->process();
 }
 
-if (! empty($_POST['hijriSettings'])) {
-    $hijri = new HijriProcessor($_POST);
+if (! empty($_POST['hijriSettings']) && check_admin_referer( 'hijriSettings' )) {
+    $data = [
+        'hijri-chbox' => sanitize_text_field($_POST['hijri-chbox'] ?? ''),
+        'hijri-ummul-qura' => sanitize_text_field($_POST['hijri-ummul-qura'] ?? ''),
+        'hijri-arabic-chbox' => sanitize_text_field($_POST['hijri-arabic-chbox'] ?? ''),
+        'hijri-adjust' => sanitize_text_field($_POST['hijri-adjust']),
+        'ramadan_chbox' => sanitize_text_field($_POST['ramadan_chbox'] ?? ''),
+        'taraweehDim' => sanitize_text_field($_POST['taraweehDim'] ?? ''),
+        'imsaq' => sanitize_text_field($_POST['imsaq'] ?? ''),
+
+    ];
+    $hijri = new DPTHijriProcessor($data);
     $hijri->process();
 }
 
-if (! empty($_POST['otherSettings'])) {
-    $otherProcessor = new OtherProcessor($_POST);
+if (! empty($_POST['adhanSettings']) && check_admin_referer( 'adhanSettings' )) {
+    $data = [
+        'activateBeep' => sanitize_text_field($_POST['activateBeep'] ?? ''),
+        'activateAdhan' => sanitize_text_field($_POST['activateAdhan'] ?? ''),
+        'fajrAdhanUrl' => sanitize_text_field($_POST['fajrAdhanUrl']),
+        'otherAdhanUrl' => sanitize_text_field($_POST['otherAdhanUrl']),
+        'fajrAdhanBefore' => sanitize_text_field($_POST['fajrAdhanBefore']),
+        'zuhrAdhanBefore' => sanitize_text_field($_POST['zuhrAdhanBefore']),
+        'asrAdhanBefore' => sanitize_text_field($_POST['asrAdhanBefore']),
+        'ishaAdhanBefore' => sanitize_text_field($_POST['ishaAdhanBefore'])
+    ];
+    $adhanProcessor = new DPTAdhanProcessor($data);
+    $adhanProcessor->process();
+}
+
+if (! empty($_POST['otherSettings']) && check_admin_referer( 'otherSettings' )) {
+    $data = [
+        'jumuah1' => sanitize_text_field($_POST['jumuah1']),
+        'jumuah2' => sanitize_text_field($_POST['jumuah2']),
+        'jumuah3' => sanitize_text_field($_POST['jumuah3']),
+        'khutbahDim' => sanitize_text_field($_POST['khutbahDim']),
+        'asrSelect' => sanitize_text_field($_POST['asrSelect']),
+        'jamah_changes' => sanitize_text_field($_POST['jamah_changes']),
+        'zawal' => sanitize_text_field($_POST['zawal']),
+        'ishraq' => sanitize_text_field($_POST['ishraq']),
+        'tomorrow_time' => sanitize_text_field($_POST['tomorrow_time'] ?? ''),
+    ];
+    $otherProcessor = new DPTOtherProcessor($data);
     $otherProcessor->process();
 }
 
-if (! empty($_POST['quickUpdate'])) {
-    $otherProcessor = new QuickUpdateProcessor($_POST);
-    $otherProcessor->process();
+if (! empty($_POST['quickUpdate']) && check_admin_referer( 'quickUpdate' )) {
+    $quickUpdateProcessor = new DPTQuickUpdateProcessor($_POST['thisMonth']);
+    $quickUpdateProcessor->process();
 }
 
-if (! empty($_POST['themeSettings'])) {
-    $themeSettings = new ThemeSettingsProcessor($_POST);
+if (! empty($_POST['themeSettings']) && check_admin_referer( 'themeSettings' )) {
+    $data = [
+        'hideTableBorder' => sanitize_text_field($_POST['hideTableBorder'] ?? ''),
+        'tableBackground' => sanitize_text_field($_POST['tableBackground']),
+        'tableHeading' => sanitize_text_field($_POST['tableHeading']),
+        'tableHeadingFont' => sanitize_text_field($_POST['tableHeadingFont']),
+        'evenRow' => sanitize_text_field($_POST['evenRow']),
+        'fontColor' => sanitize_text_field($_POST['fontColor']),
+        'highlight' => sanitize_text_field($_POST['highlight']),
+        'highlightFont' => sanitize_text_field($_POST['highlightFont']),
+        'notificationBackground' => sanitize_text_field($_POST['notificationBackground']),
+        'notificationFont' => sanitize_text_field($_POST['notificationFont']),
+        'prayerName' => sanitize_text_field($_POST['prayerName']),
+        'prayerNameFont' => sanitize_text_field($_POST['prayerNameFont']),
+        'digitalScreenRed' => sanitize_text_field($_POST['digitalScreenRed']),
+        'digitalScreenLightRed' => sanitize_text_field($_POST['digitalScreenLightRed']),
+        'digitalScreenGreen' => sanitize_text_field($_POST['digitalScreenGreen']),
+        'digitalScreenGreenFont' => sanitize_text_field($_POST['digitalScreenGreenFont']),
+        'digitalScreenPrayerName' => sanitize_text_field($_POST['digitalScreenPrayerName']),
+        'digitalScreenSlideBg' => sanitize_text_field($_POST['digitalScreenSlideBg'] ?? ''),
+    ];
+    $themeSettings = new ThemeSettingsProcessor($data);
     $themeSettings->process();
 }
 
-if (! empty($_POST['digitalScreen'])) {
-    $themeSettings = new DigitalScreenProcessor($_POST);
+if (! empty($_POST['digitalScreen']) && check_admin_referer( 'digitalScreen' )) {
+    $data = [
+        'ds-logo' => sanitize_text_field($_POST['ds-logo']),
+        'ds-scroll-text' => sanitize_text_field($_POST['ds-scroll-text']),
+        'ds-scroll-speed' => sanitize_text_field($_POST['ds-scroll-speed']),
+        'ds-blink-text' => sanitize_text_field($_POST['ds-blink-text']),
+        'ds-fading-msg' => sanitize_text_field($_POST['ds-fading-msg']),
+        'ds-additional-css' => trim($_POST['ds-additional-css'] ?? ''),
+        'template-chbox' => sanitize_text_field($_POST['template-chbox'] ?? ''),
+        'quran-chbox' => sanitize_text_field($_POST['quran-chbox'] ?? ''),
+        'slider-chbox' => sanitize_text_field($_POST['slider-chbox'] ?? ''),
+        'nextPrayerSlide' => sanitize_text_field($_POST['nextPrayerSlide']),
+        'ds-template' => sanitize_text_field($_POST['ds-template-hidden'] ?? $_POST['ds-template'] ?? ''),
+        'transitionEffect' => sanitize_text_field($_POST['transitionEffect'] ?? ''),
+        'transitionSpeed' => sanitize_text_field($_POST['transitionSpeed']),
+    ];
+    for ($i = 1; $i <= 13; $i++) {
+        $data["slider$i"] = sanitize_text_field(wp_unslash($_POST["slider$i"] ?? ''));
+        $data["slider{$i}Url"] = esc_url_raw(wp_unslash($_POST["slider{$i}Url"] ?? ''));
+        $data["slider{$i}Days"] = isset($_POST["slider{$i}Days"])
+            ? (array) wp_unslash($_POST["slider{$i}Days"])
+            : array();
+    }
+    $themeSettings = new DPTDigitalScreenProcessor($data);
     $themeSettings->process();
 }
+
+if (! empty($_POST['debugLogSettings']) && check_admin_referer( 'debugLogSettings' )) {
+    $data = [
+        'debugLog' => sanitize_text_field($_POST['debugLog'] ?? '')
+    ];
+    $debugProcessor = new DPTdebugProcessor($data);
+    $debugProcessor->process();
+}
+
+    $path = plugin_dir_url( __FILE__ ); // I am in Views
+    $path .= '../';
+    $newImage = esc_url( $path . 'Assets/images/new.jpg');
 ?>
-
-<div id="tabs" style="display: none;">
-    <ul>
-        <li><a href="#tabs-1" data-tab-index="0">Upload Timetable</a></li>
-        <li><a href="#tabs-2" data-tab-index="1">Change Language</a></li>
-        <li><a href="#tabs-3" data-tab-index="2">Hijri settings</a></li>
-        <li><a href="#tabs-4" data-tab-index="3">Theme settings</a></li>
-        <li><a href="#tabs-5" data-tab-index="4">Quick Update</a></li>
-        <li><a href="#tabs-6" data-tab-index="6">Digital Screen</a></li>
-        <li><a href="#tabs-7" data-tab-index="7">Other settings</a></li>
-    </ul>
-
-    <div id="tabs-1" class="wrap" xmlns="http://www.w3.org/1999/html">
-        <?php include 'Tabs/CsvUpload.php' ?>
-    </div>
-
-    <div id="tabs-2">
-        <?php include 'Tabs/ChangeLanguage.php' ?>
-    </div>
-
-    <div id="tabs-3">
-        <?php include 'Tabs/HijriDate.php' ?>
-    </div>
-
-    <div id="tabs-4">
-        <?php include 'Tabs/ThemeSettings.php' ?>
-    </div>
-
-    <div id="tabs-5">
-        <?php include 'Tabs/QuickUpdate.php' ?>
-    </div>
-
-    <div id="tabs-6">
-        <?php include 'Tabs/DigitalScreen.php' ?>
-    </div>
-
-    <div id="tabs-7">
-        <?php include 'Tabs/OtherSettings.php' ?>
-    </div>
+<nav>
+  <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+    <a href="nav-home" class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
+    <a href="nav-quickUpdate" class="nav-link" id="nav-quickUpdate-tab" data-bs-toggle="tab" data-bs-target="#nav-quickUpdate" type="button" role="tab" aria-controls="nav-quickUpdate" aria-selected="false">Quick Update</a>
+    <a href="nav-digitalScreen" class="nav-link" id="nav-digitalScreen-tab" data-bs-toggle="tab" data-bs-target="#nav-digitalScreen" type="button" role="tab" aria-controls="nav-digitalScreen" aria-selected="false">Digital Screen</a>
+    <a href="nav-hijri" class="nav-link" id="nav-hijri-tab" data-bs-toggle="tab" data-bs-target="#nav-hijri" type="button" role="tab" aria-controls="nav-hijri" aria-selected="false">Hijri</a>
+    <a href="nav-theme" class="nav-link" id="nav-theme-tab" data-bs-toggle="tab" data-bs-target="#nav-theme" type="button" role="tab" aria-controls="nav-theme" aria-selected="false">Theme</a>
+    <a href="nav-language" class="nav-link" id="nav-language-tab" data-bs-toggle="tab" data-bs-target="#nav-language" type="button" role="tab" aria-controls="nav-language" aria-selected="false">Translate</a>
+    <a href="nav-adhan" class="nav-link" id="nav-adhan-tab" data-bs-toggle="tab" data-bs-target="#nav-adhan" type="button" role="tab" aria-controls="nav-adhan" aria-selected="false">Adhan</a>
+    <a href="nav-misc" class="nav-link" id="nav-misc-tab" data-bs-toggle="tab" data-bs-target="#nav-misc" type="button" role="tab" aria-controls="nav-misc" aria-selected="false">Misc</a>
+  </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"><?php include 'Tabs/CsvUpload.php' ?></div>
+  <div class="tab-pane" id="nav-quickUpdate" role="tabpanel" aria-labelledby="nav-quickUpdate-tab"><?php include 'Tabs/QuickUpdate.php' ?></div>
+  <div class="tab-pane" id="nav-digitalScreen" role="tabpanel" aria-labelledby="nav-digitalScreen-tab"><?php include 'Tabs/DigitalScreen.php' ?></div>
+  <div class="tab-pane" id="nav-hijri" role="tabpanel" aria-labelledby="nav-hijri-tab"><?php include 'Tabs/HijriDate.php' ?></div>
+  <div class="tab-pane" id="nav-theme" role="tabpanel" aria-labelledby="nav-theme-tab"><?php include 'Tabs/ThemeSettings.php' ?></div>
+  <div class="tab-pane" id="nav-language" role="tabpanel" aria-labelledby="nav-language-tab"><?php include 'Tabs/ChangeLanguage.php' ?></div>
+  <div class="tab-pane" id="nav-adhan" role="tabpanel" aria-labelledby="nav-adhan-tab"><?php include 'Tabs/Adhan.php' ?></div>
+  <div class="tab-pane" id="nav-misc" role="tabpanel" aria-labelledby="nav-misc-tab"><?php include 'Tabs/OtherSettings.php' ?></div>
 </div>
-    <span class="dpt-donation"><a href="http://www.uwt.org/" target="_blank">Support The Ummah</a></span>
-    <span class="dpt-donation"><a href="https://wordpress.org/support/view/plugin-reviews/daily-prayer-time-for-mosques/reviews/#new-post" target="_blank">Write a Review </a></span>
+<div class="pt-3">
+    <span class="dpt-donation"><a href="https://donate.uwt.org/Account/Index.aspx" target="_blank">Send Sadaqa to my GRAVE</a></span>
+    <span class="dpt-donation"><a href="https://wordpress.org/support/view/plugin-reviews/daily-prayer-time-for-mosques/reviews/#new-post" target="_blank">👍 Like it? </a></span>
+</div>

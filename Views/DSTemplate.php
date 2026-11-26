@@ -1,20 +1,60 @@
+<?php /* Template Name: Digital Screen Prayer Time */
+
+if (is_page_template( '../Views/DSTemplate.php' )) {
+
+    function enqueue_dpt_scripts() {
+        wp_enqueue_script('dpt', plugin_dir_url(__FILE__) . 'js/dpt.js', array('jquery'), '1.0', true);
+        
+        wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Tajawal:wght@400;700&display=swap', array(), null);
+    }
+
+    add_action('wp_enqueue_scripts', 'enqueue_dpt_scripts');
+
+    wp_enqueue_script( 'dpt_bootstrap_js', plugins_url( '../Assets/js/bootstrap.bundle.min.js', __FILE__ ), array( 'jquery' ), DPT_PLUGIN_VERSION);
+
+    wp_register_style( 'timetable-style', plugins_url('../Assets/css/styles.css', __FILE__), array(),
+        DPT_PLUGIN_VERSION . '-' . filemtime(__DIR__ . '/../Assets/css/styles.css') );
+    wp_enqueue_style( 'timetable-style' );
+    
+    wp_register_style( 'dpt_bootstrap', plugins_url('../Assets/css/bootstrap.min.css', __FILE__), array(), DPT_PLUGIN_VERSION );
+    
+    wp_enqueue_style( 'dpt_bootstrap' );
+
+    require_once plugin_dir_path(__FILE__) . '../Models/UpdateStyles.php';
+    new UpdateStyles('timetable-style');
+    
+    // Set headers to prevent caching
+    add_action('send_headers', function() {
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+    });
+}
+
+?>
+
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
-    <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <meta charset="<?php bloginfo( 'charset' ); ?>">
-    <?php if ( ! get_theme_support( 'title-tag' ) ): ?>
-        <title><?php wp_title(); ?></title>
-    <?php endif; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    
     <link rel="profile" href="http://gmpg.org/xfn/11">
 
-    <?php //wp_head(); ?>
+    <?php wp_head(); ?>
+
+    <style>
+        <?php echo esc_html(get_option('ds-additional-css')); ?>
+    </style>
+    
 </head>
 
 <body class="google-font">
 <?php
+
 while ( have_posts() ) : the_post(); ?>
 
     <div class="entry-content">
@@ -27,6 +67,5 @@ while ( have_posts() ) : the_post(); ?>
 endwhile;
 ?>
 <?php wp_footer(); ?>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -35,8 +35,8 @@ if (! empty($instance['title'])) {
     $timeTable->setTitle($instance['title']);
 }
 
-if ($instance['choice'] === 'horizontal') {
-    echo $timeTable->horizontalTime();
+if (isset($instance['choice']) && $instance['choice'] === 'horizontal') {
+    echo wp_kses($timeTable->horizontalTime(), 'post');
 } else {
-    echo $timeTable->verticalTime();
+    echo wp_kses($timeTable->verticalTime(), 'post');
 }

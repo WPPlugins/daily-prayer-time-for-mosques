@@ -1,13 +1,55 @@
-/*Default styling*/
+@import "eict.css";
+@import "usman/style.css";
+@import "my-masjid.css";
+
+pt/*Default styling*/
 -body {
     font-family: 'Ubuntu', sans-serif;
 }
+div.dropdown {
+    width: 300px !important;
+}
+span.scDate {
+    font-weight: 800;
+}
+span.scHijri {
+    font-style: italic;
+}
 
-td.Sat, td.Sun{
+.marquee {
+    width: 100%;
+    overflow: hidden;
+  }
+
+div.upload-step {
+    padding-bottom: 20px;
+}
+div.upload-step label{
+    width: 350px;
+    font-style: normal;
+    font-weight: 200;
+    float: left;
+}
+div.upload-step select{
+    padding-left: 10px;
+    width: 350px;
+}
+select.quickMonth{
+    width: 120px;
+}
+td.Fri, td.Friday{
     font-weight: bold;
     color: red;
 }
-
+td input.Fri{
+    color: red;
+}
+tr.Fri {
+    color: red;
+}
+td.Sat, td.Sun, td input.Sat, td input.Sun{
+    color: green;
+}
 tr.today {
     font-size: large;
     font-weight: bold;
@@ -77,7 +119,14 @@ table.dptTimetable tr, table.dptTimetable th{
      width: 100px;
      white-space: nowrap;
 }
-table.dptTimetable tr td.jamah{
+table.dptTimetable tr td.jamah, td.jamahMonth{
+    font-weight: bold;
+}
+td.jamahMonth{
+    font-weight: bold;
+    background-color: #FFE;
+}
+td.dptMonthlyIqamah{
     font-weight: bold;
 }
 table.dptTimetable th.tableHeading{
@@ -98,6 +147,236 @@ table.dptTimetable tr:hover {
 table.dptTimetable th.highlight, tr.highlight, td.highlight {
     background-color: #F5FF92;
     font-weight: bold;
+}
+
+/* Horizontal timetable: compact summary and readable prayer grid. */
+.dpt-horizontal-shell,
+.dpt-vertical-shell {
+    width: 100%;
+    max-width: 1200px;
+    margin: 16px auto;
+    overflow: hidden;
+    border: 1px solid #dce8e4;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 12px 36px rgba(22, 58, 52, 0.08);
+    color: #1b3430;
+    font-family: inherit;
+}
+.dpt-vertical-shell {
+    max-width: 760px;
+}
+.dpt-horizontal-overview {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 104px;
+    padding: 18px 26px;
+    background: linear-gradient(110deg, #f5faf8, #e9f3ef);
+    border-bottom: 1px solid #dce8e4;
+}
+.dpt-horizontal-date {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+.dpt-horizontal-kicker {
+    color: #37675d;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    line-height: 1.3;
+    text-transform: uppercase;
+}
+.dpt-horizontal-date-main {
+    color: #173e36;
+    font-size: clamp(18px, 2vw, 24px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+.dpt-horizontal-hijri {
+    color: #5f746e;
+    font-size: 13px;
+    font-weight: 500;
+}
+.dpt-horizontal-next {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+.dpt-horizontal-next .dptScNextPrayer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px 13px;
+    font-weight: 600;
+    text-transform: none;
+}
+.dpt-horizontal-next .nextPrayer {
+    color: #37675d;
+    font-size: 14px;
+    line-height: 1.25;
+}
+.dpt-horizontal-next h2.dptScTime {
+    display: block;
+    margin: 0;
+    padding: 0;
+    color: #173e36;
+    font-size: clamp(20px, 2.2vw, 28px);
+    font-weight: 750;
+    line-height: 1.15;
+    white-space: nowrap;
+}
+.dpt-horizontal-next .timeLeftCountDown {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: #dceee4;
+    color: #176140;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+.dpt-horizontal-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+table.dptTimetable.dpt-horizontal-table {
+    width: 100%;
+    min-width: 680px;
+    margin: 0;
+    border: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    font-size: 15px;
+    line-height: 1.3;
+}
+table.dptTimetable.dpt-horizontal-table tr,
+table.dptTimetable.dpt-horizontal-table th,
+table.dptTimetable.dpt-horizontal-table td {
+    width: auto;
+    border: 0;
+    white-space: nowrap;
+}
+table.dptTimetable.dpt-horizontal-table th,
+table.dptTimetable.dpt-horizontal-table td {
+    padding: 15px 12px;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #e8efec;
+}
+table.dptTimetable.dpt-horizontal-table th:first-child {
+    width: 112px;
+    text-align: left;
+    padding-left: 22px;
+}
+:where(.dpt-horizontal-shell) table.customStyles th.tableHeading {
+    background: #eaf3ef;
+    color: #284e45;
+}
+table.dptTimetable.dpt-horizontal-table .dpt-horizontal-names th {
+    font-size: 14px;
+    font-weight: 700;
+}
+table.dptTimetable.dpt-horizontal-table .dpt-horizontal-begins td {
+    color: #4c625b;
+    font-weight: 500;
+}
+table.dptTimetable.dpt-horizontal-table .dpt-horizontal-iqamah td {
+    font-weight: 750;
+}
+table.dptTimetable.dpt-horizontal-table tr:last-child th,
+table.dptTimetable.dpt-horizontal-table tr:last-child td {
+    border-bottom: 0;
+}
+
+/* Vertical timetable uses the same compact summary with a roomier prayer list. */
+table.dptTimetable.dpt-vertical-table {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    color: #1b3430;
+    font-size: 16px;
+    line-height: 1.3;
+}
+table.dptTimetable.dpt-vertical-table tr,
+table.dptTimetable.dpt-vertical-table th,
+table.dptTimetable.dpt-vertical-table td {
+    width: auto;
+    border: 0;
+}
+table.dptTimetable.dpt-vertical-table th,
+table.dptTimetable.dpt-vertical-table td {
+    padding: 15px 22px;
+    border-bottom: 1px solid #e8efec;
+    vertical-align: middle;
+}
+table.dptTimetable.dpt-vertical-table th:first-child {
+    width: 34%;
+    text-align: left;
+}
+table.dptTimetable.dpt-vertical-table td {
+    text-align: center;
+    white-space: nowrap;
+}
+:where(.dpt-vertical-shell) table.customStyles th.tableHeading {
+    background: #eaf3ef;
+    color: #284e45;
+}
+table.dptTimetable.dpt-vertical-table .dpt-vertical-headings th {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-align: center;
+}
+table.dptTimetable.dpt-vertical-table .dpt-vertical-headings th:first-child {
+    text-align: left;
+}
+table.dptTimetable.dpt-vertical-table .dpt-vertical-prayer-row th {
+    font-weight: 650;
+}
+table.dptTimetable.dpt-vertical-table .dpt-vertical-prayer-row td.jamah {
+    font-weight: 750;
+}
+table.dptTimetable.dpt-vertical-table .dpt-vertical-prayer-row th.highlight,
+table.dptTimetable.dpt-vertical-table .dpt-vertical-prayer-row td.highlight {
+    background: #e2f3e8;
+    color: #174a3a;
+}
+table.dptTimetable.dpt-vertical-table .dpt-vertical-prayer-row:hover {
+    background: #f5faf8;
+}
+table.dptTimetable.dpt-vertical-table tr:last-child th,
+table.dptTimetable.dpt-vertical-table tr:last-child td {
+    border-bottom: 0;
+}
+
+@media (max-width: 700px) {
+    .dpt-horizontal-shell,
+    .dpt-vertical-shell { border-radius: 12px; }
+    .dpt-horizontal-overview {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 13px;
+        min-height: 0;
+        padding: 17px 18px;
+    }
+    .dpt-horizontal-next .dptScNextPrayer { justify-content: flex-start; }
+    table.dptTimetable.dpt-horizontal-table { min-width: 650px; font-size: 14px; }
+    table.dptTimetable.dpt-horizontal-table th,
+    table.dptTimetable.dpt-horizontal-table td { padding: 12px 10px; }
+    table.dptTimetable.dpt-vertical-table { font-size: 14px; }
+    table.dptTimetable.dpt-vertical-table th,
+    table.dptTimetable.dpt-vertical-table td { padding: 12px 10px; }
 }
 
 /*No Border styling*/
@@ -205,16 +484,17 @@ span.printIcon {
 select.otherMonth  {
     border: 1px solid;  /*Removes border*/
     -moz-appearance: none; /* Removes Default Firefox style*/
-    width: 100px; /*Width of select dropdown to give space for arrow image*/
+    width: 150px; /*Width of select dropdown to give space for arrow image*/
     text-indent: 0.01px; /* Removes default arrow from firefox*/
     text-overflow: "";  /*Removes default arrow from firefox*/ /*My custom style for fonts*/
     padding: 5px;
     float: left;
     border-radius: 5px 5px 5px 5px;
+    background-size: 20px auto;
+    background-position: right 5px center;
 }
 
 span.dpt-donation {
-    float: right;
     width: auto;
     color: #000000;
     background-color: maroon;
@@ -237,11 +517,6 @@ span.dpt-donation a:hover{
     font-weight: bold;
 }
 
-span.timeLeft {
-    font-size: 17px;
-    font-weight: bold;
-}
-
 .button {
     font-weight: bold;
 }
@@ -261,6 +536,7 @@ h3.printSiteName {
     font-style: italic;
     display: block;
     margin-bottom: 0px;
+    text-align: center;
 }
 
 div.dptScNextPrayer {
@@ -268,17 +544,23 @@ div.dptScNextPrayer {
     text-transform: uppercase;
 }
 span.minLeftText {
-    text-transform: lowercase !important;
+    text-transform: lowercase;
 }
-h2.dptScTime {
-    margin: 0px;
+
+span.green h2.dptScTime {
+    margin: unset;
 }
+
 h2.vertical div span h2.dptScTime {
-    margin: 10px;
+    margin: 1px;
 }
 h2#dsNextPrayer div span h2.dptScTime {
-    font-size: 2em !important;
+    font-size: 2em;
     font-weight: 700;
+}
+.timeLeftCountDown {
+    display: inline;
+    text-transform: lowercase;
 }
 
 .jamahChanges span{
@@ -328,17 +610,50 @@ div.todaySpan {
     transform-origin: right 2px;
 }
 
+div.quranVerse p{
+    font-style: italic;
+    display: inline;
+}
+div.quranVerse p.vertical{
+    font-style: italic;
+    display: inline;
+    font-size: 3vw;
+}
+div.quranVerse span.sura{
+    font-size: 0.9rem;
+}
+
+.friday {
+    color: red;
+}
+
 /* X BOARD */
 .x-board {
     color: #000;
     height: 100vh;
     text-align: center;
-    font-family: 'BebasNeueRegular', Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 #overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: black; opacity: 0; z-index: 99;}
 
+.height-100 {
+    height: 100%;
+}
 
+.width-100 {
+    width: 100%;
+}
+
+.height-100vh {
+    height: 100vh;
+}
+.x-board .width-100 {
+    width: 100%;
+}
+.x-board .width-25 {
+    width: 25%;
+}
 .x-board .height-100 {
     height: 100%;
 }
@@ -361,18 +676,45 @@ div.todaySpan {
     height: 24%;
     top: 10% !important;
 }
-
 .x-board .top-row {
     height: 15%;
 }
-
 .x-board .middle-row {
 height: 70%;
+}
+.x-board .middle-row85 {
+    height: 85%;
+}
+.x-board td span.prayerFinished {
+    opacity: 50%;
+}
+
+.x-board .dpt-ticker {
+    overflow: hidden;
+    width: 100%;
+}
+
+.x-board .dpt-ticker-track {
+    display: inline-block;
+    white-space: nowrap;
+    animation: dpt-ticker-scroll linear infinite;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+@keyframes dpt-ticker-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+.x-board span.jamahChanges {
+    color:red;
 }
 
 .x-board .bottom-row {
     height: 15%;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
 }
 
 .x-board .table-borderless td,
@@ -389,22 +731,26 @@ height: 70%;
     transform: translateY(-50%);
 }
 
+.x-board .align-middle-next-prayer {
+    position: relative;
+    top:50%
+}
+
 .x-board .green {
     color: #fff;
     opacity: .8;
 }
 
 .x-board .bg-dark {
-    background-color: #000 !important;
+    background-color: #000;
     color: #eee;
 }
 .x-board .bg-white {
-    background-color: #fff !important;
+    background-color: #fff;
 }
 .x-board .time{
-    background-color: #000;
     color: #fff;
-    font-size: 8vh;
+    font-size: 9vh;
     font-weight:bold;
 }
 .x-board .vertical-time{
@@ -417,13 +763,14 @@ height: 70%;
 
 .x-board .date-eng{
     font-weight: bold;
-    color: maroon;
     padding-left: 5px;
-    font-size: 6vh;
+    font-size: 5vh;
+    text-shadow: 0 0 2px #00c6ff;
 }
 
 .x-board span.vertical {
     font-size: 3vh !important;
+    padding-bottom: 20px;
 }
 .x-board p.hijriDate{
     display: inline;
@@ -436,7 +783,9 @@ height: 70%;
 .x-board span.verticalhijri p{
     font-size: 2vh !important;
 }
-
+.x-board span.dsJumuah-vertical{
+    font-size: 2.5vh !important;
+}
 .x-board h3 {
     font-weight: bold;
     margin-bottom: 0px;
@@ -507,7 +856,7 @@ height: 70%;
     font-size: 6vh;
 }
 .x-board .vertical td span.dpt_start, .vertical td span.dpt_jamah {
-    font-size: 4vh;
+    font-size: 3vh;
 }
 .x-board table > tbody > tr:last-child > td {
     border: none;
@@ -516,11 +865,12 @@ height: 70%;
 .x-board table td span {
     font-weight: bold;
 }
-
-.x-board .nextPrayer {
-    color: #fff !important;
+.quranVerse {
+    color: #FFF;
 }
-
+.x-board span.nextPrayer {
+    display: inline-block;
+}
 .x-board .nextPrayer h2 {
     color: #fff !important;
     font-size: 10vh !important;
@@ -531,13 +881,31 @@ height: 70%;
     font-size: 10vh !important;
     opacity: .8
 }
+.x-board .nextPrayer h4 {
+    padding:60px;
+    font-size: 8vh;
+    opacity: .8
+}
 
+.x-board .nextPrayer h4.vertical {
+    padding: 30px;
+    font-size: 6vw;
+    opacity: .8
+}
+.x-board .nextPrayer h4.vertical span.sura{
+    font-size: 3vw;
+    opacity: .8;
+    padding-top: 10px;
+}
 .x-board .nextPrayer h2.vertical {
     font-size: 4vh !important;
 }
 .x-board .nextPrayer h3.vertical {
     font-size: 4vh !important;
     opacity: .8
+}
+.x-board tr.nextPrayer td{
+    background-color: red;
 }
 
 .x-board .dptScTime{
@@ -546,24 +914,50 @@ height: 70%;
 .x-board .timeLeft {
     font-size: 0.8em;
 }
-.x-board .timeLeftCountDown {
-    display: inline;
-}
-
 .x-board .blink{
     animation: blink 1s infinite;
     font-weight: bold;
     font-size: 4vh;
+    line-height: 1.2;
+    will-change: opacity;
 }
 .x-board .blink-vertical{
     animation: blink 1s infinite;
     font-weight: bold;
-    font-size: 5vw;
+    will-change: opacity;
+}
+
+.x-board .blink-vertical a{
+    font-size: 3vh;
 }
 
 .x-board span.tomorrow {
     margin-left: 10px;
 }
+
+.x-board div.sehri  {
+    float: left;
+    padding: 0px 30px 0px 30px;
+    font-size: 4vh;
+    background: red;
+    color: #def;
+    font-weight: 800;
+}
+
+.x-board div.iftar  {
+    padding: 0px 30px 0px 30px;
+    font-size: 4vh;
+    background: red;
+    color: #def;
+
+    font-weight: 800;
+    text-align: right;
+}
+
+.x-board div.sehri-vertical, .x-board div.iftar-vertical  {
+    font-size: 2vh;
+}
+
 div.jamahChanges-horizontal span{
     font-size: 5vh;
     word-spacing: 10px;
@@ -575,7 +969,7 @@ div.jamahChanges-vertical span{
     padding-bottom: 10px;
 }
 
-h3.scrolling-vertical > marquee > div > span {
+div.scrolling-vertical > marquee > div > span {
     font-size: 3vh;
     word-spacing: 10px;
     padding-bottom: 10px;
@@ -583,8 +977,7 @@ h3.scrolling-vertical > marquee > div > span {
 
 .x-time-change{
     word-spacing: 10px;
-    background: #565656;
-    color: #ffffff;
+
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -602,9 +995,18 @@ h3.scrolling-vertical > marquee > div > span {
 .x-board img.logo{
     max-width: 50%;
     max-height: 100%;
+    float: right;
+    padding: 10px;
 }
 
-.x-board .carousel-inner .item img.carousel-slide{
+#carouselExampleIndicators {
+    height: 100%;
+    width: 100%;
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+}
+
+#carouselExampleIndicators div  div  img {
     height: 100%;
     width: 100%;
 }
@@ -614,6 +1016,7 @@ h3.scrolling-vertical > marquee > div > span {
 }
 
 .x-board .scrolling-vertical{
+    padding-top: 15%;
     font-size: 3vh;
 }
 
@@ -622,6 +1025,16 @@ h3.scrolling-vertical > marquee > div > span {
     margin: 20px;
 }
 
+.x-board .blink a,  div.dsScroll a {
+    text-decoration: none !important;
+}
+
+.x-board div.quranVerse span.sura {
+    font-size: 3rem;
+    color: #98ce8c;
+    display: block;
+    padding-top: 10px;
+}
 p.jumuah {
     margin: 40px;
 }
@@ -643,6 +1056,7 @@ inspired from https://codepen.io/Rowno/pen/Afykb
 .carousel-fade .carousel-inner .item {
     opacity: 0;
     transition-property: opacity;
+    will-change: opacity;
 }
 
 .carousel-fade .carousel-inner .active {
@@ -673,7 +1087,14 @@ inspired from https://codepen.io/Rowno/pen/Afykb
         margin: 0px;
     }
 }
-
+@media only screen and (max-device-width: 520px) {
+    .x-board div.sehri {
+        font-size: 2vh;
+    }
+    .x-board div.iftar  {
+        font-size: 2vh;
+    }
+}
 
 /*
 WHAT IS NEW IN 3.3: "Added transforms to improve carousel performance in modern browsers."
@@ -716,17 +1137,17 @@ ul.clock {
 
 ul.clock li {
     display: inline;
-    font-family: 'BebasNeueRegular', Arial, Helvetica, sans-serif;
     text-shadow: 0 0 5px #00c6ff;
+    /* font-family: "DSDIGI", sans-serif; */
 }
-
 ul.clock li#sec {
-    font-size: 20px !important;
+    font-size: 50%;
 }
 #point {
     position: relative;
     -moz-animation: mymove 1s ease infinite;
     -webkit-animation: mymove 1s ease infinite;
+    will-change: opacity;
 }
 
 /* Simple Animation */
@@ -763,46 +1184,20 @@ ul.clock li#sec {
     }
 }
 
-/*Print*/
-@media print {
-    * {
-        background: initial!important;
-        -webkit-print-color-adjust: exact;
-   }
-    body {
-        -webkit-print-color-adjust: exact;
-        background-color: #c30;
-    }
-    #monthlyTimetable, #monthlyTimetable * {
-        visibility: visible;
-        font-size: 10px;
-    }
-    .monthHeading, .printIcon{
-        visibility: hidden;
-    }
-    select.otherMonth {
-        width: 100%;
-        font-size: 20px;
-        color: blue;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-    }
-    table.timetable td {
-        -webkit-print-color-adjust: exact;
-    }
-    h3.printSiteName {
-        font-size: 30px;
-        display: block;
-        visibility: visible;
-        position: fixed;
-        left: 50%;
-        transform: translate(-50%, -30%);
-        padding-top: 15px;
-    }
-    table.customStyles tr.highlight, th.highlight, td.highlight {
-        background: transparent !important;
-    }
-    p.hijriDate{
-        display: none;
-    }
+div.carousel-item a{
+    text-decoration: none;
+}
+p.adhan-copy{
+    color: blue;
+    font-family: monospace;
+}
+
+.qtime {
+    width: 90px;
+    text-align: center;
+}
+
+h2.eict-donation a{
+    color: red;
+    font-weight: 700;
 }

@@ -1,0 +1,11 @@
+{
+    "name": "mmrs151/daily-prayer-time-for-mosques",
+    "description": "daily-prayer-time-for-mosques",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=8.2",
+        "islamic-network/prayer-times": "^1.0"
+    }
+}

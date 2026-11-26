@@ -1,16 +1,19 @@
 <?php
 
 require_once(__DIR__ . '/../Models/HijriDate.php');
+require_once(__DIR__ . '/../Models/DPTHelper.php');
 
 class TimetablePrinter
 {
     protected $prayerLocal = array(
         "fajr" => "Fajr",
         "sunrise" => "Sunrise",
+        "ishraq" => "Ishraq",
         "zuhr" => "Zuhr",
         "asr" => "Asr",
         "maghrib" => "Maghrib",
-        "isha" => "Isha"
+        "isha" => "Isha",
+        "zawal" => "Zawal"
     );
 
     protected $headersLocal = array(
@@ -19,8 +22,8 @@ class TimetablePrinter
         "iqamah" => "Iqamah",
         "standard" => "Standard",
         "hanafi" => "Hanafi",
-        "fast_begins" => "Fast Begins",
-        "fast_ends" => "Fast Ends",
+        "fast_begins" => "Suhoor End",
+        "fast_ends" => "Iftar Start",
         "jumuah" => "Jumuah"
     );
 
@@ -57,9 +60,12 @@ class TimetablePrinter
     protected $timesLocal = array(
         'date' => 'Date',
         'day' => 'Day',
-        'minute' => 'Minutes',
+        'minute' => 'Minute',
+        'minutes' => 'Minutes',
+        'hour' => 'Hour',
         'hours' => 'Hours',
-        'iqamah update' => 'IQAMAH UPDATE FOR TOMORROW',
+        'second' => 's',
+        'iqamah update' => 'IQAMAH CHANGES:',
         'next prayer' => 'Next ...'
     );
 
@@ -90,18 +96,18 @@ class TimetablePrinter
     /** $var bool */
     protected $isHorizontal = false;
 
-    /**
-     * TimetablePrinter constructor.
-     */
+    /** @var DPTHelper */
+    private $dptHelper;
+
     public function __construct()
     {
         $this->localPrayerNames = $this->getLocalPrayerNames();
         $this->localHeaders = $this->getLocalHeaders();
         $this->localNumbers = $this->getLocalNumbers();
         $this->localTimes = $this->getLocalTimes();
-
+        $this->dptHelper = new DPTHelper();
         $this->hijriDate = new HijriDate();
-        $this->hijridateString = $this->hijriDate->getDate(date("d"), date("m"), date("Y"), true);
+        $this->hijridateString = $this->hijriDate->getDate(date("d"), date("m"), date("Y"), true, true);
     }
 
     public function getTableClass()
@@ -112,22 +118,22 @@ class TimetablePrinter
     public function getLocalPrayerNames($forAdmin=false, $enableJumuah=false)
     {
         $prayers_local = get_option('prayersLocal');
-
         $localPrayerName =  $prayers_local;
+
         if ( empty($prayers_local)) {
             $localPrayerName =  $this->prayerLocal;
-        } elseif (count($prayers_local) != count($this->prayerLocal)) {
-            delete_option( 'prayersLocal' );
-            $localPrayerName = $this->prayerLocal;
         }
 
-        if (! $forAdmin && $enableJumuah){
-            if ($this->todayIsFriday()) {
-                $localPrayerName['zuhr'] = $this->getLocalHeaders()['jumuah'];
-            }
+        if (is_array($localPrayerName)) {
+            $localPrayerName = array_map( 'sanitize_text_field', $localPrayerName);
+            $localPrayerName = array_map('stripslashes', $localPrayerName);
         }
 
-        return array_map('stripslashes', $localPrayerName);
+        if (!isset($localPrayerName['ishraq'])) {
+            $localPrayerName['ishraq'] = 'Israq';
+        }
+
+        return $localPrayerName;
     }
 
     public function getLocalHeaders()
@@ -141,7 +147,12 @@ class TimetablePrinter
             return $this->headersLocal;
         }
 
-        return array_map('stripslashes', $headers_local);
+        if (is_array($headers_local)) {
+            $headers_local = array_map( 'sanitize_text_field', $headers_local);
+            $headers_local = array_map('stripslashes', $headers_local);
+        }
+
+        return $headers_local;
     }
 
     public function getLocalMonths()
@@ -152,18 +163,27 @@ class TimetablePrinter
             $monthsLocal = $this->monthsLocal;
         }
 
-        if ( get_option("ramadan-chbox") ) {
+        if ( $this->isRamadan() ) {
             $monthsLocal['ramadan'] = 'Ramadan';
         } else {
             unset( $monthsLocal['ramadan'] );
         }
 
-        return array_map('stripslashes', $monthsLocal);
+        if (is_array($monthsLocal)) {
+            $monthsLocal = array_map( 'sanitize_text_field', $monthsLocal);
+            $monthsLocal = array_map('stripslashes', $monthsLocal);
+        }
+
+        return $monthsLocal;
     }
 
     public function getLocalNumbers()
     {
         $numbers_local = get_option('numbersLocal');
+
+        if (is_array($numbers_local)) {
+            $numbers_local = array_map( 'sanitize_text_field', $numbers_local);
+        }
 
         return empty($numbers_local) ? $this->numbersLocal : $numbers_local;
     }
@@ -172,6 +192,9 @@ class TimetablePrinter
     public function getLocalTimes()
     {
         $times = get_option('timesLocal');
+        if (is_array($times)) {
+            $times = array_map( 'sanitize_text_field', $times);
+        }
 
         if ( empty($times)) {
             return $this->timesLocal;
@@ -181,6 +204,11 @@ class TimetablePrinter
         }
 
         return $times;
+    }
+
+    public function getLocalTimesKeys()
+    {
+            return array_keys($this->timesLocal);
     }
 
     public function setVertical($value=true)
@@ -200,14 +228,7 @@ class TimetablePrinter
      */
     public function formatDate($mysqlDate, $format=null)
     {
-        $phpDate = strtotime($mysqlDate);
-
-        $date =  date( get_option('date_format'), $phpDate );
-        if ($format) {
-            $date = date($format, $phpDate);
-        }
-
-        return $date;
+        return $this->dptHelper->formatDate($mysqlDate, $format);
     }
 
     /**
@@ -225,6 +246,33 @@ class TimetablePrinter
         $result = str_split($wpDate);
         $intlDate = '';
         $this->localNumbers = $this->getLocalNumbers();
+
+        foreach ($result as $char) {
+            if (array_key_exists($char, $this->localNumbers)) {
+                $intlDate .= $this->localNumbers[$char];
+            } else {
+                $intlDate .= $char;
+            }
+        }
+
+        return $intlDate;
+    }
+
+    public function formatDateForPrayer24Hour($mysqlDate, $imsak=false)
+    {
+        $phpDate = strtotime($mysqlDate);
+        if ($imsak) {
+            $phpDate = $phpDate - ((int)get_option('imsaq') * 60);
+        }
+        return date('H:i', $phpDate);
+    }
+
+    public function getIntlNumber($numbers)
+    {
+        $intlDate = '';
+
+        $this->localNumbers = $this->getLocalNumbers();
+        $result = str_split($numbers);
         foreach ($result as $number) {
             $intlDate .= $this->localNumbers[$number];
             if (empty($this->localNumbers[$number]) && $number !== '0') {
@@ -240,32 +288,33 @@ class TimetablePrinter
      * @param  string $day
      * @return string
      */
-    protected function getClass($month, $day)
+    protected function getClass($month, $day, $weekday='')
     {
         if ($day == user_current_time('j') && $month == user_current_time('m')){
             return "class = highlight";
+        } elseif($weekday=='Friday') {
+            return "class = Fri";
         }
     }
 
     /**
-     * @param  bool $isRamadan
      * @param  array $data
      * @param  bool $azanOnly
      * @return string|null
      */
-    protected function getFastingTdWithData($isRamadan, $data, $azanOnly=null, $imsaq=false)
+    protected function getFastingTdWithData($data, $azanOnly=null, $imsaq=false)
     {
         $html = "";
 
-        if  ($isRamadan && ! $azanOnly && $imsaq) {
+        if  ($this->isRamadan() && ! $azanOnly && $imsaq) {
             $html = "<td class='fasting'>" . $this->formatDateForPrayer($data, $imsaq) . "</td>";
-        } elseif ($isRamadan && $imsaq) {
+        } elseif ($this->isRamadan() && $imsaq) {
             $html = "<td class='fasting'>" . $this->formatDateForPrayer($data, $imsaq). "</td>";
             $html .= "<td>" . $this->formatDateForPrayer($data). "</td>";
 
-        } elseif  ($isRamadan && ! $imsaq) {
+        } elseif  ($this->isRamadan() && ! $imsaq) {
             $html = "<td class='fasting'>" . $this->formatDateForPrayer($data). "</td>";
-        } elseif  ($isRamadan && ! $azanOnly && $imsaq) {
+        } elseif  ($this->isRamadan() && ! $azanOnly && $imsaq) {
             $html = "<td class='fasting'>" . $this->formatDateForPrayer($data). "</td>";
         } elseif ($azanOnly) {
             $html = "<td>" . $this->formatDateForPrayer($data). "</td>";
@@ -276,25 +325,54 @@ class TimetablePrinter
 
     /**
      * @param array $row
-     *
-     * @param int $countStart
+     * @param bool $displayDates
+     * @param bool $apiCall
      * @return string
      */
-    protected function getNextIqamahTime(array $row)
+    public function getNextIqamahTime(array $row, $displayDates=false, $apiCall=false)
     {
         $diff = $this->getNextIqamahTimeDiff($row);
         $nextPrayer = $this->getNextPrayer($row);
 
+        if ($apiCall) {
+            $nextPrayerTime = $this->getNextPrayerActualTime($row, $nextPrayer);
+            $nextAzanTime = $this->getNextAzanActualTime($row, $nextPrayer);
+            
+            return [
+                'prayerName' => $nextPrayer,
+                'timeLeft' => $diff,
+                'iqamahTime' => $nextPrayerTime,
+                'azanTime' => $nextAzanTime
+            ];
+        }
+
+        $hijriDate = '';
+        if($row['displayHijriDate']) {
+            $hijriDate = $this->hijriDate->getDate(date("d"), date("m"), date("Y"), true, true);
+        }
+
+        $printDates = '';
+        if ($displayDates) {
+            $printDates = '<div>
+        <span class="scDate">
+        ' . date_i18n( get_option( 'date_format' ) ) . '
+        </span>
+        <span class="scHijri">
+            ' . $hijriDate . '
+        </span>';
+        }
+
         return
-            '
+            $printDates . '
         <div class="dptScNextPrayer">
-            <span class="green">
-                <span class="nextPrayer">' . $this->getHeading($row, $nextPrayer). '</span> ' .
-                $this->getTimeLeftString($diff, $row);
+            <span class="nextPrayer">' . $this->getHeading($row, $nextPrayer). '</span> ' .
+            $this->getTimeLeftString($diff, $row);
     }
 
     protected function getTimeLeftString($nextIqamah, $row)
     {
+        $timeLeftText = '';
+        $minLeftText = '';
         if ($nextIqamah) {
             $timeLeftText = $this->getLocalizedNumber( $nextIqamah ) .':00';
             $minLeftText =  $this->localTimes["minute"];
@@ -303,7 +381,9 @@ class TimetablePrinter
                 $hours = (int)$hours;
                 $mins = $nextIqamah % 60;
                 $mins = (int)$mins;
-                $timeLeftText = $this->getLocalizedNumber( $hours ) .' '.$this->localTimes["hours"] .' '. $this->getLocalizedNumber( $mins );
+                $timeLeftText = $this->getLocalizedNumber( $hours ) .' '.$this->localTimes["hour"] .' '
+                    . $this->getLocalizedNumber( $mins ) .' '
+                    .$this->localTimes["minute"];
             }
 
         }
@@ -315,13 +395,12 @@ class TimetablePrinter
         $jamahTime = $this->getJamahTime( $row );
         $now = current_time( 'H:i');
         foreach ($jamahTime as $key=>$jamah) {
-            $this->nextIqamah = $this->localPrayerNames[lcfirst($key)] . ' ' . $this->localHeaders['iqamah'] . ':';
-            if ($jamah >$now ) {
+            if ($jamah > $now ) {
                 if ($key == 'Sunrise') {
-                    $this->nextIqamah = $this->localPrayerNames[lcfirst($key)] . ':';
+                    $this->localPrayerNames[lcfirst($key)] . ':';
                 }
                 if ($key == 'Zuhr' && $this->isJumahDisplay($row)) {
-                    $this->nextIqamah = $this->localPrayerNames[lcfirst($key)] . ':';
+                    $this->localPrayerNames[lcfirst($key)] . ':';
                 }
                 $toTime = strtotime( $jamah );
                 $fromTime = strtotime( $now );
@@ -339,21 +418,21 @@ class TimetablePrinter
      */
     protected function getNextPrayer($row)
     {
-        $now = current_time( 'H:i');
-
-        $jamahTime = $this->getJamahTime( $row );
-        foreach ($jamahTime as $jamah) {
-            if ($jamah > $now ) {
-                $prayer = array_search( $jamah, $row ); // asr_jamah or asr_begins
-                $prayer = explode( '_', $prayer);
-                return $prayer[0]; // asr
-            }
-        }
+        return $this->dptHelper->getNextPrayer($row);
     }
 
     protected function getHeading($dbRow, $nextPrayer)
     {
         $iqamah = ($nextPrayer == 'sunrise') ? '' : $this->localHeaders['iqamah'];
+        if ($nextPrayer == 'zawal') {
+            return $this->localPrayerNames['zuhr'].' '. $iqamah;
+        }
+        if ($nextPrayer == 'ishraq') {
+            return $this->localPrayerNames['ishraq'];
+        }
+        if ($nextPrayer == 'jumuah') {
+            return $this->localHeaders['jumuah'];
+        }
         if ( is_null($nextPrayer)) {
             return $this->localPrayerNames['fajr'].' '. $iqamah;
         }
@@ -368,26 +447,41 @@ class TimetablePrinter
     {
         $nextPrayer = $this->getNextPrayer($dbRow);
 
-        $key = ($nextPrayer == 'sunrise') ? $nextPrayer : strtolower($nextPrayer.'_jamah');
-        $nextPrayerName = $dbRow[$key];
-        if ( is_null($nextPrayer) ) {
-            $nextPrayerName = $dbRow['nextFajr'];
+        if ($nextPrayer == 'zawal') {
+            $nextPrayer = 'zuhr';
         }
 
-        if ( $this->isJumahDisplay($dbRow) ) {
-            return '<p class="jumuah">' . get_option('jumuah') . '</span>';
+        if ($nextPrayer == 'jumuah') {
+            $nextPrayerTime = $dbRow['zuhr_jamah'];
+        } elseif ($nextPrayer == 'ishraq') {
+            $nextPrayerTime = $this->dptHelper->getIshraqTime($dbRow['sunrise']);
         } else {
-            return
-                '<h2 class="dptScTime">' .
-                $this->formatDateForPrayer($nextPrayerName). '
-                </h2> 
-                <span class="timeLeftCountDown timeLeft '.$this->getIqamahClass( $nextIqamah ).'"> 
-                    '.  $timeLeftText .' 
-                </span><span class="minLeftText"> ' . $minLeftText .'</span>
-        </div>';
-        }
-    }
+            $key = ($nextPrayer == 'sunrise') ? $nextPrayer : strtolower($nextPrayer.'_jamah');
 
+            if (isset($dbRow[$key])) {
+                $nextPrayerTime = $dbRow[$key];
+            }
+
+            if (empty($nextPrayerTime)) {
+                $nextPrayerTime = $dbRow['nextFajr'];
+            }
+        }
+        $nextPrayerTime24Hours = $this->formatDateForPrayer24Hour($nextPrayerTime);
+
+        return
+            '
+            <input type="hidden" id="timezoneOffset" value="' . get_option('gmt_offset') .'">
+            <h2 id="dptScTimeCountDown" style="display: none">' . $nextPrayerTime24Hours. '</h2>
+            <h2 class="dptScTime">
+            <input type="hidden" value="' . htmlentities($this->getTimesLocalJson()) . '" id="localizedNumbers">
+            <input type="hidden" value="' . htmlentities($this->getTimesLocalJson()) . '" id="localizedTimes">    ' .
+            $this->formatDateForPrayer($nextPrayerTime). '
+            </h2>
+            <span class="timeLeftCountDown timeLeft '.$this->getIqamahClass( $nextIqamah ).'">
+                '.  $timeLeftText .'
+            </span>
+        </div>';
+    }
 
 	/**
      * @param array $row
@@ -396,10 +490,68 @@ class TimetablePrinter
      */
     protected function getJamahTime(array $row)
     {
-        $value = array( $row["fajr_jamah"], $row['sunrise'], $row["zuhr_jamah"], $row["asr_jamah"], $row["maghrib_jamah"], $row["isha_jamah"]);
+        $jamahTimes = array( $row["fajr_jamah"], $row['sunrise'], $row["zuhr_jamah"], $row["asr_jamah"], $row["maghrib_jamah"], $row["isha_jamah"]);
+        $jamahNames = array("fajr", "sunrise", "zuhr", "asr", "maghrib", "isha");
+        return array_combine( $jamahNames, $jamahTimes );
 
-        return array_combine( array_keys($this->prayerLocal), $value );
+    }
 
+    protected function getNextPrayerActualTime(array $row, $nextPrayer)
+    {
+        if ($nextPrayer == 'zawal' || $nextPrayer == 'sunrise') {
+            return $row['sunrise'];
+        }
+
+        if ($nextPrayer == 'jumuah') {
+            return $row['zuhr_jamah'];
+        }
+
+        if ($nextPrayer == 'ishraq') {
+            return $this->dptHelper->getIshraqTime($row['sunrise']);
+        }
+
+        if (is_null($nextPrayer)) {
+            return $row['tomorrow']['fajr_jamah'] ?? null;
+        }
+
+        $key = strtolower($nextPrayer . '_jamah');
+        
+        if (isset($row[$key])) {
+            return $row[$key];
+        }
+        
+        return null;
+    }
+
+    protected function getNextAzanActualTime(array $row, $nextPrayer)
+    {
+        if ($nextPrayer == 'zawal' || $nextPrayer == 'sunrise') {
+            return $row['sunrise'];
+        }
+
+        if ($nextPrayer == 'jumuah') {
+            return $row['zuhr_begins'];
+        }
+
+        if ($nextPrayer == 'ishraq') {
+            return $this->dptHelper->getIshraqTime($row['sunrise']);
+        }
+
+        if ($nextPrayer == 'asr') {
+            return get_option('asrSelect') == 'hanafi' ? $row['asr_mithl_2'] : $row['asr_mithl_1'];
+        }
+
+        if (is_null($nextPrayer)) {
+            return $row['tomorrow']['fajr_begins'] ?? null;
+        }
+
+        $key = strtolower($nextPrayer . '_begins');
+        
+        if (isset($row[$key])) {
+            return $row[$key];
+        }
+        
+        return null;
     }
 
     /**
@@ -409,9 +561,12 @@ class TimetablePrinter
      */
     protected function getAzanTime(array $row)
     {
-        $value = array( $row["fajr_begins"], $row['sunrise'], $row["zuhr_begins"], $row["asr_begins"], $row["maghrib_begins"], $row["isha_begins"]);
-
-        return array_combine( array_keys($this->prayerLocal), $value );
+        $jamahTimes = array( $row["fajr_begins"], $row['sunrise'], $row["zuhr_begins"], $row["asr_begins"], $row["maghrib_begins"], $row["isha_begins"]);
+        $jamahNames = array_keys($this->prayerLocal);
+        $jamahNames = array_filter($jamahNames, function($key) {
+            return !in_array($key, ['zawal', 'ishraq']);
+        }); // remove zawal and ishraq (they have no begins/jamah)
+        return array_combine( $jamahNames, $jamahTimes );
     }
 
     /**
@@ -437,31 +592,34 @@ class TimetablePrinter
      */
     protected function getIqamahClass($number)
     {
-        if ( $number > 30 ) {
-            return 'green';
-        } elseif ( $number > 15 ) {
-            return 'orange';
-        }
-
-        return 'red';
+        return $this->dptHelper->getIqamahClass($number);
     }
 
     protected function getJamahChange(array $row, $isDigitalScreen=false, $orientation="")
     {
         $style = null;
+
         if ($this->isVertical && ! $isDigitalScreen) {
             $style = "style='display: block;'";
         }
+
         $timeClass = "";
         $digitalScreenClass = "";
+
         if ($isDigitalScreen) {
-            $timeClass = "class='x-time-change'";
+            $timeClass = "class='x-time-change bg-dark'";
             $digitalScreenClass = "jamahChanges-" . $orientation;
 
         }
+
         $timeRelated = $this->getLocalTimes();
-        $print = "<div class='jamahChanges " . $digitalScreenClass . "'>
-            <span class='x-time-text'>" . stripslashes($timeRelated['iqamah update']) . "</span>";
+
+        $print =
+            "<span class='jamahChanges " . $digitalScreenClass . "'>
+                <span class='x-time-text'>"
+                    . stripslashes($timeRelated['iqamah update']) .
+                "</span>";
+
         $prayerNames = $this->getLocalPrayerNames();
 
         foreach($row['jamah_changes'] as $key=>$time) {
@@ -469,20 +627,18 @@ class TimetablePrinter
                 $prayer = explode('_', $key);
                 if ( $this->tomorrowIsFriday() ) {
                     $prayerNames['zuhr'] = $this->getLocalHeaders()['jumuah'];
-                } else {
-                    $prayerNames['zuhr'] = $this->prayerLocal['zuhr'];
                 }
                 $print .= "<span " . $style . $timeClass ." >" . $prayerNames[$prayer[0]] . ": " .  $this->getTimeForIqamahUpdate($prayerNames[$prayer[0]], $time) . "</span>";
             }
         }
-        $print .= "</div>";
+        $print .= "</span>";
 
         return $print;
     }
 
     private function getTimeForIqamahUpdate($key, $time)
     {
-        $jumuahTime = get_option('jumuah');
+        $jumuahTime = get_option('jumuah1');
         if ( $key === $this->getLocalHeaders()['jumuah'] && $jumuahTime) {
             return $jumuahTime;
         }
@@ -491,52 +647,95 @@ class TimetablePrinter
 
     protected function todayIsFriday()
     {
-        return date_i18n('D') == 'Fri';
+        return $this->dptHelper->todayIsFriday();
     }
 
     protected function tomorrowIsFriday()
     {
-        return date_i18n('D') == 'Thu';
+        return $this->dptHelper->tomorrowIsFriday();
     }
 
-    /**
-     * @param $day
-     * @param $month
-     * @param $year
-     * @param array $dbRow
-     * @param bool $forMonth
-     * @return string
-     */
     public function getHijriDate($day, $month, $year, $dbRow, $forMonth=false)
     {
-        $hijriCheckbox = get_option('hijri-chbox');
-        if ( ! empty($hijriCheckbox) ) {
-            if( ! empty($dbRow['hijri_date']) ) {
-                $hijriDate = $dbRow['hijri_date'];
-            } else {
-                $hijridateArray = $this->hijriDate->getDate($day, $month, $year, false, $this->isSunset($dbRow, $forMonth));
-                $hijriDate = $hijridateArray['day']. ' '. $hijridateArray['month'] . ' ' . $hijridateArray['year'];
-            }
-
-            return '<p class="hijriDate"> '. $hijriDate .'</p>';
-        }
-        return;
+        return $this->dptHelper->getHijriDate($day, $month, $year, $dbRow, $forMonth);
     }
 
     public function isJumahDisplay($dbRow)
     {
-        if ( date_i18n('D') == 'Fri' &&
-            current_time('timestamp') > strtotime($dbRow['sunrise']) &&
-            current_time('timestamp') <= strtotime($dbRow['zuhr_jamah']) + 60
-        ) {
-            return true;
-        }
-
-        return false;
+        return $this->dptHelper->isJumahDisplay($dbRow);
     }
 
     private function isSunset($dbRow, $forMonth=false)
     {
-        return  !$forMonth && current_time('timestamp') > strtotime($dbRow['maghrib_begins']);
+        return $this->dptHelper->isSunset($dbRow, $forMonth);
+    }
+
+    /**
+     * dim display overnight between Isha and Fajr start
+     */
+    protected function canDimOvernight($dbRow, $disableOvernightDim=false)
+    {
+        return $this->dptHelper->canDimOvernight($dbRow, $disableOvernightDim);
+    }
+
+    /**
+     * set khutbah dimming time on friday between sunrise and Asr
+     */
+    protected function getKhutbahDim(array $dbRow): int
+    {
+        return $this->dptHelper->getKhutbahDim($dbRow);
+    }
+
+    /**
+     * get diming time for taraweeh during ramadan after isha and before fajr
+     */
+    protected function getTaraweehDim(array $dbRow): int
+    {
+        return $this->dptHelper->getTaraweehDim($dbRow);
+    }
+
+    protected function getNextPrayerClass($prayerName, $row, $isFajr=false)
+    {
+        return $this->dptHelper->getNextPrayerClass($prayerName, $row, $isFajr);
+    }
+
+    public function isRamadan()
+    {
+        return $this->dptHelper->isRamadan();
+    }
+
+    public function getJumuahTimesArray($isVertical = false, $separator = " | ")
+    {
+        $class = 'dsJumuah';
+        if ($isVertical) {
+            $class = 'dsJumuah-vertical';
+        }
+        $jumuahText = [];
+        $jumuahArray = [get_option('jumuah1'), get_option('jumuah2'), get_option('jumuah3')];
+        $jumuahArray = array_filter($jumuahArray);
+        foreach ($jumuahArray as $jumuah) {
+            $jumuahText[] = '<span class="' . $class . '">' . $this->formatDateForPrayer($jumuah) . '</span>';
+        }
+        return implode($separator, $jumuahText);
+    }
+
+    public function getTimesLocalJson(): string
+    {
+        return
+        json_encode([
+            'minute' => $this->getLocalTimes()['minute'] ?? 'minute',
+            'minutes' => $this->getLocalTimes()['minutes'],
+            'hour' => $this->getLocalTimes()['hour'] ?? 'hour',
+            'hours' => $this->getLocalTimes()['hours'],
+            'second' => $this->getLocalTimes()['second'],
+        ],
+            JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getNumbersLocalJson(): string
+    {
+        $localNumbers = $this->getLocalNumbers();
+        $localNumbers = array_combine(array_keys($localNumbers), $localNumbers);
+        return json_encode($localNumbers, JSON_UNESCAPED_UNICODE);
     }
 }

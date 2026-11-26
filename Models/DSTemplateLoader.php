@@ -36,7 +36,10 @@ class DSTemplateLoader
 
         add_filter( 'template_include', array( $this, 'view_project_template' ) );
 
-        $this->templates = array( '../Views/DSTemplate.php' => 'Digital Screen Prayer Time', );
+        $this->templates = 
+            array( 
+                '../Views/DSTemplate.php' => 'Digital Screen Prayer Time'
+            );
     }
 
 
@@ -61,7 +64,7 @@ class DSTemplateLoader
         add_filter( 'theme_page_templates', function( $page_templates ) use ( $templates ) {
             return $templates;
         });
-
+        
         return $atts;
 
     }
@@ -73,7 +76,7 @@ class DSTemplateLoader
 
         global $post;
 
-        if ( ! isset( $this->templates[ get_post_meta(
+        if ( isset($post->ID) && ! isset( $this->templates[ get_post_meta(
                 $post->ID, '_wp_page_template', true
             ) ] )
         ) {
@@ -81,13 +84,16 @@ class DSTemplateLoader
             return $template;
         }
 
-        $file = plugin_dir_path( __FILE__ ) . get_post_meta( $post->ID, '_wp_page_template', true );
-
-        if ( file_exists( $file ) ) {
-            return $file;
-        } else {
-            echo $file;
+        if (isset($post->ID)) {
+            $file = plugin_dir_path( __FILE__ ) . get_post_meta( $post->ID, '_wp_page_template', true );
+            if ( file_exists( $file ) ) {
+                return $file;
+            } else {
+                echo esc_attr( $file );
+            }
+    
         }
+
 
         return $template;
 
